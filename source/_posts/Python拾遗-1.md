@@ -115,7 +115,7 @@ int, long, str, tuple, frozenset
 - 不可变类型当修改时会创建新的对象，产生新的地址
 - 切片操作`[:]`，使用工厂函数`list/dict/set`以及`copy()`都会产生浅拷贝的效果
 
-赋值操作：
+**赋值**操作：
 ```python
 In [57]: will = ["will", 28, ["python", "c#", "javascript"]]
 
@@ -146,7 +146,7 @@ In [66]: print([id(element) for element in wilber])
 ```
 > 赋值操作相当于将两个指针都指向了同一个地址
 
-浅拷贝：
+**浅拷贝**：
 ```python
 In [67]: import copy
 
@@ -176,7 +176,7 @@ In [75]: print([id(element) for element in will])
 In [76]: print([id(element) for element in wilber])
 [140110221716032, 10912032, 140110220811400]
 ```
-深拷贝：
+**深拷贝**：
 ```python
 In [77]: wilber = copy.deepcopy(will)
 
