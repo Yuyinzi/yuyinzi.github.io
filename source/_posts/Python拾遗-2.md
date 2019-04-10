@@ -1,5 +1,5 @@
 ---
-title: Python拾遗2
+title: Python拾遗(2)
 date: 2019-04-10 16:03:16
 tags: Python 
 ---
