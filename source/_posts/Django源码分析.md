@@ -237,7 +237,7 @@ class WSGIHandler(base.BaseHandler)：
         return response
 ```
 这就是一个熟悉的`application`格式了。流程如图：
-![Alt text](./django_wsgi.png)
+![Alt text](/assets/django_wsgi.png)
 > 通过`run`方法，会创建`WSGIServer`实例，通过`set_app`和`get_app`方法设置和获取`wsgi_handler`
 > 当来新请求时，调用`handler_request_noblock`方法，创建`WSGIRequestHandler`实例处理请求(`finish_request`)
 > `WSGIRequestHandler`在实例化的时候，会调用自身的`handle`方法，这个方法会创建一个`ServerHandler`实例，调用其`run`方法
