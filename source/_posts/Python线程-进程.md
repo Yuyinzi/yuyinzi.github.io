@@ -5,8 +5,6 @@ tags: Python
 categories:
     - Python
 ---
-
-[TOC]
 ## `GIL`
 `GIL`:`global interpreter lock`全局锁
 限制：使得`python`中一个线程对应于`C`语言中的一个线程。同一时刻只有一个线程运行在一个`CPU`上执行字节码，无法将多线程运行到多`CPU`上。
