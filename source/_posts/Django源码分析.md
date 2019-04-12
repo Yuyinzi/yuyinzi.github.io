@@ -7,11 +7,12 @@ tags:
 categories:
     - Python
 ---
+主要分析了运行`python manage.py runserver`所发生的事。
+<!-- more -->
 ## `WSGI`,`uwsgi`和`uWSGI`
 `WSGI`：全称是`Web Server Gateway Interface`，是一种规范，只适用于`Python`语言。要实现`WSGI`协议，必须同时实现`web server`和`web application`，当前运行在`WSGI`协议之上的web框架有`Bottle`, `Flask`, `Django`。
 `uwsgi`：与`WSGI`一样是一种通信协议，是`uWSGI`服务器的独占协议，用于定义传输信息的类型(`type of information`)，每一个`uwsgi packet`前`4byte`为传输信息类型的描述，与`WSGI`协议是两种东西，据说该协议是`fcgi`协议的`10`倍快。
 `uWSGI`：是一个`web`服务器，实现了`WSGI`协议、`uwsgi`协议、`http`协议等。
-<!-- more -->
 ## 入口
 入口函数在`manage.py`中，从`execute_from_command_line(sys.argv)`开始，这时候会传入`[manage.py文件在的位置，command(runserver)， 端口号]`：
 ```python

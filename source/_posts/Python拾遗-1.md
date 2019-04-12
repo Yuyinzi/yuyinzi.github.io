@@ -309,7 +309,7 @@ gc: uncollectable <dict 0x7f14e2550910>            # b.__dict__
 gc: done, 4 unreachable, 4 uncollectable, 0.0023s elapsed.
 4
 ```
-### 编译
+## 编译
 要运行`python`程序，必须将源码编译成字节码。通常情况下，编译器会将源码转化成字节码后保存在`pyc`文件中。编译发生在模块载入那一刻。
 - 载入`pyc`流程：
     - 核对文件`Magic`标记(由`Python`版本号计算得来)
