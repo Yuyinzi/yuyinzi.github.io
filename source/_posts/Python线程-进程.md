@@ -2,6 +2,8 @@
 title: Python线程/进程
 date: 2019-04-03 17:02:50
 tags: Python
+categories:
+    - Python
 ---
 
 [TOC]

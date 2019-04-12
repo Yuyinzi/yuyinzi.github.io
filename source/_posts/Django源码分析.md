@@ -4,6 +4,8 @@ date: 2019-04-11 13:41:00
 tags: 
     - Python 
     - Django
+categories:
+    - Python
 ---
 ## `WSGI`,`uwsgi`和`uWSGI`
 `WSGI`：全称是`Web Server Gateway Interface`，是一种规范，只适用于`Python`语言。要实现`WSGI`协议，必须同时实现`web server`和`web application`，当前运行在`WSGI`协议之上的web框架有`Bottle`, `Flask`, `Django`。

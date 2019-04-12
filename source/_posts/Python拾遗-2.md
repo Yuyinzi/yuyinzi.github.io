@@ -2,6 +2,8 @@
 title: Python拾遗(2)
 date: 2019-04-10 16:03:16
 tags: Python 
+categories:
+    - Python
 ---
 主要包括`Python`中的基本数据类型。
 ## `int`

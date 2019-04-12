@@ -3,6 +3,8 @@ title: 《Redis设计与实现》读书笔记 第一部分
 date: 2019-04-10 14:05:33
 tags: Redis 
 toc: true
+categories:
+    - 数据库
 ---
 包括第二章到第八章，讲解`redis`中用到的基本数据结构。
 ## `SDS` 简单动态字符串
