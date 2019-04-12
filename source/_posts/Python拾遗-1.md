@@ -2,6 +2,8 @@
 title: Python拾遗(1) 
 date: 2019-04-10 15:46:27
 tags: Python 
+categories: 
+    - Python
 ---
 ## 虚拟机
 `python`会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。
