@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>常用排序算法的Python实现 | Yuyinzi&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="使用python实现冒泡排序，插入排序，选择排序，希尔排序，归并排序，快速排序和堆排序。">
+<meta name="keywords" content="Python,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用排序算法的Python实现">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/04/12/常用排序算法的Python实现/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s blog">
+<meta property="og:description" content="使用python实现冒泡排序，插入排序，选择排序，希尔排序，归并排序，快速排序和堆排序。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-12T11:53:31.209Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用排序算法的Python实现">
+<meta name="twitter:description" content="使用python实现冒泡排序，插入排序，选择排序，希尔排序，归并排序，快速排序和堆排序。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-常用排序算法的Python实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/12/常用排序算法的Python实现/" class="article-date">
+  <time datetime="2019-04-12T08:57:30.000Z" itemprop="datePublished">2019-04-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      常用排序算法的Python实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>使用<code>python</code>实现冒泡排序，插入排序，选择排序，希尔排序，归并排序，快速排序和堆排序。</p>
+<a id="more"></a>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>思路：通过交换相邻的两个数，使得更小的数在前较大的数在后(或反之)，每次便利后，最大的数则被交换至最后。对<code>n</code>个数需要<code>o(n^2)</code>的比较次数，对于包含大量元素的数列排序是很没有效率的。</p>
+<p>基本的<code>python</code>实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">BubbleSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, len(nums)-i):</span><br><span class="line">            <span class="keyword">if</span> nums[j] &lt; nums[j<span class="number">-1</span>]:</span><br><span class="line">                nums[j], nums[j<span class="number">-1</span>] = nums[j<span class="number">-1</span>], nums[j]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>思路：对于未排序数据，在已排序数据中从后向前扫描，找到相应位置并插入。需要用到<code>o(1)</code>的空间，平均算法复杂度为<code>o(n^2)</code>(最好情况下是<code>o(n)</code>)，同样的也不适合数据量大的排序应用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">InsertSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)<span class="number">-1</span>):</span><br><span class="line">        key = nums[i+<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i, <span class="number">-2</span>, <span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">if</span> key &lt; nums[j]:</span><br><span class="line">                nums[j+<span class="number">1</span>] = nums[j]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        nums[j+<span class="number">1</span>] = key</span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>思路：首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕(<code>维基百科</code>）。我写冒泡排序时，总是会和选择排序混在一起，与冒泡排序不同的是，每一次交换一对元素，至少有一个将会被移到最终位置上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SlectSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)):</span><br><span class="line">        min_idx = i</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i+<span class="number">1</span>, len(nums)):</span><br><span class="line">            <span class="keyword">if</span> nums[j] &lt; nums[min_idx]:</span><br><span class="line">                min_idx = j</span><br><span class="line">        nums[i], nums[min_idx] = nums[min_idx], nums[i]</span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>虽然总共比较次数需要<code>o(n^2)</code>，但是交换次数是<code>o(n)</code>，因此会比冒泡排序要快。</p>
+</blockquote>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>思路：通过将比较的元素分为几个区域从而提升插入排序的性能，然后逐渐递减步长，到了最后一步，即是普通的插入排序了。时间复杂度根据数组长度的变化而变化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ShellSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    step = len(nums) / <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> step:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(step):</span><br><span class="line">            nums[i::step] = InsertSort(nums[i::step])</span><br><span class="line">        step /= <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<p>优化过后，不需要每次都重新分配空间：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ShellSort1</span><span class="params">(nums)</span>:</span></span><br><span class="line">    step = len(nums) / <span class="number">2</span></span><br><span class="line">    <span class="keyword">while</span> step:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(step, len(nums)):</span><br><span class="line">            key, j = nums[i], i</span><br><span class="line">            <span class="comment"># 插入排序</span></span><br><span class="line">            <span class="keyword">while</span> j-step &gt;= <span class="number">0</span> <span class="keyword">and</span> nums[j-step] &gt; key:</span><br><span class="line">                nums[j] = nums[j-step]</span><br><span class="line">                j -= step</span><br><span class="line">            nums[j] = key</span><br><span class="line">        step /= <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>思路：将数组分成两部分，分别对两部分数组排序，再进行合并。因此需要两步：1.递归分解数组，2. 再进行合并。平均时间复杂度为<code>o(nlogn)</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MergeSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helpfunc</span><span class="params">(nums)</span>:</span></span><br><span class="line">        start, end = <span class="number">0</span>, len(nums)<span class="number">-1</span></span><br><span class="line">        <span class="keyword">if</span> start &lt; end:</span><br><span class="line">            <span class="comment"># 选择mid偏向于end的原因是</span></span><br><span class="line">            <span class="comment"># 当start最终等于mid时</span></span><br><span class="line">            <span class="comment"># 会使得nums[:mid]永远为空，nums[mid:]永远为nums[:]，从而进入死循环</span></span><br><span class="line">            mid = end - (end - start) / <span class="number">2</span></span><br><span class="line">            nums1 = helpfunc(nums[:mid])</span><br><span class="line">            nums2 = helpfunc(nums[mid:])</span><br><span class="line">            <span class="keyword">return</span> MergeArray(nums1, nums2)</span><br><span class="line">        <span class="keyword">return</span> nums</span><br><span class="line">    nums = helpfunc(nums)</span><br><span class="line">    <span class="keyword">return</span> nums</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MergeArray</span><span class="params">(nums1, nums2)</span>:</span></span><br><span class="line">    nums = []</span><br><span class="line">    i, j = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; len(nums1) <span class="keyword">and</span> j &lt; len(nums2):</span><br><span class="line">        <span class="keyword">if</span> nums1[i] &lt; nums2[j]:</span><br><span class="line">            nums.append(nums1[i])</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            nums.append(nums2[j])</span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">    nums.extend(nums1[i:] <span class="keyword">or</span> nums2[j:])</span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>思路：每次选取一个基准数，分别从两端开始遍历，将比基准数小的值放在前面，比基准数大的值放在后面，递归对基准值两端进行排序。平均时间复杂度为<code>o(logn)</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">QuickSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">helpfunc</span><span class="params">(start, end)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> start &gt;= end:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        left, right = start, end</span><br><span class="line">        <span class="comment"># 每次选取最左端的值为基准值</span></span><br><span class="line">        key = nums[left]</span><br><span class="line">        <span class="comment"># left始终放置比key小的值，right始终放置比key大的值</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">        		<span class="comment"># 从后往前遍历</span></span><br><span class="line">            <span class="keyword">while</span> right &gt;= <span class="number">0</span> <span class="keyword">and</span> nums[right] &gt; key:</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> left &lt; right:</span><br><span class="line">                nums[left] = nums[right]</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">						<span class="comment"># 从前往后遍历</span></span><br><span class="line">            <span class="keyword">while</span> left &lt; right <span class="keyword">and</span> nums[left] &lt; key:</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> left &lt; right:</span><br><span class="line">                nums[right] = nums[left]</span><br><span class="line">                right -= <span class="number">1</span></span><br><span class="line">        <span class="comment"># 直到left=right，找到该key的所在位置</span></span><br><span class="line">        nums[right] = key</span><br><span class="line">        helpfunc(start, right<span class="number">-1</span>)</span><br><span class="line">        helpfunc(right+<span class="number">1</span>, end)</span><br><span class="line">    helpfunc(<span class="number">0</span>, len(nums)<span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">return</span> nums</span><br></pre></td></tr></table></figure>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p>思路：通过构造一个最大堆或者最小堆，每次将最后一个元素与堆顶元素互换，再重新调整为堆，这样每次取出的元素要么是最大，要么就是最小。 初始化建堆的时间复杂度为<code>o(n)</code>，排序重建堆的时间复杂度为<code>o(nlogn)</code>，所以总的时间复杂度为<code>o(n+nlogn)=o(nlogn)</code>。</p>
+<blockquote>
+<p>对于节点<code>i</code>来说，其左右节点分别为<code>2*i+1</code>，<code>2*i+2</code>，每次调整只需要从非叶子节点开始。若数组长度为<code>n</code>，则堆从第<code>n/2-1</code>个节点开始往下调整。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">HeapSort</span><span class="params">(nums)</span>:</span></span><br><span class="line">    build_heap(nums)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">        nums[<span class="number">0</span>], nums[i] = nums[i], nums[<span class="number">0</span>]</span><br><span class="line">        max_heapify(<span class="number">0</span>, i)</span><br><span class="line">    <span class="keyword">return</span> nums</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将较大元素下沉</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_heapify</span><span class="params">(i, length)</span>:</span></span><br><span class="line">    key = nums[i]</span><br><span class="line">    left = <span class="number">2</span>*i+<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> left &lt; length:</span><br><span class="line">        <span class="comment"># 找出左右两个节点更小的那个</span></span><br><span class="line">        <span class="keyword">if</span> left+<span class="number">1</span> &lt; length <span class="keyword">and</span> nums[left] &gt; nums[left+<span class="number">1</span>]:</span><br><span class="line">            left += <span class="number">1</span></span><br><span class="line">        <span class="comment"># 根节点比子节点都小，无需调整</span></span><br><span class="line">        <span class="keyword">if</span> key &lt; nums[left]:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="comment"># 需要注意python的连续赋值</span></span><br><span class="line">        nums[left], nums[i] = nums[i], nums[left]</span><br><span class="line">        i = left</span><br><span class="line">        left, key = <span class="number">2</span>*i+<span class="number">1</span>, nums[i]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造堆</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_heap</span><span class="params">(nums)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)/<span class="number">2</span><span class="number">-1</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">        max_heapify(i, len(nums))</span><br></pre></td></tr></table></figure>
+<p><code>References</code>：</p>
+<p><a href="https://blog.csdn.net/MoreWindows/article/details/7961256" target="_blank" rel="noopener">白话经典算法系列之八 MoreWindows白话经典算法之七大排序总结篇</a></p>
+<p><a href="https://muxx.me/2018/09/06/%E5%A0%86%E6%8E%92%E5%BA%8F%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">堆排序时间复杂度分析</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/04/12/常用排序算法的Python实现/" data-id="cjue0k69d0001t08zxxakq4ab" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/11/Django源码分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Django源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#冒泡排序"><span class="toc-number">1.</span> <span class="toc-text">冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入排序"><span class="toc-number">2.</span> <span class="toc-text">插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">3.</span> <span class="toc-text">选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#希尔排序"><span class="toc-number">4.</span> <span class="toc-text">希尔排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归并排序"><span class="toc-number">5.</span> <span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序"><span class="toc-number">6.</span> <span class="toc-text">快速排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序"><span class="toc-number">7.</span> <span class="toc-text">堆排序</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
