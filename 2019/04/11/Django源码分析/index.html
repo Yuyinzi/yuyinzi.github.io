@@ -5,20 +5,20 @@
   
   <title>Django源码分析 | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="主要分析了运行python manage.py runserver所发生的事。">
+  <meta name="description" content="分析了运行python manage.py runserver后所发生的事。">
 <meta name="keywords" content="Python,Django">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Django源码分析">
-<meta property="og:url" content="http://hiddensorrow.github.io/2019/04/11/Django源码分析/index.html">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/04/11/Django源码分析/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
-<meta property="og:description" content="主要分析了运行python manage.py runserver所发生的事。">
+<meta property="og:description" content="分析了运行python manage.py runserver后所发生的事。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://hiddensorrow.github.io/assets/django_wsgi.png">
-<meta property="og:updated_time" content="2019-04-12T07:18:11.357Z">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/django_wsgi.png">
+<meta property="og:updated_time" content="2019-04-12T07:26:34.617Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django源码分析">
-<meta name="twitter:description" content="主要分析了运行python manage.py runserver所发生的事。">
-<meta name="twitter:image" content="http://hiddensorrow.github.io/assets/django_wsgi.png">
+<meta name="twitter:description" content="分析了运行python manage.py runserver后所发生的事。">
+<meta name="twitter:image" content="http://yuyinzi.github.io/assets/django_wsgi.png">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
@@ -48,7 +48,7 @@
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://hiddensorrow.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
       </div>
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
@@ -97,7 +97,7 @@
       
         <!-- Table of Contents -->
         
-        <p>主要分析了运行<code>python manage.py runserver</code>所发生的事。<br><a id="more"></a></p>
+        <p>分析了运行<code>python manage.py runserver</code>后所发生的事。<br><a id="more"></a></p>
 <h2 id="WSGI-uwsgi和uWSGI"><a href="#WSGI-uwsgi和uWSGI" class="headerlink" title="WSGI,uwsgi和uWSGI"></a><code>WSGI</code>,<code>uwsgi</code>和<code>uWSGI</code></h2><p><code>WSGI</code>：全称是<code>Web Server Gateway Interface</code>，是一种规范，只适用于<code>Python</code>语言。要实现<code>WSGI</code>协议，必须同时实现<code>web server</code>和<code>web application</code>，当前运行在<code>WSGI</code>协议之上的web框架有<code>Bottle</code>, <code>Flask</code>, <code>Django</code>。<br><code>uwsgi</code>：与<code>WSGI</code>一样是一种通信协议，是<code>uWSGI</code>服务器的独占协议，用于定义传输信息的类型(<code>type of information</code>)，每一个<code>uwsgi packet</code>前<code>4byte</code>为传输信息类型的描述，与<code>WSGI</code>协议是两种东西，据说该协议是<code>fcgi</code>协议的<code>10</code>倍快。<br><code>uWSGI</code>：是一个<code>web</code>服务器，实现了<code>WSGI</code>协议、<code>uwsgi</code>协议、<code>http</code>协议等。</p>
 <h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>入口函数在<code>manage.py</code>中，从<code>execute_from_command_line(sys.argv)</code>开始，这时候会传入<code>[manage.py文件在的位置，command(runserver)， 端口号]</code>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute_from_command_line</span><span class="params">(argv=None)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    A simple method that runs a ManagementUtility.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 使用argv进行实例化</span></span><br><span class="line">    utility = ManagementUtility(argv)</span><br><span class="line">    utility.execute()</span><br></pre></td></tr></table></figure></p>
 <p>接下来调用<code>execute()</code>方法，根据注释，这个方法根据<code>subcommand</code>解析出需要的操作：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Given the command-line arguments, this figures out which subcommand is</span></span><br><span class="line"><span class="string">    being run, creates a parser appropriate to that command, and runs it.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> settings.configured:</span><br><span class="line">        <span class="comment"># Start the auto-reloading dev server even if the code is broken.</span></span><br><span class="line">        <span class="comment"># The hardcoded condition is a code smell but we can't rely on a</span></span><br><span class="line">        <span class="comment"># flag on the command class because we haven't located it yet.</span></span><br><span class="line">        <span class="keyword">if</span> subcommand == <span class="string">'runserver'</span> <span class="keyword">and</span> <span class="string">'--noreload'</span> <span class="keyword">not</span> <span class="keyword">in</span> self.argv:</span><br><span class="line">            <span class="comment"># check_errors是一个闭包，中间执行的`django.setup`进行了一系列的导包操作</span></span><br><span class="line">            <span class="comment"># 包括`INSTALLED_APPS`，检查是否有重复的</span></span><br><span class="line">            <span class="comment"># 会有apps_ready，models_ready, ready三个状态</span></span><br><span class="line">               autoreload.check_errors(django.setup)()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 略去对help version命令的处理代码</span></span><br><span class="line">    self.fetch_command(subcommand).run_from_argv(self.argv)</span><br></pre></td></tr></table></figure></p>
@@ -123,7 +123,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/11/Django源码分析/" data-id="cjudqum4m0006sc8z5kkfvsbp" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/11/Django源码分析/" data-id="cjudqum4m0006sc8z5kkfvsbp" class="article-share-link">分享</a>
       
       
       

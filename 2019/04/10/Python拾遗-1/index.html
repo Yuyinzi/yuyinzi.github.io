@@ -5,18 +5,18 @@
   
   <title>Python拾遗(1) | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
+  <meta name="description" content="读《Python源码分析》的一些记录。">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python拾遗(1)">
-<meta property="og:url" content="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/index.html">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/04/10/Python拾遗-1/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
-<meta property="og:description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
+<meta property="og:description" content="读《Python源码分析》的一些记录。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T07:19:25.422Z">
+<meta property="og:updated_time" content="2019-04-12T07:27:15.161Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python拾遗(1)">
-<meta name="twitter:description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
+<meta name="twitter:description" content="读《Python源码分析》的一些记录。">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
@@ -46,7 +46,7 @@
         <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://hiddensorrow.github.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
       </div>
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
@@ -95,7 +95,8 @@
       
         <!-- Table of Contents -->
         
-        <h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p><code>python</code>会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。<br>虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：</p>
+        <p>读《<code>Python</code>源码分析》的一些记录。<br><a id="more"></a></p>
+<h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><p><code>python</code>会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。<br>虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：</p>
 <ul>
 <li>创建<code>__builtlin__</code>模块，持有所有内置类型和函数</li>
 <li>创建<code>sys</code>模块</li>
@@ -103,10 +104,9 @@
 <li>创建<code>__main__</code>模块，准备所需名字空间</li>
 <li>通过<code>site.py</code>将<code>site-packages</code>中的第三方扩展库添加到搜索路径列表</li>
 <li>执行入口<code>py</code>文件，执行前将<code>__main__.__dict__</code>作为名字空间传递进去</li>
-<li>程序执行结束后执行清理操作<a id="more"></a>
-<h2 id="类型和对象"><a href="#类型和对象" class="headerlink" title="类型和对象"></a>类型和对象</h2>每个对象都包含一个标准头，通过头部信息就可以明确知道其具体类型。头部信息由“引用计数”和“类型指针”组成。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">0x1234</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getsizeof(x)</span><br><span class="line"><span class="number">24</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)    //作为形参也会增加一次引用计数</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = x</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> y</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
-</li>
+<li>程序执行结束后执行清理操作</li>
 </ul>
+<h2 id="类型和对象"><a href="#类型和对象" class="headerlink" title="类型和对象"></a>类型和对象</h2><p>每个对象都包含一个标准头，通过头部信息就可以明确知道其具体类型。头部信息由“引用计数”和“类型指针”组成。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">0x1234</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getsizeof(x)</span><br><span class="line"><span class="number">24</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)    //作为形参也会增加一次引用计数</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y = x</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> y</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.getrefcount(x)</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure></p>
 <p>所有内置类型对象都能从<code>types</code>模块中找到，<code>int</code>、<code>long</code>、<code>str</code>都可以看做是简短别名：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> types</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x = <span class="number">20</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>type(x) <span class="keyword">is</span> types.IntType</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x.__class__</span><br><span class="line">&lt;type <span class="string">'int'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x.__class__ <span class="keyword">is</span> type(x)</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x.__class__ <span class="keyword">is</span> int</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>x.__class__ <span class="keyword">is</span> types.IntType</span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>实际上<code>python</code>中，名字实际上是字符串对象，和所指向的目标对象在命名空间中构成<code>{name: object}</code>关联。它有多种命名空间，比如<code>globals</code>(模块命名空间)，<code>locals</code>函数堆栈帧命名空间，以及<code>class</code>、<code>instance</code>等。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>globals()</span><br><span class="line">&#123;<span class="string">'__builtins__'</span>: &lt;module <span class="string">'__builtin__'</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">'__package__'</span>: <span class="literal">None</span>, <span class="string">'sys'</span>: &lt;module <span class="string">'sys'</span> (built-<span class="keyword">in</span>)&gt;, <span class="string">'x'</span>: <span class="number">123</span>, <span class="string">'__name__'</span>: <span class="string">'__main__'</span>, <span class="string">'__doc__'</span>: <span class="literal">None</span>, <span class="string">'types'</span>: &lt;module <span class="string">'types'</span> <span class="keyword">from</span> <span class="string">'/usr/lib/python2.7/types.pyc'</span>&gt;&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>globals()[<span class="string">"y"</span>] = <span class="string">"hello"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>y</span><br><span class="line"><span class="string">'hello'</span></span><br></pre></td></tr></table></figure></p>
 <blockquote>
@@ -169,7 +169,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqum4j0005sc8zqsyqxyn9" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqum4j0005sc8zqsyqxyn9" class="article-share-link">分享</a>
       
       
       
