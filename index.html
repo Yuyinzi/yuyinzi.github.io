@@ -3,17 +3,17 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>The winding path</title>
+  <title>Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
-<meta property="og:title" content="The winding path">
+<meta property="og:title" content="Yuyinzi&#39;s blog">
 <meta property="og:url" content="http://hiddensorrow.github.io/index.html">
-<meta property="og:site_name" content="The winding path">
+<meta property="og:site_name" content="Yuyinzi&#39;s blog">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="The winding path">
+<meta name="twitter:title" content="Yuyinzi&#39;s blog">
   
-    <link rel="alternate" href="/atom.xml" title="The winding path" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -55,7 +55,7 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">The winding path</a>
+        <a href="/" id="logo">Yuyinzi&#39;s blog</a>
       </h1>
       
     </div>
@@ -90,7 +90,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="WSGI-uwsgi和uWSGI"><a href="#WSGI-uwsgi和uWSGI" class="headerlink" title="WSGI,uwsgi和uWSGI"></a><code>WSGI</code>,<code>uwsgi</code>和<code>uWSGI</code></h2><p><code>WSGI</code>：全称是<code>Web Server Gateway Interface</code>，是一种规范，只适用于<code>Python</code>语言。要实现<code>WSGI</code>协议，必须同时实现<code>web server</code>和<code>web application</code>，当前运行在<code>WSGI</code>协议之上的web框架有<code>Bottle</code>, <code>Flask</code>, <code>Django</code>。<br><code>uwsgi</code>：与<code>WSGI</code>一样是一种通信协议，是<code>uWSGI</code>服务器的独占协议，用于定义传输信息的类型(<code>type of information</code>)，每一个<code>uwsgi packet</code>前<code>4byte</code>为传输信息类型的描述，与<code>WSGI</code>协议是两种东西，据说该协议是<code>fcgi</code>协议的<code>10</code>倍快。<br><code>uWSGI</code>：是一个<code>web</code>服务器，实现了<code>WSGI</code>协议、<code>uwsgi</code>协议、<code>http</code>协议等。<br>
+        <p>主要分析了运行<code>python manage.py runserver</code>所发生的事。<br>
         
           </p><p class="article-more-link">
             <a href="/2019/04/11/Django源码分析/#more">继续阅读全文 »</a>
@@ -99,7 +99,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/11/Django源码分析/" data-id="cjudqm9yi0000o68z69gf5hf8" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/11/Django源码分析/" data-id="cjudqum4m0006sc8z5kkfvsbp" class="article-share-link">分享</a>
       
       
       
@@ -139,15 +139,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>主要包括<code>Python</code>中的基本数据类型。</p>
-<h2 id="int"><a href="#int" class="headerlink" title="int"></a><code>int</code></h2><p>在<code>64</code>位平台上，<code>int</code>类型是<code>64</code>位整数：</p>
-<ul>
-<li>从堆上按需申请名为<code>PyIntBlcok</code>的缓存区域存储整数对象</li>
-<li>使用固定数组缓存<code>[-5， 257]</code>之间的小数字，只需计算下标就能获得指针</li>
-<li><code>PyIntBlock</code>内存不会返还给操作系统，直至进程结束</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">15</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">15</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">257</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">257</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
-<p>根据第三点，如果使用<code>range</code>创建巨大的数字列表，这就需要很大内存空间。但是换成<code>xrange</code>，每次迭代之后数字对象被回收，其占用内存空间出来并被复用，内存就不会暴涨。(仅指<code>python2</code>)。<br>当超出<code>int</code>限制时，会自动转换成为<code>long</code>。<br>
+        <p>主要包括<code>Python</code>中的基本数据类型。<br>
         
           </p><p class="article-more-link">
             <a href="/2019/04/10/Python拾遗-2/#more">继续阅读全文 »</a>
@@ -156,7 +148,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-2/" data-id="cjudqm9yx0004o68znayru8vj" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-2/" data-id="cjudqum4p0009sc8zwn08tjtm" class="article-share-link">分享</a>
       
       
       
@@ -213,7 +205,7 @@
       
     </li></ul></div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqm9yr0001o68zjs5og2e4" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqum4j0005sc8zqsyqxyn9" class="article-share-link">分享</a>
       
       
       
@@ -272,7 +264,7 @@
       
     </li></ul></div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" data-id="cjudqm9zs000mo68zfdx7x2ah" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" data-id="cjudqum4r000asc8z1cjctl4a" class="article-share-link">分享</a>
       
       
       
@@ -325,7 +317,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/03/Python线程-进程/" data-id="cjudqma0k000ro68zup97q3fk" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/03/Python线程-进程/" data-id="cjudqum5v000rsc8zv8pong0x" class="article-share-link">分享</a>
       
       
       
@@ -372,7 +364,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/03/Test/" data-id="cjudqm9yz0005o68ztamimw62" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/03/Test/" data-id="cjudqum3n0000sc8zv5cxvlmd" class="article-share-link">分享</a>
       
       
       

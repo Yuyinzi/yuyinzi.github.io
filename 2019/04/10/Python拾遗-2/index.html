@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Python拾遗(2) | The winding path</title>
+  <title>Python拾遗(2) | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="主要包括Python中的基本数据类型。 int在64位平台上，int类型是64位整数：  从堆上按需申请名为PyIntBlcok的缓存区域存储整数对象 使用固定数组缓存[-5， 257]之间的小数字，只需计算下标就能获得指针 PyIntBlock内存不会返还给操作系统，直至进程结束  123456789101112&amp;gt;&amp;gt;&amp;gt; a = 15&amp;gt;&amp;gt;&amp;gt; b = 15&amp;gt;">
+  <meta name="description" content="主要包括Python中的基本数据类型。">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python拾遗(2)">
 <meta property="og:url" content="http://hiddensorrow.github.io/2019/04/10/Python拾遗-2/index.html">
-<meta property="og:site_name" content="The winding path">
-<meta property="og:description" content="主要包括Python中的基本数据类型。 int在64位平台上，int类型是64位整数：  从堆上按需申请名为PyIntBlcok的缓存区域存储整数对象 使用固定数组缓存[-5， 257]之间的小数字，只需计算下标就能获得指针 PyIntBlock内存不会返还给操作系统，直至进程结束  123456789101112&amp;gt;&amp;gt;&amp;gt; a = 15&amp;gt;&amp;gt;&amp;gt; b = 15&amp;gt;">
+<meta property="og:site_name" content="Yuyinzi&#39;s blog">
+<meta property="og:description" content="主要包括Python中的基本数据类型。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T07:03:53.462Z">
+<meta property="og:updated_time" content="2019-04-12T07:19:54.597Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python拾遗(2)">
-<meta name="twitter:description" content="主要包括Python中的基本数据类型。 int在64位平台上，int类型是64位整数：  从堆上按需申请名为PyIntBlcok的缓存区域存储整数对象 使用固定数组缓存[-5， 257]之间的小数字，只需计算下标就能获得指针 PyIntBlock内存不会返还给操作系统，直至进程结束  123456789101112&amp;gt;&amp;gt;&amp;gt; a = 15&amp;gt;&amp;gt;&amp;gt; b = 15&amp;gt;">
+<meta name="twitter:description" content="主要包括Python中的基本数据类型。">
   
-    <link rel="alternate" href="/atom.xml" title="The winding path" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -60,7 +60,7 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">The winding path</a>
+        <a href="/" id="logo">Yuyinzi&#39;s blog</a>
       </h1>
       
     </div>
@@ -95,7 +95,7 @@
       
         <!-- Table of Contents -->
         
-        <p>主要包括<code>Python</code>中的基本数据类型。</p>
+        <p>主要包括<code>Python</code>中的基本数据类型。<br><a id="more"></a></p>
 <h2 id="int"><a href="#int" class="headerlink" title="int"></a><code>int</code></h2><p>在<code>64</code>位平台上，<code>int</code>类型是<code>64</code>位整数：</p>
 <ul>
 <li>从堆上按需申请名为<code>PyIntBlcok</code>的缓存区域存储整数对象</li>
@@ -103,7 +103,7 @@
 <li><code>PyIntBlock</code>内存不会返还给操作系统，直至进程结束</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">15</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">15</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">1000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = <span class="number">257</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = <span class="number">257</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a <span class="keyword">is</span> b</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
-<p>根据第三点，如果使用<code>range</code>创建巨大的数字列表，这就需要很大内存空间。但是换成<code>xrange</code>，每次迭代之后数字对象被回收，其占用内存空间出来并被复用，内存就不会暴涨。(仅指<code>python2</code>)。<br>当超出<code>int</code>限制时，会自动转换成为<code>long</code>。<br><a id="more"></a></p>
+<p>根据第三点，如果使用<code>range</code>创建巨大的数字列表，这就需要很大内存空间。但是换成<code>xrange</code>，每次迭代之后数字对象被回收，其占用内存空间出来并被复用，内存就不会暴涨。(仅指<code>python2</code>)。<br>当超出<code>int</code>限制时，会自动转换成为<code>long</code>。</p>
 <h2 id="float"><a href="#float" class="headerlink" title="float"></a><code>float</code></h2><p>在<code>python2</code>中，<code>/</code>默认返回整数，而<code>python3</code>中默认返回浮点数。如果需要准确控制运算精度，有效位数和<code>round</code>的结果，使用<code>Decimal</code>代替。(但是建议往<code>Decimal</code>传入字符串型的浮点数 – (为什么你需要少看垃圾博客以及如何在Python里精确地四舍五入)[<a href="https://zhuanlan.zhihu.com/p/60952919]" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/60952919]</a>)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> decimal <span class="keyword">import</span> Decimal, ROUND_UP, ROUND_DOWN</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>float(<span class="string">'0.1'</span>) * <span class="number">3</span> == float(<span class="string">'0.3'</span>)</span><br><span class="line"><span class="literal">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>Decimal(<span class="string">'0.1'</span>) * <span class="number">3</span> == Decimal(<span class="string">'0.3'</span>)</span><br><span class="line"><span class="literal">True</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="string"><a href="#string" class="headerlink" title="string"></a><code>string</code></h2><h3 id="不太熟的方法"><a href="#不太熟的方法" class="headerlink" title="不太熟的方法"></a>不太熟的方法</h3><ul>
 <li><code>splitlines()</code>: 按行分割</li>
@@ -214,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-2/" data-id="cjudqm9yx0004o68znayru8vj" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-2/" data-id="cjudqum4p0009sc8zwn08tjtm" class="article-share-link">分享</a>
       
       
       

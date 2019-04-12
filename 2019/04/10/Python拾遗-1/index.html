@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Python拾遗(1) | The winding path</title>
+  <title>Python拾遗(1) | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python拾遗(1)">
 <meta property="og:url" content="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/index.html">
-<meta property="og:site_name" content="The winding path">
+<meta property="og:site_name" content="Yuyinzi&#39;s blog">
 <meta property="og:description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-12T06:33:35.522Z">
+<meta property="og:updated_time" content="2019-04-12T07:19:25.422Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python拾遗(1)">
 <meta name="twitter:description" content="虚拟机python会在模块载入时将源码编译成字节码，然后字节码会被虚拟机在核心函数中解释执行。虚拟机开始运行时，通过初始化函数完成整个运行环境设置，包括：  创建__builtlin__模块，持有所有内置类型和函数 创建sys模块 初始化内置Exception 创建__main__模块，准备所需名字空间 通过site.py将site-packages中的第三方扩展库添加到搜索路径列表 执行入口py">
   
-    <link rel="alternate" href="/atom.xml" title="The winding path" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -60,7 +60,7 @@
     </div>
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">The winding path</a>
+        <a href="/" id="logo">Yuyinzi&#39;s blog</a>
       </h1>
       
     </div>
@@ -146,7 +146,7 @@
 <p>包含<code>__del__</code>方法的循环引用对象，永远不会被<code>GC</code>回收，直至进程终止。</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(object)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="function"><span class="keyword">def</span> <span class="title">__del__</span><span class="params">(self)</span>:</span> <span class="keyword">pass</span></span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">callback</span><span class="params">(r)</span>:</span> <span class="keyword">print</span> r, <span class="string">"dead!"</span></span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_LEAK)   <span class="comment"># 输出详细的回收状态信息</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>gc.isenabled()</span><br><span class="line"><span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = User(); wa = weakref.ref(a, callback)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b = User(); wb = weakref.ref(b, callback)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a.b = b; b.a = a</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">del</span> a; <span class="keyword">del</span> b</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>gc.collect()                                </span><br><span class="line">gc: collecting generation <span class="number">2.</span>..</span><br><span class="line">gc: objects <span class="keyword">in</span> each generation: <span class="number">10</span> <span class="number">0</span> <span class="number">3637</span></span><br><span class="line">gc: uncollectable &lt;User <span class="number">0x7f14e24e1210</span>&gt;            <span class="comment"># a</span></span><br><span class="line">gc: uncollectable &lt;User <span class="number">0x7f14e24e1250</span>&gt;            <span class="comment"># b</span></span><br><span class="line">gc: uncollectable &lt;dict <span class="number">0x7f14e2550b40</span>&gt;            <span class="comment"># a.__dict__</span></span><br><span class="line">gc: uncollectable &lt;dict <span class="number">0x7f14e2550910</span>&gt;            <span class="comment"># b.__dict__</span></span><br><span class="line">gc: done, <span class="number">4</span> unreachable, <span class="number">4</span> uncollectable, <span class="number">0.0023</span>s elapsed.</span><br><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
-<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>要运行<code>python</code>程序，必须将源码编译成字节码。通常情况下，编译器会将源码转化成字节码后保存在<code>pyc</code>文件中。编译发生在模块载入那一刻。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>要运行<code>python</code>程序，必须将源码编译成字节码。通常情况下，编译器会将源码转化成字节码后保存在<code>pyc</code>文件中。编译发生在模块载入那一刻。</p>
 <ul>
 <li><p>载入<code>pyc</code>流程：</p>
 <ul>
@@ -169,7 +169,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqm9yr0001o68zjs5og2e4" class="article-share-link">分享</a>
+      <a data-url="http://hiddensorrow.github.io/2019/04/10/Python拾遗-1/" data-id="cjudqum4j0005sc8zqsyqxyn9" class="article-share-link">分享</a>
       
       
       
@@ -269,7 +269,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟机"><span class="toc-number">1.</span> <span class="toc-text">虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型和对象"><span class="toc-number">2.</span> <span class="toc-text">类型和对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名空间"><span class="toc-number">3.</span> <span class="toc-text">命名空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理"><span class="toc-number">4.</span> <span class="toc-text">内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用传递"><span class="toc-number">4.1.</span> <span class="toc-text">引用传递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#深拷贝与浅拷贝"><span class="toc-number">4.2.</span> <span class="toc-text">深拷贝与浅拷贝</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#引用计数"><span class="toc-number">4.2.1.</span> <span class="toc-text">引用计数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱引用"><span class="toc-number">4.3.</span> <span class="toc-text">弱引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾回收"><span class="toc-number">4.4.</span> <span class="toc-text">垃圾回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译"><span class="toc-number">4.5.</span> <span class="toc-text">编译</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟机"><span class="toc-number">1.</span> <span class="toc-text">虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型和对象"><span class="toc-number">2.</span> <span class="toc-text">类型和对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命名空间"><span class="toc-number">3.</span> <span class="toc-text">命名空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理"><span class="toc-number">4.</span> <span class="toc-text">内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用传递"><span class="toc-number">4.1.</span> <span class="toc-text">引用传递</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#深拷贝与浅拷贝"><span class="toc-number">4.2.</span> <span class="toc-text">深拷贝与浅拷贝</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#引用计数"><span class="toc-number">4.2.1.</span> <span class="toc-text">引用计数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱引用"><span class="toc-number">4.3.</span> <span class="toc-text">弱引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾回收"><span class="toc-number">4.4.</span> <span class="toc-text">垃圾回收</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-number">5.</span> <span class="toc-text">编译</span></a></li></ol>
           </div>
       </div>
     </div>
