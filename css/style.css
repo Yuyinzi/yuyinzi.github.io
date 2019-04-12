@@ -633,7 +633,7 @@ a.article-title:hover {
 }
 .article-entry blockquote {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.4em;
+  font-size: 1em;
   margin: 1.6em 20px;
   padding: 0.5em 1em;
   overflow: auto;
@@ -1233,8 +1233,8 @@ a.article-title:hover {
   font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
 }
 .article-entry code {
-  background: #ffc0cb;
-  color: #333;
+  background: none;
+  color: #ab073f;
   border-radius: 4px;
   margin: auto 3px;
   padding: 0 0.3em;
@@ -1590,7 +1590,7 @@ span.ua .location:before {
   text-transform: none !important;
 }
 .follow {
-  text-align: center !important;
+  text-align: left !important;
   font-size: 2em !important;
   line-height: 1em !important;
 }
@@ -1721,10 +1721,10 @@ span.ua .location:before {
 }
 .widget {
   color: #777;
-  background: #deebf7 /*#ddd*/;
+  background: none /*#ddd*/;
   -webkit-box-shadow: 0 -1px 4px #eee inset;
   box-shadow: 0 -1px 4px #eee inset;
-  border: 1px solid #eee;
+  border: none;
   padding: 15px;
   border-radius: 10px;
 }
