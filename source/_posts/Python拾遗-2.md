@@ -5,7 +5,7 @@ tags: Python
 categories:
     - Python
 ---
-主要包括`Python`中的基本数据类型。
+包括`Python`中的常用数据类型。
 <!-- more -->
 ## `int`
 在`64`位平台上，`int`类型是`64`位整数：
