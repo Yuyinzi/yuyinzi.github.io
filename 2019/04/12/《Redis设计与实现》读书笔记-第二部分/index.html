@@ -5,18 +5,18 @@
   
   <title>《Redis设计与实现》读书笔记 第二部分 | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 redis服务器是如何启动及初始化的">
+  <meta name="description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 serverCron是如何管理服务器资源的 redis服务器是如何启动及初始化的">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Redis设计与实现》读书笔记 第二部分">
 <meta property="og:url" content="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
-<meta property="og:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 redis服务器是如何启动及初始化的">
+<meta property="og:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 serverCron是如何管理服务器资源的 redis服务器是如何启动及初始化的">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-13T08:57:40.212Z">
+<meta property="og:updated_time" content="2019-04-13T09:00:38.130Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Redis设计与实现》读书笔记 第二部分">
-<meta name="twitter:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 redis服务器是如何启动及初始化的">
+<meta name="twitter:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭 当接收到一个请求时，redis服务器是如何处理的 serverCron是如何管理服务器资源的 redis服务器是如何启动及初始化的">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
@@ -103,6 +103,7 @@
 <li><code>redis</code>是如何实现单线程下的事件驱动的</li>
 <li><code>redis</code>客户端是如何保存的，有哪些属性，在什么情况下会被关闭</li>
 <li>当接收到一个请求时，<code>redis</code>服务器是如何处理的</li>
+<li><code>serverCron</code>是如何管理服务器资源的</li>
 <li><code>redis</code>服务器是如何启动及初始化的</li>
 </ul>
 <a id="more"></a>
