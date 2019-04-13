@@ -14,6 +14,8 @@ categories:
 - `RDB`与`AOF`的原理，以及`AOF`的重写
 - `redis`是如何实现单线程下的事件驱动的
 - `redis`客户端是如何保存的，有哪些属性，在什么情况下会被关闭
+- 当接收到一个请求时，`redis`服务器是如何处理的
+- `redis`服务器是如何启动及初始化的
 
 <!-- more -->
 
@@ -55,7 +57,7 @@ struct redisServer {
   pid_t rdb_child_pid; 
   pid_t aof_cild_pid; 
   int cronloops; 
-	...
+  ...
 } 
 ```
 
@@ -72,7 +74,7 @@ struct redisClient{
   int flags;
   sds querybuf;
   robj ** argv; 
-	int argc;
+  int argc;
   struct redisCommand * cmd;
   // 输出缓冲区/当前已使用字节数量
   char buf[REDIS_REPLY_CHUNK_BYTES];
@@ -84,7 +86,7 @@ struct redisClient{
   time_t ctime;
   time_t lastinteraction;
   time_t obuf_soft_limit_reached_time;
-	...
+  ...
 } 
 ```
 
