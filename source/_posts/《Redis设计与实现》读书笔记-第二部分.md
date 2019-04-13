@@ -17,17 +17,17 @@ categories:
 
 <!-- more -->
 
-\##  服务器和客户端的数据结构
+##  服务器和客户端的数据结构
 
 服务器：
 
 ```C 
-struct redisServer { 
-	// 第9章，保存服务器中所有数据库的数组，服务器数据库默认数量(16个)
-	redisDb *db;
+struct redisServer {
+  // 第9章，保存服务器中所有数据库的数组，服务器数据库默认数量(16个)
+  redisDb * db;
   int dbnum;
   // 第10章，记录save选项的数组
-  struct saveparam *saveparam;
+  struct saveparam * saveparam;
   // 距离上一次成功执行save或者bgsave，服务器经过的修改次数
   long long dirty;
   // 上一次成功执行save或者bgsave的时间
@@ -35,10 +35,10 @@ struct redisServer {
   // 第11章，AOF缓冲区
   sds aof_buf;
   // 第13章，所有客户端状态/LUA脚本伪客户端
-  list *clients;
-  redisClient *lua_client;
-  
-	// 第14章，服务器当前时间戳/10s更新一次的时钟缓存 
+  list * clients;
+  redisClient * lua_client;
+
+  // 第14章，服务器当前时间戳/10s更新一次的时钟缓存 
   time_t unixtime; 
   long long mstime; 
   unsigned lruclock:22; 
@@ -65,14 +65,15 @@ struct redisServer {
 struct redisClient{ 
   // 第9章，记录客户端当前使用的数据库
   redisDb *db;
-	// 第13章，客户端socket描述符/名字/role/输入缓冲区/命令与命令参数/命令实现函数指针
+
+  // 第13章，客户端socket描述符/名字/role/输入缓冲区/命令与命令参数/命令实现函数指针
   int fd;
   robj * name;
   int flags;
   sds querybuf;
   robj ** argv; 
 	int argc;
-  struct redisCommand *cmd;
+  struct redisCommand * cmd;
   // 输出缓冲区/当前已使用字节数量
   char buf[REDIS_REPLY_CHUNK_BYTES];
   int bufpos;
@@ -110,7 +111,7 @@ struct redisObject{
 ```C 
 struct redisDb{
   dict * dict;
-  dict *expires;
+  dict * expires;
   ...
 }
 ```
