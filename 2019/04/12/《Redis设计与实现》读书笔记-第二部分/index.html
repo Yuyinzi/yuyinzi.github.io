@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>《Redis设计与实现》读书笔记 第二部分 | Yuyinzi&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Redis设计与实现》读书笔记 第二部分">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s blog">
+<meta property="og:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-13T08:49:58.764Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《Redis设计与实现》读书笔记 第二部分">
+<meta name="twitter:description" content="第二部分主要解决下面的问题：  数据库在服务器中是如何保存的 过期键是如何保存的以及如何被清理的 RDB与AOF的原理，以及AOF的重写 redis是如何实现单线程下的事件驱动的 redis客户端是如何保存的，有哪些属性，在什么情况下会被关闭">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s blog</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-《Redis设计与实现》读书笔记-第二部分" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" class="article-date">
+  <time datetime="2019-04-12T12:43:13.000Z" itemprop="datePublished">2019-04-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《Redis设计与实现》读书笔记 第二部分
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>第二部分主要解决下面的问题：</p>
+<ul>
+<li>数据库在服务器中是如何保存的</li>
+<li>过期键是如何保存的以及如何被清理的</li>
+<li><code>RDB</code>与<code>AOF</code>的原理，以及<code>AOF</code>的重写</li>
+<li><code>redis</code>是如何实现单线程下的事件驱动的</li>
+<li><code>redis</code>客户端是如何保存的，有哪些属性，在什么情况下会被关闭</li>
+</ul>
+<a id="more"></a>
+<p>##  服务器和客户端的数据结构</p>
+<p>服务器：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisServer</span> &#123;</span> </span><br><span class="line">	<span class="comment">// 第9章，保存服务器中所有数据库的数组，服务器数据库默认数量(16个)</span></span><br><span class="line">	redisDb *db;</span><br><span class="line">  <span class="keyword">int</span> dbnum;</span><br><span class="line">  <span class="comment">// 第10章，记录save选项的数组</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">saveparam</span> *<span class="title">saveparam</span>;</span></span><br><span class="line">  <span class="comment">// 距离上一次成功执行save或者bgsave，服务器经过的修改次数</span></span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> dirty;</span><br><span class="line">  <span class="comment">// 上一次成功执行save或者bgsave的时间</span></span><br><span class="line">  <span class="keyword">time_t</span> lastsave;</span><br><span class="line">  <span class="comment">// 第11章，AOF缓冲区</span></span><br><span class="line">  sds aof_buf;</span><br><span class="line">  <span class="comment">// 第13章，所有客户端状态/LUA脚本伪客户端</span></span><br><span class="line">  <span class="built_in">list</span> *clients;</span><br><span class="line">  redisClient *lua_client;</span><br><span class="line">  </span><br><span class="line">	<span class="comment">// 第14章，服务器当前时间戳/10s更新一次的时钟缓存 </span></span><br><span class="line">  <span class="keyword">time_t</span> unixtime; </span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> mstime; </span><br><span class="line">  <span class="keyword">unsigned</span> lruclock:<span class="number">22</span>; </span><br><span class="line">  <span class="comment">// 上一次抽样时间/已执行命令数量/抽样结果/环形数组索引值 </span></span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> ops_sec_last_sample_time; </span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> ops_sec_lst_sample_ops; </span><br><span class="line">  <span class="keyword">long</span> <span class="keyword">long</span> ops_sec_samples[REDIS_OPS_SEC_SAMPLES]; </span><br><span class="line">  <span class="keyword">int</span> ops_sec_idx; </span><br><span class="line">  <span class="comment">// 已使用内存峰值/关闭服务器标识/BGREWRITEAOF延迟 </span></span><br><span class="line">  <span class="keyword">size_t</span> stat_peak_memory; </span><br><span class="line">  <span class="keyword">int</span> shutdown_asap; </span><br><span class="line">  <span class="keyword">int</span> aof_rewrite_scheduled; </span><br><span class="line">  <span class="comment">// 记录执行BGSAVE/BGREWRITEAOF的子进程ID/serverCron计数器 </span></span><br><span class="line">  <span class="keyword">pid_t</span> rdb_child_pid; </span><br><span class="line">  <span class="keyword">pid_t</span> aof_cild_pid; </span><br><span class="line">  <span class="keyword">int</span> cronloops; </span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisClient</span>&#123;</span> </span><br><span class="line">  <span class="comment">// 第9章，记录客户端当前使用的数据库</span></span><br><span class="line">  redisDb *db;</span><br><span class="line">	<span class="comment">// 第13章，客户端socket描述符/名字/role/输入缓冲区/命令与命令参数/命令实现函数指针</span></span><br><span class="line">  <span class="keyword">int</span> fd;</span><br><span class="line">  robj * name;</span><br><span class="line">  <span class="keyword">int</span> flags;</span><br><span class="line">  sds querybuf;</span><br><span class="line">  robj ** argv; </span><br><span class="line">	<span class="keyword">int</span> argc;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">redisCommand</span> *<span class="title">cmd</span>;</span></span><br><span class="line">  <span class="comment">// 输出缓冲区/当前已使用字节数量</span></span><br><span class="line">  <span class="keyword">char</span> buf[REDIS_REPLY_CHUNK_BYTES];</span><br><span class="line">  <span class="keyword">int</span> bufpos;</span><br><span class="line">  <span class="built_in">list</span> * reply;</span><br><span class="line">  <span class="comment">// 身份验证，通过验证为1</span></span><br><span class="line">  <span class="keyword">int</span> authenticated;</span><br><span class="line">  <span class="comment">// 客户端创建时间/最后一次互动时间/缓冲区到达软性限制时间</span></span><br><span class="line">  <span class="keyword">time_t</span> ctime;</span><br><span class="line">  <span class="keyword">time_t</span> lastinteraction;</span><br><span class="line">  <span class="keyword">time_t</span> obuf_soft_limit_reached_time;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Redis</code>对象：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span>&#123;</span> </span><br><span class="line">  <span class="comment">// 第14章，对象最后一次被命令访问的时间 </span></span><br><span class="line">  <span class="keyword">unsigned</span> lru:<span class="number">22</span>; </span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="第九章-数据库"><a href="#第九章-数据库" class="headerlink" title="第九章 数据库"></a>第九章 数据库</h2><h3 id="数据库键空间"><a href="#数据库键空间" class="headerlink" title="数据库键空间"></a>数据库键空间</h3><p><code>redisClient</code>中的<code>db</code>指针指向<code>redisServer</code>的<code>db</code>，<code>select</code>命令可以修改该指针，从而指向服务器中的不同数据库。</p>
+<p>每一个数据库都由<code>redisDb</code>对象表示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisDb</span>&#123;</span></span><br><span class="line">  dict * dict;</span><br><span class="line">  dict *expires;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>dict</code>字典保存了数据库中的所有键值对(键空间)。每个键都是一个字符串对象，值可以是五种对象中的任意一种。<code>flushdb</code>就是通过删除所有键值对实现的。</p>
+</blockquote>
+<h3 id="键的过期设置原理"><a href="#键的过期设置原理" class="headerlink" title="键的过期设置原理"></a>键的过期设置原理</h3><p>设置键的过期时间可以通过<code>expire</code>，<code>pexpire</code>,<code>expireat</code>三个命令，但最终都是通过<code>pexpireat</code>实现的。</p>
+<p><code>expires</code>字典保存了数据库的所有键的过期时间，其中键指向指向键空间的某个对象 ，值是一个<code>long long</code>类型的整数，保存了毫秒精度的<code>unix</code>时间戳。使用<code>persist</code>可以从<code>expires</code>字典中解除键和值的关联。</p>
+<h3 id="过期键的删除策略"><a href="#过期键的删除策略" class="headerlink" title="过期键的删除策略"></a>过期键的删除策略</h3><p>过期键的删除策略有三种：</p>
+<ul>
+<li>定时删除：为每一个过期键创建一个定时器，在过期时间来临时，执行对键的删除。</li>
+<li>惰性删除：每次从键空间中获取键时，检查是否过期，过期了进行删除，否则返回该键。</li>
+<li>定期删除：每隔一段时间，对数据库进行检查，删除过期键。</li>
+</ul>
+<p>其中定时删除和定期删除是主动删除，惰性删除是被动删除。每种方式都有优缺点：</p>
+<ul>
+<li>定时删除可以尽快删除过期键，释放内存。但是会占用大量<code>CPU</code>，对服务器响应时间和吞吐量造成影响。同时，创建定时器需要使用时间事件，它的实现方式是无序链表，查找复杂度为<code>o(n)</code>。</li>
+<li>惰性删除对<code>CPU</code>是最后好的，但是对内存是最不友好的。</li>
+<li>定期删除是以上两种的折中，但是难以确定操作的时长和频率。否则容易退化成上面两种。</li>
+</ul>
+<p><strong>综上</strong>：</p>
+<p><code>redis</code>服务器实际采用的是惰性删除和定期删除。定期删除由<code>serverCron</code>执行调用<code>activeExpireCycle</code>。它在每次执行中，都从一定量的数据库中随机抽取键进行检查，并对过期键进行删除，在下一次调用时接着上一次的进度进行处理。</p>
+<h3 id="持久化和复制对过期键的处理"><a href="#持久化和复制对过期键的处理" class="headerlink" title="持久化和复制对过期键的处理"></a>持久化和复制对过期键的处理</h3><p><code>RDB</code>:</p>
+<ul>
+<li><p>使用<code>save</code>或者<code>bgsave</code>创建新的<code>RDB</code>时，过期键并不会保存到新的<code>RDB</code>文件中。</p>
+</li>
+<li><p>当以主服务器模式载入<code>RDB</code>时，会忽略过期键。而从服务器载入<code>RDB</code>时，并不会对过期键进行检查。</p>
+</li>
+</ul>
+<p><code>AOF</code>: </p>
+<ul>
+<li>写入<code>AOF</code>时，如果键已经过期，但还未被删除，<code>AOF</code>并不会产生任何影响。因为当该键被删除后，会向<code>AOF</code>追加一条<code>del</code>命令。</li>
+<li>重写<code>AOF</code>时，并不会写入过期键。</li>
+</ul>
+<p>复制：</p>
+<ul>
+<li>主服务器删除过期键会通知从服务器删除。</li>
+<li>从服务器收到客户端的读命令时，即使键已经过期，也不会删除；它只在从服务器发送的<code>del</code>命令后才会删除过期键。</li>
+</ul>
+<h3 id="数据库通知"><a href="#数据库通知" class="headerlink" title="数据库通知"></a>数据库通知</h3><p>自<code>2.8</code>之后，客户端可以通过订阅给定的频道或者模式，获知数据库中键的变化。每当<code>redis</code>命令需要发送数据库通知时，该命令中包含的实现函数会调用<code>notify-KeyspaceEvent</code>，根据<code>type</code>值判断通知是否是服务器配置中<code>notify-keyspace-events</code>的类型，从而决定是否要发送通知。</p>
+<h2 id="第十章-RDB持久化"><a href="#第十章-RDB持久化" class="headerlink" title="第十章 RDB持久化"></a>第十章 <code>RDB</code>持久化</h2><p><code>RDB</code>可以将<code>redis</code>在内存中的数据库状态保存到磁盘中，生成的<code>RDB</code>文件是一个经过压缩的二进制文件。</p>
+<p>通过<code>save</code>和<code>bgsave</code>可以生成<code>RDB</code>文件，不同的是，前者将会阻塞服务器，执行期间，服务器不能处理任何请求；后者会派生出一个新的子进程，由子进程负责创建，父进程继续处理命令请求。</p>
+<p>只要启动时检测到有<code>RDB</code>的存在，就会自动载入。服务器在载入时，一直处于阻塞状态。</p>
+<blockquote>
+<p> 由于<code>AOF</code>的更新频率更高一些，如果开启了<code>AOF</code>持久化，会优先使用<code>AOF</code>文件还原数据库。</p>
+</blockquote>
+<p>通过配置服务器的<code>save</code>选项，可以让服务器每隔一段时间自动执行<code>bgsave</code>(可以有多个选项，只要满足其中一个便开始执行，根据<code>server</code>的<code>dirty</code>，<code>lastsave</code>来判断)。</p>
+<h2 id="第十一章-AOF持久化"><a href="#第十一章-AOF持久化" class="headerlink" title="第十一章 AOF持久化"></a>第十一章 <code>AOF</code>持久化</h2><p><code>RDB</code>是通过保存数据库中的键值对来记录数据库的状态，<code>AOF</code>是通过保存服务器执行的<strong>写命令</strong>来记录的。<code>AOF</code>持久化包括命令追加，文件写入和文件同步。</p>
+<p>命令追加是将服务器锁执行的命令追加到<code>server</code>的<code>aof_buf</code>缓冲区。在每一次事件循环中，<code>redis</code>都会考虑是否要(由<code>appendfsync</code>决定)将缓冲区的内容写入(写入到内存缓冲区)和同步到<code>AOF</code>里(写入到磁盘中)。</p>
+<p>当系统载入<code>AOF</code>时，会创建一个不带网络连接的伪客户端，来执行所有<code>AOF</code>中的命令，从而还原数据库。</p>
+<h3 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a><code>AOF</code>重写</h3><p>当<code>AOF</code>文件过大时，系统采用重写创建一个新的<code>AOF</code>文件来替代原有的文件，不会包含浪费空间的冗余命令。</p>
+<p>事实上，重写的过程<strong>不需要对现有的<code>AOF</code>文件进行分析</strong>，它是<strong>通过读取服务器当前数据库状态来实现的</strong>：读取数据库中键现在的值，然后使用一条命令代替原先的多条命令(如果元素数量太多，为了避免缓冲区溢出，还是会采取多条记录的~)。</p>
+<p>为了避免重写时阻塞服务器，<code>redis</code>采用后台重写的方式，即在子进程中执行重写。但这样会带来的问题是，服务器仍然在接受请求，重写的文件所保存的数据库与当前数据并不一致。为了解决这个问题，<code>redis</code>设置了<code>AOF</code>重写缓冲区，当<code>redis</code>执行完写命令，它会将这条命令同时追加到<code>AOF</code>缓冲区和<code>AOF</code>重写缓冲区中。</p>
+<blockquote>
+<p>从创建子进程开始，服务器的所有写命令都会追加到<code>AOF</code>重写缓冲区中。</p>
+</blockquote>
+<p>当重写完成之后，会将所有<code>AOF</code>重写缓冲区的命令写入到新<code>AOF</code>中，并对新文件进行改名，覆盖原来的<code>AOF</code>文件。</p>
+<h2 id="第十二章-事件"><a href="#第十二章-事件" class="headerlink" title="第十二章 事件"></a>第十二章 事件</h2><p><code>redis</code>服务器是一个事件驱动程序，需要处理的有：</p>
+<ul>
+<li>文件事件，即<code>socket</code></li>
+<li>时间事件，即定时</li>
+</ul>
+<h3 id="文件事件"><a href="#文件事件" class="headerlink" title="文件事件"></a>文件事件</h3><p>文件事件处理器由四个部分组成：套接字，<code>I/O</code>多路复用程序，文件事件分派器和事件处理器。</p>
+<p><code>I/O</code>多路复用监听多个套接字，并且将产生事件的套接字放入队列之中，以有序、同步，每次一个的方式向文件事件分派器传送套接字。服务器会为不同人物的套接字关联不同的事件处理器。</p>
+<blockquote>
+<p>只有上一个套接字产生的事件被所关联的事件处理器处理完毕，才会传送下一个套接字。</p>
+</blockquote>
+<p><code>I/O</code>多路复用的功能通过包装常见的<code>select</code>，<code>epoll</code>和<code>kqueue</code>来实现，程序会在编译时自动选择性能最高的函数库作为底层实现。它负责监听套接字的<code>AE_READABLE</code>(当客户端对<code>socket</code>进行写操作，或者<code>close</code>操作，或者有新的客户端连接)和<code>AE_WRITABLE</code>(客户端对<code>socket</code>进行读操作)事件。如果同时产生了这两种事件，即<code>socket</code>既可读又可写，将首先处理读事件。</p>
+<p>事件处理器是如何工作的：</p>
+<p>当一个客户端与服务器进行连接时(<code>connect</code>)，监听<code>socket</code>会产生<code>AE_READABLE</code>事件，此时与此<code>socket</code>关联连接应答处理器会进行处理；</p>
+<p>接下来，客户端通过该处理器成功连接到服务器之后(<code>accept</code>)，服务器会产生客户端<code>socket</code>，并关联到命令请求处理器上。当客户端向服务器发送命令请求的时候，产生<code>AE_READABLE</code>事件引发命令请求处理器执行，处理器读取命令内容，然后交由其他程序执行；</p>
+<p>当服务器有命令恢复需要传送给客户端时，会将该<code>socket</code>的<code>AE_WRITABLE</code>事件和命令回复器关联，当客户端准备好接收回复时，引发命令回复器执行。当命令回复发送完毕后，移除可写事件与套接字的关联。</p>
+<h3 id="时间事件"><a href="#时间事件" class="headerlink" title="时间事件"></a>时间事件</h3><p>时间事件包括了定时事件和周期性事件，而目前只采用了后者(正常模式下只使用一个<code>serverCron</code>)。</p>
+<p>服务器将所有的时间事件都放在一个无序链表(新来的事件总是插入到表头，但每个节点的<code>when</code>值并不是有序的)中，每当时间事件执行器运行时，就遍历整个列表，查找已到达的时间事件，并调用相应的处理器。</p>
+<blockquote>
+<p>因为在无序链表中查找一个元素的复杂度为<code>o(n)</code>，所以对过期键采用定时删除并不合理。</p>
+</blockquote>
+<h3 id="事件调度"><a href="#事件调度" class="headerlink" title="事件调度"></a>事件调度</h3><p>事件调度与执行可以表述如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">aeProcessEvents</span><span class="params">()</span>:</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment"># 略去对阻塞时间的计算与修改</span></span><br><span class="line">  processFileEvents()</span><br><span class="line">  processTimeEvents()</span><br><span class="line">  </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">  init_server()</span><br><span class="line">  <span class="keyword">while</span> server_is_not_shutdown():</span><br><span class="line">    aeProcessEvents()</span><br><span class="line">  clean_server()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>服务器的最大阻塞时间由到达时间最接近当前时间的时间事件决定，可以避免频繁轮询，可以保证不会阻塞过长(<code>tornado</code>也有类似的处理)；</li>
+<li>如果处理完文件事件，仍未有时间事件到达，则会回到继续等待并处理文件事件的状态；</li>
+<li>不管文件事件处理或者时间事件的处理，都会尽可能减少对程序的阻塞，降低造成事件饥饿。比如命令回复处理器会将较长的回复截断，将余下数据留到下次继续处理，而时间事件处理器会将耗时的操作放到子线程或者子进程处理；</li>
+<li>因为总是先处理文件事件，因此时间事件的实际处理时间可能会比设定时间稍晚一些。</li>
+</ul>
+<h2 id="第十三章-客户端"><a href="#第十三章-客户端" class="headerlink" title="第十三章 客户端"></a>第十三章 客户端</h2><p>对于每一个与服务器连接的客户端，服务器都建立了相应的<code>redisClient</code>，并使用链表进行保存。每当新来一个客户端，都会保存到链表的尾部。每个客户端数据结构保存了下面一些属性：</p>
+<p><code>fd</code>: 前面提到，当载入<code>AOF</code>时，会生成一个伪客户端，采用<code>fd</code>值为<code>-1</code>来指示(执行<code>LUA</code>脚本时也会生成伪客户端)。</p>
+<p><code>flags</code>：采用诸如<code>REDIS_MASTER</code>/<code>REDIS_SLAVE</code>等记录当前客户端的角色。</p>
+<p><code>querybuf</code>: 缓冲区大小虽然可以动态变化，但是如果超过了<code>1G</code>，会被服务器关闭。</p>
+<p><code>argv/argc</code>：<code>argv</code>是一个数组，每一项都是字符串对象，<code>argv[0]</code>是要执行的命令，其余为参数。<code>argc</code>用以记录命令参数的长度。</p>
+<p><code>cmd</code>：根据<code>argv[0]</code>成功在命令表中找到对应的<code>redisCommand</code>结构时，就将<code>cmd</code>指向它。不分大小写。</p>
+<p><code>buf/reply</code>：客户端有两个缓冲区，固定长度缓冲区保存较短回复(默认<code>16K</code>)，可变大小缓冲区保存长度较大的回复。</p>
+<p>客户端的连接在上一章有介绍，关闭有以下几种情况：</p>
+<ul>
+<li>客户端退出或被<code>kill</code></li>
+<li>客户端发送非法命令请求</li>
+<li>客户端成为<code>CLIENT KILL</code>目标</li>
+<li>如果服务器设置了<code>timeout</code>，将会将空转超时的客户端关闭</li>
+<li>客户端发送命令请求超过<code>querybuf</code>限制大小</li>
+<li>服务器要发送给客户端的命令回复大小超过输出缓冲区限制大小</li>
+</ul>
+<blockquote>
+<p>虽然输出缓冲区有两种，但是为了避免过多占用服务器资源，仍然具有限制：</p>
+<ul>
+<li>硬性限制：一旦超出，客户端会被关闭</li>
+<li>软性限制：如果在指定时间内一直超出软性限制，也会关闭客户端</li>
+</ul>
+</blockquote>
+<p>除此之外，服务器初始化时会创建一个<code>Lua</code>脚本的伪客户端，会一直运行到服务器结束；而执行<code>AOF</code>载入的伪客户端，一旦执行完毕就会被关闭。</p>
+<h2 id="十四章-服务器"><a href="#十四章-服务器" class="headerlink" title="十四章 服务器"></a>十四章 服务器</h2><p>服务器负责处理客户端发来的请求，以及通过周期时间事件<code>serverCron</code>进行资源管理，包括服务器的启动以及初始化。 </p>
+<h3 id="处理客户端请求"><a href="#处理客户端请求" class="headerlink" title="处理客户端请求"></a>处理客户端请求</h3><p>当 接收到客户端发送的命令请求后，客户端与服务器之间的套接字可读时，服务器使用<strong>命令请求处理器</strong>进行以下操作 </p>
+<ul>
+<li>读取套接字中协议格式的命令请求，保存到客户端状态的输入缓冲区 </li>
+<li><p>分析命令请求，提取命令参数以及参数的个数，分别保存到客户端里的<code>argv</code>和<code>argc</code> </p>
+</li>
+<li><p>调用<strong>命令执行器</strong>，执行命令 </p>
+</li>
+</ul>
+<p>命令执行器的主要工作有： </p>
+<ul>
+<li><p>查找命令实现：命令执行器根据<code>argv[0]</code>参数在命令表中查找指定命令，使得客户端的<code>cmd</code>指针指向对应的<code>redisCommand</code>结构。</p>
+</li>
+<li><p>检查是否能执行命令： </p>
+<ul>
+<li><p>命令不存在，说明用户命令非法，服务器将向客户端返回一个错误。 </p>
+</li>
+<li><p>参数不一致，服务器将向客户端返回一个错误。 </p>
+</li>
+<li>未通过身份验证，服务器将向客户端返回一个错误。 </li>
+<li>检查服务器的内存占用情况，以及上一次<code>BGSAVE</code>功能是否正常执行/客户端是否处在订阅模式/服务器正在执行数据载入/执行<code>LUA</code>脚本并超时/客户端执行事务/服务器打开了监视器功能等情况的存在。(以上皆为单机模式) </li>
+</ul>
+</li>
+<li><p>执行命令：根据<code>cmd</code>指针指向的命令函数，将客户端中的<code>argv</code>和<code>argc</code>传入进行指定的操作，对应的命令回复会被保存在客户端的输出缓冲区里(<code>buf</code>和<code>reply</code>)。 </p>
+</li>
+<li><p>执行后续工作：判断是否要新增慢查询日志/更新<code>redisCommand</code>结构体/判断是否要写入<code>AOF</code>缓冲区/是否要复制给其他从服务器 </p>
+</li>
+<li>回复客户端：当客户端与服务器之间套接字可写时，将缓冲区中的回复内容发送给客户端 </li>
+</ul>
+<h3 id="serverCron函数"><a href="#serverCron函数" class="headerlink" title="serverCron函数"></a><code>serverCron</code>函数</h3><p><code>serverCron</code>主要负责管理服务器的资源(<strong>更新时间，内存等属性，拦截<code>SIGTERM</code>信号，管理客户端，处理持久化</strong>)，默认每隔<code>100ms</code>执行一次。它包括： </p>
+<ul>
+<li><p>更新服务器的时间缓存(<code>unixtime</code>和<code>mstime</code>)，因此这两个时间精度并不高，只用在打印日志/更新服务器<code>LRU</code>时钟/是否执行持久化任务/计算服务器上线时间等功能上。 </p>
+</li>
+<li><p>更新<code>LRU</code>时钟，用于减去对象的<code>lru</code>属性记录的时间，得出对象的空转时间，因此得出的空转时间也是模糊的。 </p>
+</li>
+<li><p>更新服务器每秒执行命令次数，通过抽样计算的方式，计算出两次抽样之间服务器能处理多少个命令的估计值，放在环形数组里，最后利用环形数组的值计算一个平均值作为结果。 </p>
+</li>
+<li><p>更新服务器内存峰值记录。 </p>
+</li>
+<li><p>处理<code>SIGTERM</code>信号，服务器会为这个信号关联处理器，打开服务器的<code>shutdown_asap</code>标识，<code>serverCron</code>根据这个标识符决定是否关闭服务器，服务器拦截该信号的原因是要在关闭之前执行<code>RDB</code>持久化操作。 </p>
+</li>
+<li><p>管理客户端资源，关闭超时的客户端/重新给用户分配输入缓冲区/关闭输出缓冲区大小超过限制的客户端。 </p>
+</li>
+<li><p>管理数据库资源，对部分数据库进行检查，删除过期键，对字典进行收缩操作。 </p>
+</li>
+<li><p>执行被延迟的<code>BGREWRITEAOF</code>，当服务器执行<code>BGSAVE</code>命令期间，如果收到<code>BGREWRITEAOF</code>命令，将会延迟到<code>BGSAVE</code>执行完毕后。 </p>
+</li>
+<li><p>检查持久化操作的运行状态，判断是否需要执行持久化操作。 </p>
+</li>
+<li><p>将<code>AOF</code>缓冲区的内容写入<code>AOF</code>文件。 </p>
+</li>
+<li><p>增加<code>cronloops</code>的值。 </p>
+</li>
+</ul>
+<h3 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h3><p>服务器的启动需要经过一系列的初始化和设置： </p>
+<ul>
+<li><p>初始化过程即创建<code>redisServer</code>的结构体，使用<code>initServerConfig</code>函数初始化一般属性，除了命令表，没有创建服务器的其他数据结构，只进行了默认端口号/默认数据库个数/文件路径等属性的设置。 </p>
+</li>
+<li><p>我们可以通过<code>redis-server --port 10086</code>或者指定<code>conf</code>文件启动<code>redis server</code>，即此时开始载入用户给定的配置参数和配置文件，覆盖系统默认的对应参数。 </p>
+<ul>
+<li>利用<code>initServer</code>为<code>clients</code>链表/<code>db</code>数组/保存订阅信息的字典与链表/<code>LUA</code>环境/慢查询日志数据结构分配内存，设置或者关联初始化值。除了初始化数据结构之外，<code>initServer</code>还有一些操作： </li>
+<li>为服务器设置进程信号处理器 </li>
+<li>创建常用的值作为共享对象，避免反复创建 </li>
+<li>打开监听窗口，等待接受连接 </li>
+<li>为<code>serverCron</code>创建时间事件 </li>
+<li>如果打开了<code>AOF</code>持久化功能，打开现有的<code>AOF</code>文件，如果不存在则创建 </li>
+<li>初始化后台<code>I/O</code>操作 </li>
+</ul>
+</li>
+<li>完成<code>server</code>的初始化后，利用<code>RDB</code>或者<code>AOF</code>文件还原数据库操作。 </li>
+<li>启动事件循环。 </li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjuf9fne40010nh8zt32x6vvs" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/12/常用排序算法的Python实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">常用排序算法的Python实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第九章-数据库"><span class="toc-number">1.</span> <span class="toc-text">第九章 数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库键空间"><span class="toc-number">1.1.</span> <span class="toc-text">数据库键空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#键的过期设置原理"><span class="toc-number">1.2.</span> <span class="toc-text">键的过期设置原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过期键的删除策略"><span class="toc-number">1.3.</span> <span class="toc-text">过期键的删除策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#持久化和复制对过期键的处理"><span class="toc-number">1.4.</span> <span class="toc-text">持久化和复制对过期键的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据库通知"><span class="toc-number">1.5.</span> <span class="toc-text">数据库通知</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十章-RDB持久化"><span class="toc-number">2.</span> <span class="toc-text">第十章 RDB持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十一章-AOF持久化"><span class="toc-number">3.</span> <span class="toc-text">第十一章 AOF持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF重写"><span class="toc-number">3.1.</span> <span class="toc-text">AOF重写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十二章-事件"><span class="toc-number">4.</span> <span class="toc-text">第十二章 事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件事件"><span class="toc-number">4.1.</span> <span class="toc-text">文件事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间事件"><span class="toc-number">4.2.</span> <span class="toc-text">时间事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件调度"><span class="toc-number">4.3.</span> <span class="toc-text">事件调度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十三章-客户端"><span class="toc-number">5.</span> <span class="toc-text">第十三章 客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#十四章-服务器"><span class="toc-number">6.</span> <span class="toc-text">十四章 服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#处理客户端请求"><span class="toc-number">6.1.</span> <span class="toc-text">处理客户端请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#serverCron函数"><span class="toc-number">6.2.</span> <span class="toc-text">serverCron函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动过程"><span class="toc-number">6.3.</span> <span class="toc-text">启动过程</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
