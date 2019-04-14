@@ -90,8 +90,6 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
-        
         <p>网络模型可以概括为五层结构：</p>
 <ul>
 <li>应用层</li>
@@ -101,172 +99,11 @@
 <li>物理层</li>
 </ul>
 <p>其中<code>TCP</code>位于传输层，主要用于保证通信的完整性及可靠性。</p>
-<h2 id="包的组成"><a href="#包的组成" class="headerlink" title="包的组成"></a>包的组成</h2><p><img src="/assets/TCP-Header-01.jpg" alt="TCP-header.jpg"></p>
-<ul>
-<li>源端口与目的端口分别占<code>2</code>个字节</li>
-<li>数据序号与确认序号分别占<code>4</code>个字节</li>
-<li>数据偏移(数据距离包头有多少个<code>32</code>位)占<code>4</code>位，保留位(未使用，应清零)占<code>6</code>位，控制位占<code>6</code>位，窗口大小(控制对方发送数据大小)占<code>2</code>个字节。其中控制位包括：<ul>
-<li>紧急位(<code>URG</code>)：与紧急指针配合使用，表明有紧急数据进行传送</li>
-<li>确认位(<code>ACK</code>)：仅当该位为<code>1</code>确认序号有效，<code>TCP</code>连接建立后，都会置为<code>1</code></li>
-<li>推送位(<code>PSH</code>)：当接收方收到带有该字段的报文时，应当尽快交付数据，而不再等到整个缓存都填满了之后才进行交付</li>
-<li>复位位(<code>RST</code>)：<code>TCP</code>出现严重差错，释放连接</li>
-<li>同步位(<code>SYN</code>)：在连接建立时用来同步序号，当<code>SYN=1</code>而<code>ACK=0</code>时，表明是连接请求报文段</li>
-<li>终止位(<code>FIN</code>)：表明此报文的发送方的数据已发送完毕，并要求释放连接</li>
-</ul>
-</li>
-<li>包校验和：占<code>2</code>个字节</li>
-<li>紧急指针：占<code>2</code>个字节，当且仅当<code>URG=1</code>时才有意义，指出在本报文段中的紧急数据的字节数(紧急数据结束后就是普通数据)，即使窗口为<code>0</code>也可以发送紧急数据</li>
-<li>可选选项：长度可变，最长可以到达<code>40</code>字节</li>
-</ul>
-<blockquote>
-<p><code>TCP</code>数据包在<code>IP</code>数据包的负载里头，头信息最少需要<code>20</code>字节，因此<code>TCP</code>数据包最大负载是<code>1460</code>字节(<code>IP</code>数据包的负载最多为<code>1480</code>)。</p>
-</blockquote>
-<h2 id="三次握手与四次挥手"><a href="#三次握手与四次挥手" class="headerlink" title="三次握手与四次挥手"></a>三次握手与四次挥手</h2><p>对于<code>TCP</code>，最经典的莫过于三次握手和四次挥手：</p>
-<p><img src="/assets/tcp_open_close.jpg" alt="tcp_connect_close.jpg"></p>
-<p>三次握手主要用于初始化序列号的初始值，相互通知对方自己的初始化序列号(<code>ISN</code>)，作为以后数据通信的序号。</p>
-<p>四次挥手是由于<code>TCP</code>是全双工的，发送端和接收端都需要<code>FIN</code>和<code>ACK</code>。</p>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><h4 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h4><p><code>ISN</code>是不可以固定的。否则可能在连接中断之后的网络重连，导致数据混乱。</p>
-<p>在后续传输中，数据传输中的序列号是逐渐增加且与字节数相关的。例如：</p>
-<p><img src="/assets/tcp_seq.jpg" alt="tcp_seq.jpg"></p>
-<p>每一次发送的<code>Seq</code>是对方<code>ACK</code>所期待的序号，如果此次发送携带了长度，则对方的<code>ACK</code>会加上此次发送的数据长度。</p>
-<h4 id="初始化连接时SYN超时"><a href="#初始化连接时SYN超时" class="headerlink" title="初始化连接时SYN超时"></a>初始化连接时<code>SYN</code>超时</h4><p>当<code>client</code>发送<code>SYN</code>给<code>server</code>后，如果<code>client</code>发生故障，导致<code>server</code>回发的<code>SYN-ACK</code>没有收到<code>client</code>的确认，这时需要超时时间让<code>server</code>将这个连接断开，否则会一直占用<code>server</code>的<code>SYN</code>连接队列的位置，直至将其耗尽。</p>
-<p>默认情况下，<code>Linux</code>会进行<code>5</code>次重发<code>SYN-ACK</code>，重试的间隔时间从<code>1s</code>开始每次都翻倍，<code>5</code>次的重试时间间隔为<code>1s</code>,<code>2s</code>, <code>4s</code>, <code>8s</code>,<code>16s</code>，总共<code>31s</code>，第<code>5</code>次发出后还要等<code>32s</code>都知道第<code>5</code>次也超时了，所以，总共需要 <code>1s + 2s + 4s+ 8s+ 16s + 32s = 2^6 -1 = 63s</code>，<code>TCP</code>才会断开这个连接。</p>
-<p>这种处理方式会带来<code>SYN flood</code>攻击，即攻击者短时间内发送大量的<code>SYN</code>包给<code>server</code>，用于耗尽<code>server</code>的<code>SYN</code>队列，让正常连接请求无法处理。这时<code>netstat</code>可以看到大量的<code>SYN_RECV</code>状态。对于<code>SYN</code>过多的情况，<code>linux</code>提供了几个<code>TCP</code>参数来调整应对：</p>
-<ul>
-<li><code>tcp_syncookies</code>(不推荐，违背了<code>TCP</code>协议)：当<code>SYN</code>队列满了之后，<code>TCP</code>会通过原地址端口、目标地址端口和时间戳生成一个特别的序列号(<code>cookie</code>)发回去，如果攻击者不会响应，而正常连接会把<code>SYN cookie</code>发送回来，服务端可以根据这个<code>cookie</code>进行连接，即使不在<code>SYN</code>队列中。</li>
-<li><code>tcp_synack_retries</code>：减少重试次数</li>
-<li><code>tcp_max_syn_backlog</code>：增大<code>SYN</code>队列，让服务器可以接受更多连接请求</li>
-<li><code></code>tcp_abort_on_overflow<code>(谨慎设置) ：如果应用程序处理速度比较慢，来不及接受新的连接，系统就直接丢弃这个连接，给对端发个</code>RST`。</li>
-</ul>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>主要包括以下几个步骤：</p>
-<ul>
-<li><p><code>TCP</code>的<code>Peer</code>端在收到对端的<code>FIN</code>包前发出了<code>FIN</code>包，那么该<code>Peer</code>的状态就变成了<code>FIN_WAIT1</code>；</p>
-</li>
-<li><p><code>Peer</code>在<code>FIN_WAIT1</code>状态下收到对端<code>Peer</code>对自己<code>FIN</code>包的<code>ACK</code>包的话，那么<code>Peer</code>状态就变成<code>FIN_WAIT2</code>；</p>
-</li>
-<li><p><code>Peer</code>在<code>FIN_WAIT2</code>下收到对端<code>Peer</code>的<code>FIN</code>包，在确认已经收到了对端<code>Peer</code>全部的<code>Data</code>数据包后，就响应一个<code>ACK</code>给对端<code>Peer</code>，然后自己进入<code>TIME_WAIT</code>状态。</p>
-</li>
-<li>对端<code>Peer</code>收到<code>ACK</code>后/或者经过<code>2*MSL</code>后的等待，各自进入<code>CLOSED</code>，连接关闭。</li>
-</ul>
-<p>实际上被动关闭方并没有数据要发送给主动关闭方时，将<code>FIN</code>和<code>ACK</code>合并成一个包发送过去，即只有三次挥手，也是可以的。四次挥手的原因是为了保证被动关闭方的数据也能够发送完毕。</p>
-<h4 id="两端同时发起FIN"><a href="#两端同时发起FIN" class="headerlink" title="两端同时发起FIN"></a>两端同时发起<code>FIN</code></h4><p>如果两边同时断开连接，会同时到达<code>CLOSING</code>状态，然后到达<code>TIME_WAIT</code>状态，等待<code>2*MSL</code>(最大存活时间)后连接真正关闭，即双方出现一样的状态转移：<code>FIN_WAIT1--&gt;CLOSING-&gt;TIME_WAIT</code>。</p>
-<p><img src="/assets/tcpclosesimul.png" alt="tcpclosesimul.png"></p>
-<h4 id="TIME-WAIT"><a href="#TIME-WAIT" class="headerlink" title="TIME_WAIT"></a>TIME_WAIT</h4><p>只有主动关闭方(在还没收到对方的<code>FIN</code>之前自己先发出了<code>FIN</code>)才会进入<code>TIME_WAIT</code>状态。需要<code>TIME_WAIT</code>的原因有：</p>
-<ul>
-<li>在<code>ACK</code>丢失后，被动关闭方由于没有收到<code>ACK</code>，会进行重传。而此时主动关闭方已经关闭了，无法识别这个<code>FIN</code>包，会主动回复一个<code>RST</code>给被动关闭方，被动关闭方会收到错误(例如<code>connetion reset by peer</code>)，从而导致连接没有正常关闭而是发生了错误。</li>
-<li>防止链路上已经关闭的残余数据包干扰正常的数据包。比如新的连接由于复用了上一个连接的五元素(源<code>IP</code>，目的<code>IP</code>，<code>TCP</code>，源端口，目的端口)，导致链路中残留的<code>FIN</code>包终止这次新的连接。</li>
-</ul>
-<p>Linux<code>将</code>MSL<code>时间固定为</code>30s<code>，因此</code>TIME_WAIT<code>需要等待</code>1分钟<code>。如果美妙的连接数是一千，那么一分钟可能会产生六万个</code>TIME_WAIT<code>。于是，大量的</code>TIME_WAIT<code>会消耗大量的系统资源。通常解决</code>TIME_WAIT`，会提及下面几个参数：</p>
-<ul>
-<li><code>**tcp_tw_recycle**</code>：顾名思义就是回收<code>TIME_WAIT</code>连接，对客户端和服务器(服务端主动关闭连接)同时起作用。但是，当多个客户端通过<code>NAT</code>(对外是同一个<code>IP</code>)与服务端交互时，对于服务端事实上等同于同一个客户端，于是小时间戳的数据包会被丢弃，此时会有其他用户连接不上服务器。</li>
-<li><code>**tcp_tw_reuse**</code>：当创建新连接的时候，如果可能的话会考虑复用相应的<code>TIME_WAIT</code>连接，只对连接发起方起作用(例如，客户端关闭连接又再次连接服务器；负载均衡服务器主动关闭对后端的连接，来了新的请求又再次连接)，且连接超过<code>1s</code>后才能被复用。通常认为它比<code>tcp_tw_recycle</code>安全一点。</li>
-</ul>
-<p>需要注意的是，以上两者都依赖于<code>tcp_timestamps</code>，它在<code>linux</code>中是默认开启的。</p>
-<p>除此之外，还有一个<code>tcp_max_tw_buckets</code>参数，用以控制并发的<code>TIME_WAIT</code>数量。采用<code>tcp_tw_recycle</code>和<code>tcp_tw_reuse</code>都是十分危险的，尽量将服务器设置为<code>KeepAlive</code>，把<code>TIME_WAIT</code>留给客户端去处理。</p>
-<h4 id="CLOSE-WAIT"><a href="#CLOSE-WAIT" class="headerlink" title="CLOSE_WAIT"></a><code>CLOSE_WAIT</code></h4><p>主动关闭的一方发出<code>FIN</code>包，被动关闭的一方响应<code>ACK</code>包，此时，被动关闭的一方就进入了<code>CLOSE_WAIT</code>状态。如果一切正常，稍后被动关闭的一方也会发出<code>FIN</code>包，然后迁移到<code>LAST_ACK</code>状态。</p>
-<p>当出现大量<code>CLOSE_WAIT</code>时，说明被动关闭一方没有及时发送<code>FIN</code>，可能是因为：</p>
-<ul>
-<li>没有调用<code>socket</code>的<code>close</code>方法</li>
-<li>响应太慢，导致<code>close</code>被延后</li>
-<li><code>accept backlog</code>太大，来不及消费，多余请求被对方关闭</li>
-</ul>
-<h4 id="LAST-ACK"><a href="#LAST-ACK" class="headerlink" title="LAST_ACK"></a><code>LAST_ACK</code></h4><p>正常情况下，被动关闭方收到了主动关闭方最后发来的<code>ACK</code>后，会从<code>LAST_ACK</code>进入<code>CLOSED</code>状态。</p>
-<p>如果被动关闭方没有收到<code>ACK</code>，当等待超时之后，它会继续向主动关闭方发送<code>FIN</code>包，那么会有下面的情况：</p>
-<ul>
-<li>主动关闭方仍然处在<code>TIME_WAIT</code>，向被动关闭方发送<code>ACK</code>，这次被动关闭方终于收到了，于是进入了<code>CLOSED</code></li>
-<li>如果主动关闭方已经进入了<code>CLOSED</code>，那么它无法识别这个<code>FIN</code>，将会发送一个<code>RST</code>包，被动关闭方收到后进入<code>CLOSED</code></li>
-<li>如果被动关闭方一直没有收到<code>ACK</code>，那么它会重传到超时放弃，进入<code>CLOSED</code></li>
-</ul>
-<p>总而言之，最后都会进入<code>CLOSED</code>。</p>
-<h3 id="TCP重传机制"><a href="#TCP重传机制" class="headerlink" title="TCP重传机制"></a><code>TCP</code>重传机制</h3><p>接收端给发送端的<code>ACK</code>确认只会确认最后一个连续的包，那么当发送方没有收到刚发送的数据所的<code>ACK</code>时，等待超时后会选择重传，这就是超时重传。</p>
-<p>当超时等待的<code>timeout</code>很长时，超时重传无疑是费时的。因此又引入了快速重传。就是在连续收到<code>3</code>次相同确认号的<code>ACK</code>，那么就进行重传。这个算法基于这么一个假设，连续收到<code>3</code>个相同的<code>ACK</code>，那么说明当前的网络状况变好了，可以重传丢失的包了。</p>
-<p>但是这两种重传都没有解决是重传一个还是多个数据的问题，于是有了新的<code>SACK</code>机制。这种方式需要在<code>TCP</code>头里加一个<code>SACK</code>的东西(通过头中的可选选项扩展，<code>TCP</code>的选项不能超过<code>40</code>个字节，所以边界不能超过<code>4</code>组)，<code>ACK</code>还是<code>Fast Retransmit</code>的<code>ACK</code>，<code>SACK</code>则是汇报接收到的没有被确认的不连续数据段。接收方收到乱序包后，就会使用<code>SACK</code>选项来选择确认。参见下图：</p>
-<p><img src="/assets/tcp_sack_example-900x507.jpg" alt="sack.jpg"></p>
-<p>而<code>D-SACK</code>是用<code>SACK</code>来告诉发送方，那些数据被重复接收了，因此：</p>
-<ul>
-<li><code>SACK</code>第一个段被<code>ACK</code>覆盖，那么是一个<code>D-SACK</code></li>
-<li><code>SACK</code>第一个段的范围被第二个段覆盖，也是一个<code>D-SACK</code></li>
-</ul>
-<p>它比<code>SACK</code>可以告知发送端更多的信息。</p>
-<p>对于重传机制，<code>timeout</code>的设置十分重要，因此不能固定，所以引入了<code>RTT</code>(往返时延)，用以设置<code>RTO</code>(重传超时)。<code>RTT</code>算法的难点在于，是用正常发送和<code>ACK</code>回来的时间用于采样还是采用重传的时间和<code>ACK</code>回来的时间做样本。所以有了一个神一样的公式~</p>
-<h2 id="TCP滑动窗口"><a href="#TCP滑动窗口" class="headerlink" title="TCP滑动窗口"></a><code>TCP</code>滑动窗口</h2><p><code>TCP</code>头中有个<code>Window</code>字段，<strong>是接收端告诉发送端自己还有多少缓冲区可以接收数据</strong>。<strong>于是发送端就可以根据这个接收端的处理能力来发送数据，而不会导致接收端处理不过来</strong>。如图：</p>
-<p><img src="/assets/tcpswflow.png" alt="滑动窗口.jpg"></p>
-<p>发送端在窗口变成<code>0</code>后，会发<code>ZWP</code>的包给接收方，让接收方来<code>ack</code>他的<code>Window</code>尺寸，一般这个值会设置成<code>3</code>次，每次大约<code>30-60</code>秒（不同的实现可能会不一样）。如果<code>3</code>次过后还是<code>0</code>的话，有的<code>TCP</code>实现就会发<code>RST</code>把链接断了。</p>
-<p>如果接收端处理有限，可能会导致发送大量小包的问题，即<code>Silly Window Syndrome</code>(糊涂窗口综合症)，此时可以从发送端和接收端来解决：</p>
-<ul>
-<li>如果是接收端引起，当接收到数据小于某值时，就<code>ACK</code>一个<code>0</code>窗口，等到接收端处理了一些数据后<code>windows size</code> 大于等于了<code>MSS</code>，或者<code>buffer</code>有一半为空，就可以通告一个非<code>0</code>窗口。</li>
-<li>如果是发送端引起，采用<code>Nagle’s algorithm</code>，默认是打开的，规则如下：<ul>
-<li>如果包长度达到 <code>MSS</code> ，则允许发送；</li>
-<li>如果该包含有<code>FIN</code> ，则允许发送；</li>
-<li>设置了<code>TCP_NODELAY</code> 选项，则允许发送；</li>
-<li>设置<code>TCP_CORK</code>选项时，若所有发出去的小数据包(包长度小于<code>MSS</code>)均被确认，则允许发送；</li>
-<li>上述条件都未满足，但发生了超时(一般为<code>200ms</code> )，则立即发送。</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>可以在<code>Socket</code>设置<code>TCP_NODELAY</code>选项来关闭这个算法，并且它没有禁止小包发送，只是禁止了大量的小包发送。</p>
-</blockquote>
-<h2 id="TCP拥塞处理"><a href="#TCP拥塞处理" class="headerlink" title="TCP拥塞处理"></a><code>TCP</code>拥塞处理</h2><p>拥塞控制主要依赖于拥塞窗口(<code>cwnd</code>)来控制，再加上有接收窗口(<code>rwnd</code>)用于流量控制，因此实际的发送窗口为<code>min(rwnd, cwnd)</code>，包括了四个算法：</p>
-<ul>
-<li><p>慢启动(<code>slow start</code>)：先线性后指数的算法</p>
-<ul>
-<li>连接建好的开始先初始化<code>cwnd = N</code>，表明可以传<code>N</code>个<code>MSS</code>大小的数据</li>
-<li>每当收到一个<code>ACK</code>，<code>++cwnd</code> ，呈线性上升</li>
-<li>每当过了一个<code>RTT</code>，<code>cwnd = cwnd*2</code>， 呈指数上升</li>
-<li>还有一个慢启动门限<code>ssthresh</code>(<code>slow start threshold</code>)，是一个上限，当<code>cwnd &gt;= ssthresh</code>时，就会进入拥塞避免算法。</li>
-</ul>
-</li>
-<li><p>拥塞避免(<code>Congestion Avoidance</code>)：是一个线性上升的算法</p>
-<ul>
-<li>每收到一个<code>ACK</code>，调整<code>cwnd</code> 为 <code>(cwnd + 1/cwnd) * MSS</code>个字节</li>
-<li>每经过一个<code>RTT</code>的时长，<code>cwnd</code>增加<code>1</code>个<code>MSS</code>大小。</li>
-</ul>
-</li>
-<li><p>拥塞发生：当发生了丢包时，<code>TCP</code>认为网络发生了拥塞</p>
-<ul>
-<li>如果发生超时重传，反应比较强烈<ul>
-<li>调整门限<code>ssthresh</code>的值为当前<code>cwnd</code>值的<code>1/2</code>；</li>
-<li><code>reset</code>自己的<code>cwnd</code>值为<code>1</code>；</li>
-<li>然后重新进入慢启动过程。</li>
-</ul>
-</li>
-<li>如果发生快速重传，表明只是轻微拥堵，进入拥塞避免后，<code>cwnd</code>恢复的很慢，这时如果收到<code>3</code>个冗余的<code>ACK</code>时，那么进入的不是拥塞避免阶段，而是快速恢复<ul>
-<li>调整门限<code>ssthresh</code>的值为当前<code>cwnd</code>值的<code>1/2</code>；</li>
-<li>将<code>cwnd</code>值设置为新的<code>ssthresh</code>的值；</li>
-<li>重新进入拥塞避免阶段。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>快速恢复(<code>Fast Recovery</code>)：在进入快速恢复前，<code>cwnd</code> 和<code>sshthresh</code>已被更新为：<code>sshthresh = cwnd /2</code>，<code>cwnd = sshthresh</code></p>
-<ul>
-<li>把<code>cwnd</code>设置为<code>ssthresh</code>的值加<code>3</code>，重传<code>Duplicated ACKs</code>指定的数据包</li>
-<li>如果再收到 <code>duplicated Acks</code>，那么<code>cwnd = cwnd +1</code></li>
-<li>如果收到新的<code>ACK</code>，而非<code>Duplicated ACK</code>，那么<code>cwnd = sshthresh</code>，然后进入了拥塞避免算法</li>
-</ul>
-<blockquote>
-<p>显然，快速恢复依赖于<code>3</code>个重复的<code>ACK</code>，它只是重传了一个包，而如果还有其他的包丢失，只能等到超时重传，从而使得每超时一个窗口就减半，并且再也不会进入快速恢复阶段。出现这个问题的原因是过早退出了<code>Fast Recovery</code>阶段。</p>
-</blockquote>
-<p>为了解决快速恢复算法存在的问题，提出了<code>New Reno</code>算法，在没有<code>SACK</code>的支持下改进快速恢复算法:</p>
-<ul>
-<li>发送端收到<code>3</code>个冗余<code>ACK</code>后，重传冗余<code>ACK</code>指示可能丢失的那个包。如果只有这一个包丢了，那么重传这个包后回来的<code>ACK</code>会指示整个已经被出去的数据。如果没有的话，说明有多个包丢了。我们叫这个<code>ACK</code>为<code>Partial ACK</code></li>
-<li>一旦发送端发现了<code>Partial ACK</code>出现，那么，<code>sender</code>就可以推理出来有多个包被丢了，于是乎继续重传滑动窗里未被<code>ACK</code>的第一个包。直到再也没有收到<code>Partial ACK</code>，才真正结束<code>Fast Recovery</code>这个过程</li>
-</ul>
-</li>
-</ul>
-<p>总而言之，拥塞避免时，<code>cwnd</code>是加性增长的，而出现了拥塞，是指数递减的。拥塞控制可以归纳为下图：</p>
-<p><img src="/assets/tcp.fr_-900x315.jpg" alt="拥塞控制"></p>
-<p><code>References</code>:</p>
-<p><a href="https://huoding.com/2013/12/31/316" target="_blank" rel="noopener">再叙TIME_WAIT</a></p>
-<p><a href="https://huoding.com/2016/01/19/488" target="_blank" rel="noopener">浅谈CLOSE_WAIT</a></p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MjA4ODU0Ng==&amp;mid=402415747&amp;idx=1&amp;sn=2458ba4fe1830eecdb8db725d3f395fa&amp;scene=1&amp;srcid=0317kixDKODOMBEMqjenW4Jb" target="_blank" rel="noopener">高性能网络 | 你所不知道的TIME_WAIT和CLOSE_WAIT</a></p>
-<p><a href="http://www.52im.net/thread-1003-1-1.html" target="_blank" rel="noopener">不为人知的网络编程(一)：浅析TCP协议中的疑难杂症(上篇)</a></p>
-<p><a href="https://coolshell.cn/articles/11564.html" target="_blank" rel="noopener">TCP 的那些事儿（上）</a></p>
-<p><a href="https://coolshell.cn/articles/11609.html" target="_blank" rel="noopener"> TCP的那些事儿（下)</a></p>
-<p><a href="https://www.zhihu.com/question/27564314/answer/162476313" target="_blank" rel="noopener">在tcp协议中处于last_ack状态的连接，如果一直收不到对方的ack，会一直处于这个状态吗？ - JCRunner的回答 - 知乎</a></p>
-<p>### </p>
-
+        
+          <p class="article-more-link">
+            <a href="/2019/04/14/TCP学习记录/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
