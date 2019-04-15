@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://yuyinzi.github.io/assets/tcp_sack_example-900x507.jpg">
 <meta property="og:image" content="http://yuyinzi.github.io/assets/tcpswflow.png">
 <meta property="og:image" content="http://yuyinzi.github.io/assets/tcp.fr_-900x315.jpg">
-<meta property="og:updated_time" content="2019-04-14T18:18:30.944Z">
+<meta property="og:updated_time" content="2019-04-15T03:48:37.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="有关TCP的那些记录">
 <meta name="twitter:description" content="网络模型可以概括为五层结构：  应用层 传输层 网络层 链路层 物理层  其中TCP位于传输层，主要用于保证通信的完整性及可靠性。">
@@ -122,7 +122,7 @@
 <li>确认位(<code>ACK</code>)：仅当该位为<code>1</code>确认序号有效，<code>TCP</code>连接建立后，都会置为<code>1</code></li>
 <li>推送位(<code>PSH</code>)：当接收方收到带有该字段的报文时，应当尽快交付数据，而不再等到整个缓存都填满了之后才进行交付</li>
 <li>复位位(<code>RST</code>)：<code>TCP</code>出现严重差错，释放连接</li>
-<li>同步位(<code>SYN</code>)：在连接建立时用来同步序号，当<code>SYN=1</code>而<code>ACK=0</code>时，表明是连接请求报文段</li>
+<li>同步位(<code>SYN</code>)：在连接建立时用来同步序号，当<code>SYN=1</code>而<code>ACK=0</code>时，表明是连接请求报文段，当握手完成后置为<code>0</code></li>
 <li>终止位(<code>FIN</code>)：表明此报文的发送方的数据已发送完毕，并要求释放连接</li>
 </ul>
 </li>
@@ -168,7 +168,7 @@
 <li>在<code>ACK</code>丢失后，被动关闭方由于没有收到<code>ACK</code>，会进行重传。而此时主动关闭方已经关闭了，无法识别这个<code>FIN</code>包，会主动回复一个<code>RST</code>给被动关闭方，被动关闭方会收到错误(例如<code>connetion reset by peer</code>)，从而导致连接没有正常关闭而是发生了错误。</li>
 <li>防止链路上已经关闭的残余数据包干扰正常的数据包。比如新的连接由于复用了上一个连接的五元素(源<code>IP</code>，目的<code>IP</code>，<code>TCP</code>，源端口，目的端口)，导致链路中残留的<code>FIN</code>包终止这次新的连接。</li>
 </ul>
-<p><code>Linux</code>将<code>MSL</code>时间固定为<code>30s</code>，因此<code>TIME_WAIT</code>需要等待<code>1分钟</code>。如果美妙的连接数是一千，那么一分钟可能会产生六万个<code>TIME_WAIT</code>。于是，大量的<code>TIME_WAIT</code>会消耗大量的系统资源。通常解决<code>TIME_WAIT</code>，会提及下面几个参数：</p>
+<p><code>Linux</code>将<code>MSL</code>时间固定为<code>30s</code>，因此<code>TIME_WAIT</code>需要等待<code>1分钟</code>。如果每秒的连接数是一千，那么一分钟可能会产生六万个<code>TIME_WAIT</code>。于是，大量的<code>TIME_WAIT</code>会消耗大量的系统资源。通常解决<code>TIME_WAIT</code>，会提及下面几个参数：</p>
 <ul>
 <li><code>tcp_tw_recycle</code>：顾名思义就是回收<code>TIME_WAIT</code>连接，对客户端和服务器(服务端主动关闭连接)同时起作用。但是，当多个客户端通过<code>NAT</code>(对外是同一个<code>IP</code>)与服务端交互时，对于服务端事实上等同于同一个客户端，于是小时间戳的数据包会被丢弃，此时会有其他用户连接不上服务器。</li>
 <li><code>tcp_tw_reuse</code>：当创建新连接的时候，如果可能的话会考虑复用相应的<code>TIME_WAIT</code>连接，只对连接发起方起作用(例如，客户端关闭连接又再次连接服务器；负载均衡服务器主动关闭对后端的连接，来了新的请求又再次连接)，且连接超过<code>1s</code>后才能被复用。通常认为它比<code>tcp_tw_recycle</code>安全一点。</li>
@@ -191,10 +191,10 @@
 </ul>
 <p>总而言之，最后都会进入<code>CLOSED</code>。</p>
 <h3 id="TCP重传机制"><a href="#TCP重传机制" class="headerlink" title="TCP重传机制"></a><code>TCP</code>重传机制</h3><p>接收端给发送端的<code>ACK</code>确认只会确认最后一个连续的包，那么当发送方没有收到刚发送的数据所的<code>ACK</code>时，等待超时后会选择重传，这就是超时重传。</p>
-<p>当超时等待的<code>timeout</code>很长时，超时重传无疑是费时的。因此又引入了快速重传。就是在连续收到<code>3</code>次相同确认号的<code>ACK</code>，那么就进行重传。这个算法基于这么一个假设，连续收到<code>3</code>个相同的<code>ACK</code>，那么说明当前的网络状况变好了，可以重传丢失的包了。</p>
+<p>当超时等待的<code>timeout</code>很长时，超时重传无疑是费时的。因此又引入了快速重传。就是在连续收到<code>3</code>次相同确认号的<code>ACK</code>，无需等待超时定时器溢出就进行重传。这个算法基于这么一个假设，连续收到<code>3</code>个相同的<code>ACK</code>，那么说明当前的网络状况变好了，可以重传丢失的包了。</p>
 <p>但是这两种重传都没有解决是重传一个还是多个数据的问题，于是有了新的<code>SACK</code>机制。这种方式需要在<code>TCP</code>头里加一个<code>SACK</code>的东西(通过头中的可选选项扩展，<code>TCP</code>的选项不能超过<code>40</code>个字节，所以边界不能超过<code>4</code>组)，<code>ACK</code>还是<code>Fast Retransmit</code>的<code>ACK</code>，<code>SACK</code>则是汇报接收到的没有被确认的不连续数据段。接收方收到乱序包后，就会使用<code>SACK</code>选项来选择确认。参见下图：</p>
 <p><img src="/assets/tcp_sack_example-900x507.jpg" alt="sack.jpg"></p>
-<p>而<code>D-SACK</code>是用<code>SACK</code>来告诉发送方，那些数据被重复接收了，因此：</p>
+<p>而<code>D-SACK</code>是用<code>SACK</code>来告诉发送方，哪些数据被重复接收了，因此：</p>
 <ul>
 <li><code>SACK</code>第一个段被<code>ACK</code>覆盖，那么是一个<code>D-SACK</code></li>
 <li><code>SACK</code>第一个段的范围被第二个段覆盖，也是一个<code>D-SACK</code></li>
@@ -269,6 +269,14 @@
 </ul>
 <p>总而言之，拥塞避免时，<code>cwnd</code>是加性增长的，而出现了拥塞，是指数递减的。拥塞控制可以归纳为下图：</p>
 <p><img src="/assets/tcp.fr_-900x315.jpg" alt="拥塞控制"></p>
+<h2 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a><code>TCP</code>和<code>UDP</code>的区别</h2><ul>
+<li><code>UDP</code>不需要建立连接</li>
+<li><code>UDP</code>的头只有<code>8</code>个字节，首部开销小</li>
+<li><code>UDP</code>没有拥塞控制，网络拥塞不会使源主机发送速率降低</li>
+<li><code>UDP</code>面向报文，会保留报文的边界，而<code>TCP</code>是面向字节流的，不保留边界，因此接发速率不一致时会出现粘包</li>
+<li><code>TCP</code>提供可靠的服务,<code>TCP</code>连接传送的数据，无差错，不丢失，不重复，且按序到达；<code>UDP</code>尽最大努力交付，即不保证可靠交付</li>
+<li>每一条<code>TCP</code>连接是点到点的，<code>UDP</code>支持一对一，一对多，多对一和多对多的交互通信</li>
+</ul>
 <p><code>References</code>:</p>
 <p><a href="https://huoding.com/2013/12/31/316" target="_blank" rel="noopener">再叙TIME_WAIT</a></p>
 <p><a href="https://huoding.com/2016/01/19/488" target="_blank" rel="noopener">浅谈CLOSE_WAIT</a></p>
@@ -372,7 +380,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#包的组成"><span class="toc-number">1.</span> <span class="toc-text">包的组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三次握手与四次挥手"><span class="toc-number">2.</span> <span class="toc-text">三次握手与四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手"><span class="toc-number">2.1.</span> <span class="toc-text">三次握手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#序号"><span class="toc-number">2.1.1.</span> <span class="toc-text">序号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#初始化连接时SYN超时"><span class="toc-number">2.1.2.</span> <span class="toc-text">初始化连接时SYN超时</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四次挥手"><span class="toc-number">2.2.</span> <span class="toc-text">四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#两端同时发起FIN"><span class="toc-number">2.2.1.</span> <span class="toc-text">两端同时发起FIN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TIME-WAIT"><span class="toc-number">2.2.2.</span> <span class="toc-text">TIME_WAIT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CLOSE-WAIT"><span class="toc-number">2.2.3.</span> <span class="toc-text">CLOSE_WAIT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LAST-ACK"><span class="toc-number">2.2.4.</span> <span class="toc-text">LAST_ACK</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP重传机制"><span class="toc-number">2.3.</span> <span class="toc-text">TCP重传机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP滑动窗口"><span class="toc-number">3.</span> <span class="toc-text">TCP滑动窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP拥塞处理"><span class="toc-number">4.</span> <span class="toc-text">TCP拥塞处理</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#包的组成"><span class="toc-number">1.</span> <span class="toc-text">包的组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三次握手与四次挥手"><span class="toc-number">2.</span> <span class="toc-text">三次握手与四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手"><span class="toc-number">2.1.</span> <span class="toc-text">三次握手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#序号"><span class="toc-number">2.1.1.</span> <span class="toc-text">序号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#初始化连接时SYN超时"><span class="toc-number">2.1.2.</span> <span class="toc-text">初始化连接时SYN超时</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四次挥手"><span class="toc-number">2.2.</span> <span class="toc-text">四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#两端同时发起FIN"><span class="toc-number">2.2.1.</span> <span class="toc-text">两端同时发起FIN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TIME-WAIT"><span class="toc-number">2.2.2.</span> <span class="toc-text">TIME_WAIT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CLOSE-WAIT"><span class="toc-number">2.2.3.</span> <span class="toc-text">CLOSE_WAIT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LAST-ACK"><span class="toc-number">2.2.4.</span> <span class="toc-text">LAST_ACK</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP重传机制"><span class="toc-number">2.3.</span> <span class="toc-text">TCP重传机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP滑动窗口"><span class="toc-number">3.</span> <span class="toc-text">TCP滑动窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP拥塞处理"><span class="toc-number">4.</span> <span class="toc-text">TCP拥塞处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP和UDP的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP的区别</span></a></li></ol>
           </div>
       </div>
     </div>
