@@ -3,15 +3,23 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Yuyinzi&#39;s blog</title>
+  <title>Django笔记 | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Yuyinzi&#39;s blog">
-<meta property="og:url" content="http://yuyinzi.github.io/index.html">
+  <meta name="description" content="随手记录一些Django发现的知识点。 as_view`当在view中采用class-based-view方法时，必须要在url中使用as_view()。例如： 123456789101112131415# views.pyfrom django.views.generic import Viewfrom django.http import HttpResponseclass Hello(Vie">
+<meta name="keywords" content="Python,Django">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django笔记">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/04/16/Django笔记/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
+<meta property="og:description" content="随手记录一些Django发现的知识点。 as_view`当在view中采用class-based-view方法时，必须要在url中使用as_view()。例如： 123456789101112131415# views.pyfrom django.views.generic import Viewfrom django.http import HttpResponseclass Hello(Vie">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/缓存.jpg">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/执行顺序.png">
+<meta property="og:updated_time" content="2019-04-16T09:50:06.922Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Yuyinzi&#39;s blog">
+<meta name="twitter:title" content="Django笔记">
+<meta name="twitter:description" content="随手记录一些Django发现的知识点。 as_view`当在view中采用class-based-view方法时，必须要在url中使用as_view()。例如： 123456789101112131415# views.pyfrom django.views.generic import Viewfrom django.http import HttpResponseclass Hello(Vie">
+<meta name="twitter:image" content="http://yuyinzi.github.io/assets/缓存.jpg">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
@@ -62,9 +70,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Django笔记" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Django笔记" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/16/Django笔记/" class="article-date">
   <time datetime="2019-04-16T06:24:09.000Z" itemprop="datePublished">2019-04-16</time>
@@ -81,8 +87,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/16/Django笔记/">Django笔记</a>
+    <h1 class="article-title" itemprop="name">
+      Django笔记
     </h1>
   
 
@@ -158,476 +164,72 @@
     </footer>
   </div>
   
-</article>
- 
-
-
-  
-    <article id="post-TCP学习记录" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/14/TCP学习记录/" class="article-date">
-  <time datetime="2019-04-14T08:25:53.000Z" itemprop="datePublished">2019-04-14</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/14/TCP学习记录/">TCP学习记录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>网络模型可以概括为五层结构：</p>
-<ul>
-<li>应用层</li>
-<li>传输层</li>
-<li>网络层</li>
-<li>链路层</li>
-<li>物理层</li>
-</ul>
-<p>其中<code>TCP</code>位于传输层，主要用于保证通信的完整性及可靠性。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/14/TCP学习记录/#more">继续阅读全文 »</a>
-          </p>
-        
-      
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjujlwkl80011g28zdyny2a9v" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-
-    </footer>
   </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/14/TCP学习记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">TCP学习记录</div>
+    </a>
+  
+</nav>
+
   
 </article>
  
-
-
-  
-    <article id="post-《Redis设计与实现》读书笔记-第二部分" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" class="article-date">
-  <time datetime="2019-04-12T12:43:13.000Z" itemprop="datePublished">2019-04-12</time>
-</a>
+   <!-- 
+  <div class="comments" id="comments">
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+     
+       
+       
+      
+      
   </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/">《Redis设计与实现》读书笔记 第二部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第二部分主要解决下面的问题：</p>
-<ul>
-<li>数据库在服务器中是如何保存的</li>
-<li>过期键是如何保存的以及如何被清理的</li>
-<li><code>RDB</code>与<code>AOF</code>的原理，以及<code>AOF</code>的重写</li>
-<li><code>redis</code>是如何实现单线程下的事件驱动的</li>
-<li><code>redis</code>客户端是如何保存的，有哪些属性，在什么情况下会被关闭</li>
-<li>当接收到一个请求时，<code>redis</code>服务器是如何处理的</li>
-<li><code>serverCron</code>是如何管理服务器资源的</li>
-<li><code>redis</code>服务器是如何启动及初始化的</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjujlwklb0013g28zu9abf8hu" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-常用排序算法的Python实现" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/12/常用排序算法的Python实现/" class="article-date">
-  <time datetime="2019-04-12T08:57:30.000Z" itemprop="datePublished">2019-04-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/算法/">算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/12/常用排序算法的Python实现/">常用排序算法的Python实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>使用<code>python</code>实现冒泡排序，插入排序，选择排序，希尔排序，归并排序，快速排序和堆排序。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/12/常用排序算法的Python实现/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/常用排序算法的Python实现/" data-id="cjujlwkj70001g28zis35y6f5" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-Django源码分析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/11/Django源码分析/" class="article-date">
-  <time datetime="2019-04-11T05:41:00.000Z" itemprop="datePublished">2019-04-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/11/Django源码分析/">Django源码分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>分析了运行<code>python manage.py runserver</code>后所发生的事。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/04/11/Django源码分析/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/11/Django源码分析/" data-id="cjujlwkk8000dg28zoo4bvs85" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-Python拾遗-2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/10/Python拾遗-2/" class="article-date">
-  <time datetime="2019-04-10T08:03:16.000Z" itemprop="datePublished">2019-04-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/10/Python拾遗-2/">Python拾遗(2)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>包括<code>Python</code>中的常用数据类型。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/04/10/Python拾遗-2/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-2/" data-id="cjujlwkka000gg28z29jwycj0" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-Python拾遗-1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/10/Python拾遗-1/" class="article-date">
-  <time datetime="2019-04-10T07:46:27.000Z" itemprop="datePublished">2019-04-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/10/Python拾遗-1/">Python拾遗(1)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>读《<code>Python</code>源码分析》的一些记录。<br>
-        
-          </p><p class="article-more-link">
-            <a href="/2019/04/10/Python拾遗-1/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-1/" data-id="cjujlwkkc000hg28zc1ru9p9a" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-《Redis设计与实现》读书笔记-第一部分" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" class="article-date">
-  <time datetime="2019-04-10T06:05:33.000Z" itemprop="datePublished">2019-04-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据库/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/">《Redis设计与实现》读书笔记 第一部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第一部分从第二章到第八章，主要解决下面几个问题：</p>
-<ul>
-<li><code>redis</code>的底层是由哪些数据结构实现的，它们的应用场景又是什么</li>
-<li><code>redis</code>的五大对象分别用了哪些数据结构实现</li>
-<li><code>redis</code>的内存回收机制</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" data-id="cjujlwkke000jg28zu24gynwx" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-Python线程-进程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/03/Python线程-进程/" class="article-date">
-  <time datetime="2019-04-03T09:02:50.000Z" itemprop="datePublished">2019-04-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/03/Python线程-进程/">Python线程/进程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="GIL"><a href="#GIL" class="headerlink" title="GIL"></a><code>GIL</code></h2><p><code>GIL</code>:<code>global interpreter lock</code>全局锁<br>限制：使得<code>python</code>中一个线程对应于<code>C</code>语言中的一个线程。同一时刻只有一个线程运行在一个<code>CPU</code>上执行字节码，无法将多线程运行到多<code>CPU</code>上。<br>释放：根据字节码执行行数或者时间片来释放锁，或者遇到<code>io</code>操作时会主动释放。<br>显示字节码：<code>from dis import dis</code></p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
-<li>耗<code>CPU</code>操作(例如运算)采用多进程更加具有优势(<code>GIL</code>使得多线程没有办法在不同的<code>CPU</code>上运行)</li>
-<li>耗<code>IO</code>操作采用多线程更具有优势(当碰见<code>IO</code>操作时，会主动释放<code>GIL</code>)</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/03/Python线程-进程/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/03/Python线程-进程/" data-id="cjujlwkl50010g28zvsxbbah7" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-Test" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/03/Test/" class="article-date">
-  <time datetime="2019-04-03T08:30:34.000Z" itemprop="datePublished">2019-04-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/工作之外/">工作之外</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/03/Test/">Test</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- Table of Contents -->
-        
-        <p>因为不小心<code>rm -rf</code>干掉了以前的博客，刚好用了马克飞象导致一篇笔记丢失，心有余悸，还是试试多处备份~<br>慢慢把印象笔记上的乱七八糟的东西搬过来吧，也当是自己的复习了~</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/03/Test/" data-id="cjujlwkiy0000g28z53i7o4gg" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
+  -->
   
 
 </section>
@@ -635,82 +237,29 @@
     <aside id="sidebar">
   
     
-  <div class="widget-wrap">
-     
-        <h3 class="follow-title ">About me</h3>
-     
-    <div class="widget follow">
-      
-              <a class="github" aria-hidden="true" href="https://github.com/Yuyinzi" target="_blank" title="Github"></a>
-      
-      
-      
-      
-    </div>
-  </div>
 
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#as-view"><span class="toc-number">1.</span> <span class="toc-text">as_view`</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch"><span class="toc-number">2.</span> <span class="toc-text">dispatch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reverse"><span class="toc-number">3.</span> <span class="toc-text">reverse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#中间件-Middlewares"><span class="toc-number">4.</span> <span class="toc-text">中间件(Middlewares)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#process-request"><span class="toc-number">4.1.</span> <span class="toc-text">process_request</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#process-view"><span class="toc-number">4.2.</span> <span class="toc-text">process_view</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#process-template-response"><span class="toc-number">4.3.</span> <span class="toc-text">process_template_response</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#process-response"><span class="toc-number">4.4.</span> <span class="toc-text">process_response</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#procee-exception"><span class="toc-number">4.5.</span> <span class="toc-text">procee_exception</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行顺序"><span class="toc-number">4.6.</span> <span class="toc-text">执行顺序</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
 
   
     
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title categories">分类</h3>
-    <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title tagcloud">标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Django/" style="font-size: 19.5px;">Django</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Redis/" style="font-size: 19.5px;">Redis</a> <a href="/tags/web/" style="font-size: 14px;">web</a> <a href="/tags/算法/" style="font-size: 14px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/04/16/Django笔记/">Django笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/14/TCP学习记录/">TCP学习记录</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/">《Redis设计与实现》读书笔记 第二部分</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/12/常用排序算法的Python实现/">常用排序算法的Python实现</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/11/Django源码分析/">Django源码分析</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title archive">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">10</span></li></ul>
-    </div>
-  </div>
-
 
   
 </aside>
