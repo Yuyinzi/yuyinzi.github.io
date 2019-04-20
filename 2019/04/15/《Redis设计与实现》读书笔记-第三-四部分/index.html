@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
 <meta property="og:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是什么">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-20T16:10:54.813Z">
+<meta property="og:updated_time" content="2019-04-20T16:11:49.957Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Redis设计与实现》读书笔记 第三&#x2F;四部分">
 <meta name="twitter:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是什么">
@@ -278,7 +278,7 @@
 <p>选举的过程大概如下：在每一个配置纪元里，从节点会向所有负责处理槽的主节点发送投票请求，要求对方将票投给自己(仍然是采取先来先到的原则)。当一个从节点获得超过<code>N/2+1</code>张选票时(具有投票权的主节点个数为<code>N</code>)，这个从节点就当选成为新的主节点。如果当前配置纪元没有选出节点，则会进入新的配置纪元直到选举完成。</p>
 </blockquote>
 <h3 id="消息"><a href="#消息" class="headerlink" title="消息"></a>消息</h3><p>基本的消息结构为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> clusterMsgData&#123;</span><br><span class="line">  <span class="comment">// Gossip消息的正文</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> &#123;</span>...&#125; ping;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> &#123;</span>...&#125; fail;</span><br><span class="line">  sturct &#123;...&#125; publish;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> clusterMsgData&#123;</span><br><span class="line">  <span class="comment">// Gossip消息的正文</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> &#123;</span>...&#125; ping;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> &#123;</span>...&#125; fail;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> &#123;</span>...&#125; publish;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>节点之间相互发送的消息有五种：</p>
 <ul>
 <li><code>MEET</code>：发送者邀请接收者加入发送者所在的集群</li>
