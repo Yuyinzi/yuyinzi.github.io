@@ -209,7 +209,7 @@ struct sentinelRedisInstance{
 - `serverCron`函数会执行`clusterCron`，执行集群下常规操作
 - 集群中需要用到的数据，采用`cluserNode`，`clusterLink`以及`clusterState`来保存。
 
-#### `clusterNode`
+**`clusterNode`**
 
 每个节点都有自己的`clusterNode`结构来记录自己的状态，包括节点的创建时间，名字，配置纪元`IP`地址和端口号等，还包含了一个`clusterLink`结构的指针，指向`link`：
 
@@ -231,15 +231,13 @@ struct clusterNode{
 }
 ```
 
-
-
-####`clusterLink`
+**`clusterLink`**
 
 这个结构保存了连接节点所需的比如套接字描述符，输入缓冲区和输出缓冲区以及与这个节点相关联的节点。
 
 > `clusterLink`中保存的输入缓冲区和输出缓冲区是用于连接节点的，不同于`redisClient`中的是用于连接客户端的。
 
-#### `clusterState`
+**`clusterState`**
 
 除了上面两个数据结构，每个节点还保存了`clusterState`，即在当前节点的视角下，集群目前所处的状态：
 
@@ -332,7 +330,7 @@ union clusterMsgData{
   // Gossip消息的正文
   struct {...} ping;
   struct {...} fail;
-  sturct {...} publish;
+  struct {...} publish;
 }
 ```
 
