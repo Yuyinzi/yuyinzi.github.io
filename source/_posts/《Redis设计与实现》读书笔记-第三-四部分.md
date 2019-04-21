@@ -12,6 +12,7 @@ categories:
 - `redis`是如何实现主从一致的
 - `redis`的`sentinel`是如何发现下线服务器并进行故障转移的
 - `redis`的集群是如何进行数据分片的，什么是`Gossip`协议
+- `redis`的发布与订阅功能是如何实现的
 
 <!-- more -->
 
@@ -352,3 +353,82 @@ union clusterMsgData{
 显然，当集群节点数量比较大的情况下，单纯使用`Gossip`协议，传播信息会带来一定延迟。而`FAIL`消息需要尽快地告知所有节点，因此`FAIL`节点中只需要保存下线节点的名字，告知接收者该节点已经下线。
 
 当某个节点收到客户端发来的`PUBLISH <channel> <message>`时，它不仅会向`channel`发送`message`，同时还会向集群广播`PUBLISH`消息，最终实现所有节点都向`channel`发送`message`。
+
+## 第十八章 发布与订阅
+
+发布订阅功能包括`PUBLISH`/`SUBSCRIBE`/`PSUBSCRIBE`等组成。
+
+### 订阅/退订频道
+
+`redis`将频道订阅关系保存在`pubsub_channels`里，它是一个字典：
+
+```C 
+struct redisServer{
+  dict * pubsub_channels;
+}
+```
+
+其中，字典的键值代表某个订阅的频道，键的值是一个链表，代表订阅这个频道的所有客户端。
+
+当用户执行`SUBSCRIBE`时，会有两种情况：
+
+- 频道已经有订阅者，那么客户端添加至链表的尾部
+- 如果没有订阅者，在字典中创建一个新的键，并且将客户端添加至链表中成为第一个元素
+
+退订`UNSUBSCRIBE`与订阅正好相反，如果当删除客户端后链表变为空链表，那么也会在字典中删除这个频道。
+
+### 订阅/退订模式
+
+`redis`将模式订阅关系保存在`pubsub_patterns`里，它是一个链表：
+
+```C 
+struct redisServer{
+  list * pubsub_patterns;
+}
+```
+
+链表中的每一个节点都包含了一个`pubsubPattern`结构，记录了被订阅的模式，以及订阅模式的客户端。
+
+当用户执行`PSUBSCRIBE`时，会有两个步骤：
+
+1. 新建一个`pubsubPattern`结构，记录被订阅的模式以及订阅客户端
+
+2. 将新建的结构添加至`pubsub_patterns`的表尾
+
+> 也是就是，如果有订阅模式已经存在，也仍然会新建一个新的`pubsubPattern`节点。
+
+当用户执行`PUNSUBSCRIBE`退订模式时，会在链表中寻找订阅模式与客户端都匹配的节点，将其删除。
+
+### `PUBLISH`
+
+当用户执行发布`PUBLISH <channel> <message>`时，会分为两个步骤：
+
+1. 在`pubsub_channels`中寻找到`channel`，遍历其订阅者名单，然后将`message`发送给`channel`频道的订阅者
+
+2. 遍历整个`pubsub_patterns`链表，查找与`channel`频道相匹配的模式，并将消息发送给订阅了这些模式的客户端
+
+于是`PUBLISH`可以表示为：
+
+```python
+def publish(channel, message):
+  channel_publish()
+  pattern_publish()
+```
+
+### 查看订阅信息(`PUBSUB`)
+
+**`PUBSUB CHANNELS [pattern]`**
+
+- 如果不给定`pattern`参数，返回服务器当前被订阅的所有频道
+- 如果给定`pattern`参数，返回服务器当前订阅频道中与其相匹配的频道
+
+它是通过遍历`pubsub_channels`的所有键，并返回符合条件的键来实现的。
+
+**`PUBSUB NUMSUB`**
+
+接收任意多个频道作为输入参数，返回频道的订阅者数量。它是通过在`pubsub_channels`中找到对应频道的订阅者链表，并且返回链表长度来实现的。
+
+**`PUBSUB NUMPAT`**
+
+这个命令与订阅模式相关，返回当前被订阅模式的数量。是通过返回`pubsub_patterns`链表的长度来实现的。由于可能会有重复的模式订阅，因此这个命令返回参与了模式订阅的客户端之和，而不是总共有多少种模式订阅。
+
