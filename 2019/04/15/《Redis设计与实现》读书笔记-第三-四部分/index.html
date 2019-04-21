@@ -5,18 +5,18 @@
   
   <title>《Redis设计与实现》读书笔记 第三/四部分 | Yuyinzi&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议">
+  <meta name="description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议 redis的发布与订阅功能是如何实现的">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="《Redis设计与实现》读书笔记 第三&#x2F;四部分">
 <meta property="og:url" content="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s blog">
-<meta property="og:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议">
+<meta property="og:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议 redis的发布与订阅功能是如何实现的">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-20T16:16:18.628Z">
+<meta property="og:updated_time" content="2019-04-21T17:07:22.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Redis设计与实现》读书笔记 第三&#x2F;四部分">
-<meta name="twitter:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议">
+<meta name="twitter:description" content="因为第四部分只挑了感兴趣的部分看，于是将第三第四部分合并起来。主要介绍的有：  redis是如何实现主从一致的 redis的sentinel是如何发现下线服务器并进行故障转移的 redis的集群是如何进行数据分片的，什么是Gossip协议 redis的发布与订阅功能是如何实现的">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s blog" type="application/atom+xml">
   
@@ -100,6 +100,7 @@
 <li><code>redis</code>是如何实现主从一致的</li>
 <li><code>redis</code>的<code>sentinel</code>是如何发现下线服务器并进行故障转移的</li>
 <li><code>redis</code>的集群是如何进行数据分片的，什么是<code>Gossip</code>协议</li>
+<li><code>redis</code>的发布与订阅功能是如何实现的</li>
 </ul>
 <a id="more"></a>
 <h2 id="第十五章-复制"><a href="#第十五章-复制" class="headerlink" title="第十五章 复制"></a>第十五章 复制</h2><p>用户可以通过执行<code>SLAVEOF</code>命令让一个服务器(从服务器)去复制另一个服务器(主服务器)。复制功能包括同步(<code>sync</code>)和命令传播(<code>command propagate</code>)：</p>
@@ -294,6 +295,49 @@
 <p><code>Gossip</code>协议由前三种消息实现，它们使用同样的消息正文，接收节点根据<code>type</code>来判断具体是哪一种消息。每次发送时，发送者都从自己的已知节点中随机选出两个节点，将其消息包含在消息正文中的<code>Gossip</code>消息结构(<code>clusterMsgDataGossip</code>)中，接收者根据对这两个节点的认知程度选择进行握手或者更新。</p>
 <p>显然，当集群节点数量比较大的情况下，单纯使用<code>Gossip</code>协议，传播信息会带来一定延迟。而<code>FAIL</code>消息需要尽快地告知所有节点，因此<code>FAIL</code>节点中只需要保存下线节点的名字，告知接收者该节点已经下线。</p>
 <p>当某个节点收到客户端发来的<code>PUBLISH &lt;channel&gt; &lt;message&gt;</code>时，它不仅会向<code>channel</code>发送<code>message</code>，同时还会向集群广播<code>PUBLISH</code>消息，最终实现所有节点都向<code>channel</code>发送<code>message</code>。</p>
+<h2 id="第十八章-发布与订阅"><a href="#第十八章-发布与订阅" class="headerlink" title="第十八章 发布与订阅"></a>第十八章 发布与订阅</h2><p>发布订阅功能包括<code>PUBLISH</code>/<code>SUBSCRIBE</code>/<code>PSUBSCRIBE</code>等组成。</p>
+<h3 id="订阅-退订频道"><a href="#订阅-退订频道" class="headerlink" title="订阅/退订频道"></a>订阅/退订频道</h3><p><code>redis</code>将频道订阅关系保存在<code>pubsub_channels</code>里，它是一个字典：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisServer</span>&#123;</span></span><br><span class="line">  dict * pubsub_channels;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，字典的键值代表某个订阅的频道，键的值是一个链表，代表订阅这个频道的所有客户端。</p>
+<p>当用户执行<code>SUBSCRIBE</code>时，会有两种情况：</p>
+<ul>
+<li>频道已经有订阅者，那么客户端添加至链表的尾部</li>
+<li>如果没有订阅者，在字典中创建一个新的键，并且将客户端添加至链表中成为第一个元素</li>
+</ul>
+<p>退订<code>UNSUBSCRIBE</code>与订阅正好相反，如果当删除客户端后链表变为空链表，那么也会在字典中删除这个频道。</p>
+<h3 id="订阅-退订模式"><a href="#订阅-退订模式" class="headerlink" title="订阅/退订模式"></a>订阅/退订模式</h3><p><code>redis</code>将模式订阅关系保存在<code>pubsub_patterns</code>里，它是一个链表：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisServer</span>&#123;</span></span><br><span class="line">  <span class="built_in">list</span> * pubsub_patterns;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>链表中的每一个节点都包含了一个<code>pubsubPattern</code>结构，记录了被订阅的模式，以及订阅模式的客户端。</p>
+<p>当用户执行<code>PSUBSCRIBE</code>时，会有两个步骤：</p>
+<ol>
+<li><p>新建一个<code>pubsubPattern</code>结构，记录被订阅的模式以及订阅客户端</p>
+</li>
+<li><p>将新建的结构添加至<code>pubsub_patterns</code>的表尾</p>
+</li>
+</ol>
+<blockquote>
+<p>也是就是，如果有订阅模式已经存在，也仍然会新建一个新的<code>pubsubPattern</code>节点。</p>
+</blockquote>
+<p>当用户执行<code>PUNSUBSCRIBE</code>退订模式时，会在链表中寻找订阅模式与客户端都匹配的节点，将其删除。</p>
+<h3 id="PUBLISH"><a href="#PUBLISH" class="headerlink" title="PUBLISH"></a><code>PUBLISH</code></h3><p>当用户执行发布<code>PUBLISH &lt;channel&gt; &lt;message&gt;</code>时，会分为两个步骤：</p>
+<ol>
+<li><p>在<code>pubsub_channels</code>中寻找到<code>channel</code>，遍历其订阅者名单，然后将<code>message</code>发送给<code>channel</code>频道的订阅者</p>
+</li>
+<li><p>遍历整个<code>pubsub_patterns</code>链表，查找与<code>channel</code>频道相匹配的模式，并将消息发送给订阅了这些模式的客户端</p>
+</li>
+</ol>
+<p>于是<code>PUBLISH</code>可以表示为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">publish</span><span class="params">(channel, message)</span>:</span></span><br><span class="line">  channel_publish()</span><br><span class="line">  pattern_publish()</span><br></pre></td></tr></table></figure>
+<h3 id="查看订阅信息-PUBSUB"><a href="#查看订阅信息-PUBSUB" class="headerlink" title="查看订阅信息(PUBSUB)"></a>查看订阅信息(<code>PUBSUB</code>)</h3><p><strong><code>PUBSUB CHANNELS [pattern]</code></strong></p>
+<ul>
+<li>如果不给定<code>pattern</code>参数，返回服务器当前被订阅的所有频道</li>
+<li>如果给定<code>pattern</code>参数，返回服务器当前订阅频道中与其相匹配的频道</li>
+</ul>
+<p>它是通过遍历<code>pubsub_channels</code>的所有键，并返回符合条件的键来实现的。</p>
+<p><strong><code>PUBSUB NUMSUB</code></strong></p>
+<p>接收任意多个频道作为输入参数，返回频道的订阅者数量。它是通过在<code>pubsub_channels</code>中找到对应频道的订阅者链表，并且返回链表长度来实现的。</p>
+<p><strong><code>PUBSUB NUMPAT</code></strong></p>
+<p>这个命令与订阅模式相关，返回当前被订阅模式的数量。是通过返回<code>pubsub_patterns</code>链表的长度来实现的。由于可能会有重复的模式订阅，因此这个命令返回参与了模式订阅的客户端之和，而不是总共有多少种模式订阅。</p>
 
       
     </div>
@@ -398,7 +442,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第十五章-复制"><span class="toc-number">1.</span> <span class="toc-text">第十五章 复制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#旧版复制"><span class="toc-number">1.1.</span> <span class="toc-text">旧版复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新版复制"><span class="toc-number">1.2.</span> <span class="toc-text">新版复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制的实现"><span class="toc-number">1.3.</span> <span class="toc-text">复制的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#心跳检测"><span class="toc-number">1.4.</span> <span class="toc-text">心跳检测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十六章-Sentinel"><span class="toc-number">2.</span> <span class="toc-text">第十六章 Sentinel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本质"><span class="toc-number">2.1.</span> <span class="toc-text">本质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取主服务器信息"><span class="toc-number">2.2.</span> <span class="toc-text">获取主服务器信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取从服务器信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取从服务器信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发现-更新sentinel信息"><span class="toc-number">2.4.</span> <span class="toc-text">发现/更新sentinel信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检测主观-客观下线"><span class="toc-number">2.5.</span> <span class="toc-text">检测主观/客观下线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选举领头sentinel"><span class="toc-number">2.6.</span> <span class="toc-text">选举领头sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#故障转移-failover"><span class="toc-number">2.7.</span> <span class="toc-text">故障转移 (failover)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十七章-集群"><span class="toc-number">3.</span> <span class="toc-text">第十七章 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#节点"><span class="toc-number">3.1.</span> <span class="toc-text">节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#槽指派"><span class="toc-number">3.2.</span> <span class="toc-text">槽指派</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理命令"><span class="toc-number">3.3.</span> <span class="toc-text">处理命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新分片"><span class="toc-number">3.4.</span> <span class="toc-text">重新分片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制与故障转移"><span class="toc-number">3.5.</span> <span class="toc-text">复制与故障转移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息"><span class="toc-number">3.6.</span> <span class="toc-text">消息</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第十五章-复制"><span class="toc-number">1.</span> <span class="toc-text">第十五章 复制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#旧版复制"><span class="toc-number">1.1.</span> <span class="toc-text">旧版复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新版复制"><span class="toc-number">1.2.</span> <span class="toc-text">新版复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制的实现"><span class="toc-number">1.3.</span> <span class="toc-text">复制的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#心跳检测"><span class="toc-number">1.4.</span> <span class="toc-text">心跳检测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十六章-Sentinel"><span class="toc-number">2.</span> <span class="toc-text">第十六章 Sentinel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#本质"><span class="toc-number">2.1.</span> <span class="toc-text">本质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取主服务器信息"><span class="toc-number">2.2.</span> <span class="toc-text">获取主服务器信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取从服务器信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取从服务器信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发现-更新sentinel信息"><span class="toc-number">2.4.</span> <span class="toc-text">发现/更新sentinel信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检测主观-客观下线"><span class="toc-number">2.5.</span> <span class="toc-text">检测主观/客观下线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选举领头sentinel"><span class="toc-number">2.6.</span> <span class="toc-text">选举领头sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#故障转移-failover"><span class="toc-number">2.7.</span> <span class="toc-text">故障转移 (failover)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十七章-集群"><span class="toc-number">3.</span> <span class="toc-text">第十七章 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#节点"><span class="toc-number">3.1.</span> <span class="toc-text">节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#槽指派"><span class="toc-number">3.2.</span> <span class="toc-text">槽指派</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理命令"><span class="toc-number">3.3.</span> <span class="toc-text">处理命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新分片"><span class="toc-number">3.4.</span> <span class="toc-text">重新分片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制与故障转移"><span class="toc-number">3.5.</span> <span class="toc-text">复制与故障转移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息"><span class="toc-number">3.6.</span> <span class="toc-text">消息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第十八章-发布与订阅"><span class="toc-number">4.</span> <span class="toc-text">第十八章 发布与订阅</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#订阅-退订频道"><span class="toc-number">4.1.</span> <span class="toc-text">订阅/退订频道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#订阅-退订模式"><span class="toc-number">4.2.</span> <span class="toc-text">订阅/退订模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PUBLISH"><span class="toc-number">4.3.</span> <span class="toc-text">PUBLISH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看订阅信息-PUBSUB"><span class="toc-number">4.4.</span> <span class="toc-text">查看订阅信息(PUBSUB)</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
