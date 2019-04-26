@@ -14,7 +14,7 @@
 <meta property="og:description" content="优点 实现了AMQP标准的消息服务器 可靠性，使用持久化、传输确认、发布确认等保证 灵活的路由 集群部署简单 支持多种协议，以及多种语言客户端 易用的用户界面  …">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yuyinzi.github.io/assets/rpc.jpg">
-<meta property="og:updated_time" content="2019-04-26T09:08:27.394Z">
+<meta property="og:updated_time" content="2019-04-26T09:11:23.925Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rabbitmq学习记录">
 <meta name="twitter:description" content="优点 实现了AMQP标准的消息服务器 可靠性，使用持久化、传输确认、发布确认等保证 灵活的路由 集群部署简单 支持多种协议，以及多种语言客户端 易用的用户界面  …">
@@ -122,7 +122,7 @@
 <p>折腾了半个小时，此时终于可以不使用<code>sudo</code>启动了。</p>
 <p>可以使用<code>rabbitmqctl start_app/stop_app</code>启动/停止<code>rabbitmq</code>。网页端的用户界面访问：<code>localhost:15762</code>，默认用户名密码都为<code>guest</code>。</p>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li>Message：消息，<code>AMQP</code>中预定了<code>14</code>个属性，即后文<code>pika</code>中会用到的<code>BasicProperties</code></li>
+<li><code>Message</code>：消息，<code>AMQP</code>中预定了<code>14</code>个属性，即后文<code>pika</code>中会用到的<code>BasicProperties</code></li>
 <li><code>Producer</code>：消息的生产者，也是一个向交换机发布消息的客户端应用程序</li>
 <li><code>Consumer</code>：消息的消费者，表示一个从消息队列中取得消息的客户端应用程序。</li>
 <li><code>Exchange</code>：交换机，用来接收生产者发送的消息并根据规则将这些消息路由给服务器中的队列</li>
