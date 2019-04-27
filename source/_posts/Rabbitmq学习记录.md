@@ -1,5 +1,5 @@
 ---
-title: Rabbitmq学习记录
+title: RabbitMQ学习记录
 date: 2019-04-25 15:28:17
 tags:
 - Rabbitmq
