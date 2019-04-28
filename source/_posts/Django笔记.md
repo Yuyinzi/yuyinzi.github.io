@@ -118,7 +118,7 @@ urlpatterns = [
 - `process_request(self, request)`：该方法在请求被决定使用哪个`view`之前调用，会返回`None`或者`HttpResponse`对象。
 
 - `process_view(self , request, callback , callback_args,  callback_kwargs)`：`callback`是请求被决定使用的`view`函数，`callback_args`和`callback_kwargs`是`view`锁需要接受的参数，它返回`None`或者`HttpResponse`。
-- `process_template_response(self, request, response):`response`是一个由`Django view`或者中间件返回的`TemplateResponse `对象, `process_template_response()`在`view`使用`render`渲染一个模版对象完成之后被调用，它必须返回一个`render`方法执行后的`response`对象。
+- `process_template_response(self, request, response)`:`response`是一个由`Django view`或者中间件返回的`TemplateResponse `对象, `process_template_response()`在`view`使用`render`渲染一个模版对象完成之后被调用，它必须返回一个`render`方法执行后的`response`对象。
 
 - `process_response`(`self`, `request`, `response`)：`response` 是一个`django view`或者中间件返回的`HttpResponse`或者`StreamingHttpResponse`对象，`process_response`会在所有响应到达浏览器之前被调用
 
