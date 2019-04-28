@@ -14,7 +14,7 @@
 <meta property="og:description" content="随手记录一些Django发现的知识点。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yuyinzi.github.io/assets/middlewares.png">
-<meta property="og:updated_time" content="2019-04-16T09:58:06.779Z">
+<meta property="og:updated_time" content="2019-04-28T02:49:48.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django笔记">
 <meta name="twitter:description" content="随手记录一些Django发现的知识点。">
@@ -117,7 +117,7 @@
 </li>
 <li><p><code>process_view(self , request, callback , callback_args,  callback_kwargs)</code>：<code>callback</code>是请求被决定使用的<code>view</code>函数，<code>callback_args</code>和<code>callback_kwargs</code>是<code>view</code>锁需要接受的参数，它返回<code>None</code>或者<code>HttpResponse</code>。</p>
 </li>
-<li><p><code>process_template_response(self, request, response):</code>response<code>是一个由</code>Django view<code>或者中间件返回的</code>TemplateResponse <code>对象,</code>process_template_response()<code>在</code>view<code>使用</code>render<code>渲染一个模版对象完成之后被调用，它必须返回一个</code>render<code>方法执行后的</code>response`对象。</p>
+<li><p><code>process_template_response(self, request, response)</code>:<code>response</code>是一个由<code>Django view</code>或者中间件返回的<code>TemplateResponse</code>对象, <code>process_template_response()</code>在<code>view</code>使用<code>render</code>渲染一个模版对象完成之后被调用，它必须返回一个<code>render</code>方法执行后的<code>response</code>对象。</p>
 </li>
 <li><p><code>process_response</code>(<code>self</code>, <code>request</code>, <code>response</code>)：<code>response</code> 是一个<code>django view</code>或者中间件返回的<code>HttpResponse</code>或者<code>StreamingHttpResponse</code>对象，<code>process_response</code>会在所有响应到达浏览器之前被调用</p>
 </li>
