@@ -13,12 +13,17 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="第一部分从第二章到第八章，主要解决下面几个问题：  redis的底层是由哪些数据结构实现的，它们的应用场景又是什么 redis的五大对象分别用了哪些数据结构实现 redis的内存回收机制">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/sds.png">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/list.png">
 <meta property="og:image" content="http://yuyinzi.github.io/assets/1554866099325.jpg">
-<meta property="og:updated_time" content="2019-04-13T09:05:35.343Z">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/skiplist.png">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/intset.png">
+<meta property="og:image" content="http://yuyinzi.github.io/assets/ziplist.png">
+<meta property="og:updated_time" content="2019-04-30T09:40:16.201Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Redis设计与实现》读书笔记 第一部分">
 <meta name="twitter:description" content="第一部分从第二章到第八章，主要解决下面几个问题：  redis的底层是由哪些数据结构实现的，它们的应用场景又是什么 redis的五大对象分别用了哪些数据结构实现 redis的内存回收机制">
-<meta name="twitter:image" content="http://yuyinzi.github.io/assets/1554866099325.jpg">
+<meta name="twitter:image" content="http://yuyinzi.github.io/assets/sds.png">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
   
@@ -105,6 +110,7 @@
 </ul>
 <a id="more"></a>
 <h2 id="SDS-简单动态字符串"><a href="#SDS-简单动态字符串" class="headerlink" title="SDS 简单动态字符串"></a><code>SDS</code> 简单动态字符串</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">free</span>;</span><br><span class="line">    <span class="keyword">char</span> buf[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/assets/sds.png" alt="sds"></p>
 <p><code>SDS</code>遵循<code>C</code>中以空字符串结尾的惯例，可以方便重用<code>C</code>中的相关函数。但不同的是：</p>
 <ul>
 <li>因为<code>len</code>的存在，获取字符串长度的复杂度为<code>O(1)</code>。</li>
@@ -119,6 +125,7 @@
 <blockquote>
 <p><code>listNode</code>是一个双链表，包含了<code>prev</code>和<code>next</code>指针，可以保存不同类型的值。</p>
 </blockquote>
+<p><img src="/assets/list.png" alt="list"></p>
 <p>优点：</p>
 <ul>
 <li>获取表头和表尾节点的复杂度为<code>o(1)</code></li>
@@ -136,7 +143,7 @@
 <li>为<code>ht[1]</code>分配空间，大小取决于<code>ht[0]</code></li>
 <li>将<code>ht[0]</code>中的所有键值对<code>rehash</code>到<code>ht[1]</code>中，采用渐进式<code>rehash</code></li>
 <li>当<code>ht[0]</code>包含的所有<code>ht[1]</code>之后，释放<code>ht[0]</code>，将<code>ht[1]</code>设置为<code>ht[0]</code><blockquote>
-<p>当服务器1)没有执行<code>BGSAVE</code>或者<code>BGREWRITEAOF</code>且负载因子大于<code>1</code>；2)执行<code>BGSAVE</code>或者<code>BGREWRITEAOF</code>且负载因子大于<code>5</code>时会自动进行扩展；<br>当服务器负载因子小于<code>0.1</code>时，会自动进行收缩。</p>
+<p>当服务器1)没有执行<code>BGSAVE</code>或者<code>BGREWRITEAOF</code>且负载因子(<code>used/size</code>)大于<code>1</code>；2)执行<code>BGSAVE</code>或者<code>BGREWRITEAOF</code>且负载因子大于<code>5</code>时会自动进行扩展；<br>当服务器负载因子小于<code>0.1</code>时，会自动进行收缩。</p>
 </blockquote>
 </li>
 </ol>
@@ -151,10 +158,12 @@
 <blockquote>
 <p>需要注意的是，每创建一个新的节点时，都会随机生成一个介于<code>1</code>到<code>32</code>之间的值作为<code>level</code>数组的大小。<br>跨度实际上是用来计算排位的，在查找某个节点的过程中，将沿途访问过的所有层的跨度累计，就是目标节点的排位。</p>
 </blockquote>
+<p><img src="/assets/skiplist.png" alt="skiplist"></p>
 <h2 id="整数集合"><a href="#整数集合" class="headerlink" title="整数集合"></a>整数集合</h2><p><code>intset</code>是<code>redis</code>用于保存整数值的集合抽象数据结构，可以保存<code>int16_t</code>、<code>int32_t</code>或者<code>int64_t</code>的整数值，并且不会重复，结构如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">intset</span>&#123;</span></span><br><span class="line">    unit32_encoding;</span><br><span class="line">    <span class="keyword">uint32_t</span> length;</span><br><span class="line">    <span class="comment">// 底层实现，每个元素都是contents数组的数组项</span></span><br><span class="line">    <span class="keyword">int8_t</span> contents[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>虽然<code>contents</code>声明为<code>int8_t</code>类型的数组，但是它真正保存的值取决于<code>encoding</code>的值。</p>
 </blockquote>
+<p><img src="/assets/intset.png" alt="intset.png"></p>
 <p>当需要将新元素添加到现有的整数集合里，并且新元素的类型比现有元素的类型都要长时，整数集合需要先进行<strong>升级</strong>：</p>
 <ol>
 <li>根据新元素类型，扩展底层数组空间大小</li>
@@ -164,6 +173,7 @@
 <p>由此可见，升级可以提升灵活性和节约内存。<strong>整数集合不支持降级，一旦升级，将永远保持</strong>。</p>
 <h2 id="压缩列表"><a href="#压缩列表" class="headerlink" title="压缩列表"></a>压缩列表</h2><p><code>ziplist</code>可以用于实现列表键和哈希键，由一系列特殊编码的连续内存块组成的顺序性结构。它可以包含任意多个节点(<code>entry</code>)，每个节点可以保存一个字节数组或者一个整数值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ziplist</span>&#123;</span></span><br><span class="line">    <span class="keyword">uint32_t</span> zlbytes;</span><br><span class="line">    <span class="keyword">uint32_t</span> zltail;</span><br><span class="line">    <span class="keyword">unit16_t</span> zllen;</span><br><span class="line">    <span class="keyword">unit8_t</span> zlend;</span><br><span class="line">    若干节点，可以为字节数组或者整数值；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>每个节点都由<code>previous_entry_length</code>(前一个节点的长度，因而可以根据当前节点的起始地址计算前一个节点的起始地址，长度可以是<code>1字节</code>或者<code>5字节</code>)、<code>encoding</code>(<code>content</code>所保存数据的类型及长度，例如<code>001011</code>表示保存的是一个长度为<code>11</code>的字节数组)、<code>content</code>三个部分组成。</p>
+<p><img src="/assets/ziplist.png" alt="ziplist"></p>
 <blockquote>
 <p>由于<code>previous_entry_length</code>的长度是记录前一个节点的长度，因此添加或者删除节点都可能导致连锁更新，最坏复杂度为<code>O(N^2)</code>，只是这种情况比较少出现。</p>
 </blockquote>
