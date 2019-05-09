@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="特点一个leader多个follower组成的集群，只要半数服务器有效，则集群有效。  顺序一致性： 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到ZooKeeper中去。 原子性： 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。 全局数据一致： 无论客户端连到哪一个ZooKeeper服务器上，">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-09T08:03:41.852Z">
+<meta property="og:updated_time" content="2019-05-09T08:06:25.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper学习笔记">
 <meta name="twitter:description" content="特点一个leader多个follower组成的集群，只要半数服务器有效，则集群有效。  顺序一致性： 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到ZooKeeper中去。 原子性： 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。 全局数据一致： 无论客户端连到哪一个ZooKeeper服务器上，">
@@ -214,12 +214,12 @@
 <li>存在一种情况将出现监听事件丢失：当客户端与服务端断开连接期间，一个被监听的节点创建并且被删除，客户端将收不到任何监听事件。 </li>
 <li><code>ZooKeeper</code>服务端的监听列表仅保存在内存中，不做持久化。当一个客户端与服务端断开连接后，它所有的<code>watch</code>都会从内存中移除，客户端会在重连后自动重新注册它的所有<code>watch</code>。</li>
 </ul>
-<p>References`:</p>
+<p><code>References</code>:</p>
 <p>《大数据日知录》p96-p104</p>
 <p><a href="https://blog.51cto.com/littledevil/1983260" target="_blank" rel="noopener">Zookeeper详解（一）：分布式与Zookeeper</a></p>
 <p><a href="https://www.jianshu.com/p/fb527a64deee" target="_blank" rel="noopener">Zab：Zookeeper 中的分布式一致性协议介绍</a></p>
-<p>[<a href="https://www.cnblogs.com/leesf456/p/6107600.html" target="_blank" rel="noopener">【分布式】Zookeeper的Leader选举</a>]</p>
-<p>[ZooKeeper监听机制](</p>
+<p><a href="https://www.cnblogs.com/leesf456/p/6107600.html" target="_blank" rel="noopener">【分布式】Zookeeper的Leader选举</a>]</p>
+<p><a href="https://blog.csdn.net/tomato__/article/details/78563001" target="_blank" rel="noopener">ZooKeeper监听机制</a></p>
 
       
     </div>
