@@ -5,18 +5,18 @@
   
   <title>分布式锁的实现原理学习笔记 | Yuyinzi&#39;s note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memecached) 基于ZooKeeper">
+  <meta name="description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memcached) 基于ZooKeeper">
 <meta name="keywords" content="分布式,redis,mysql,ZooKeeper">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分布式锁的实现原理学习笔记">
 <meta property="og:url" content="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
-<meta property="og:description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memecached) 基于ZooKeeper">
+<meta property="og:description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memcached) 基于ZooKeeper">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-09T17:23:12.191Z">
+<meta property="og:updated_time" content="2019-05-09T17:24:28.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式锁的实现原理学习笔记">
-<meta name="twitter:description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memecached) 基于ZooKeeper">
+<meta name="twitter:description" content="前言在分布式场景下，单机的锁已经没有办法满足控制不同节点对同一资源的并发访问。 常见的分布式锁有三种：  基于Mysql 基于缓存(redis、Memcached) 基于ZooKeeper">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
   
@@ -99,7 +99,7 @@
 <p>常见的分布式锁有三种：</p>
 <ul>
 <li>基于<code>Mysql</code></li>
-<li>基于缓存(<code>redis</code>、<code>Memecached</code>)</li>
+<li>基于缓存(<code>redis</code>、<code>Memcached</code>)</li>
 <li>基于<code>ZooKeeper</code></li>
 </ul>
 <a id="more"></a>
