@@ -183,7 +183,7 @@ categories:
 - 存在一种情况将出现监听事件丢失：当客户端与服务端断开连接期间，一个被监听的节点创建并且被删除，客户端将收不到任何监听事件。 
 - `ZooKeeper`服务端的监听列表仅保存在内存中，不做持久化。当一个客户端与服务端断开连接后，它所有的`watch`都会从内存中移除，客户端会在重连后自动重新注册它的所有`watch`。
 
-References`:
+`References`:
 
 《大数据日知录》p96-p104
 
@@ -191,6 +191,6 @@ References`:
 
 [Zab：Zookeeper 中的分布式一致性协议介绍](<https://www.jianshu.com/p/fb527a64deee>)
 
-[[【分布式】Zookeeper的Leader选举](https://www.cnblogs.com/leesf456/p/6107600.html)]
+[【分布式】Zookeeper的Leader选举](https://www.cnblogs.com/leesf456/p/6107600.html)]
 
-[ZooKeeper监听机制](
+[ZooKeeper监听机制](<https://blog.csdn.net/tomato__/article/details/78563001>)
