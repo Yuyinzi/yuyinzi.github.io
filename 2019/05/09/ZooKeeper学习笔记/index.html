@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>ZooKeeper学习笔记 | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="特点一个leader多个follower组成的集群，只要半数服务器有效，则集群有效。  顺序一致性： 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到ZooKeeper中去。 原子性： 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。 全局数据一致： 无论客户端连到哪一个ZooKeeper服务器上，">
+<meta name="keywords" content="ZooKeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper学习笔记">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="特点一个leader多个follower组成的集群，只要半数服务器有效，则集群有效。  顺序一致性： 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到ZooKeeper中去。 原子性： 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。 全局数据一致： 无论客户端连到哪一个ZooKeeper服务器上，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-09T08:03:41.852Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooKeeper学习笔记">
+<meta name="twitter:description" content="特点一个leader多个follower组成的集群，只要半数服务器有效，则集群有效。  顺序一致性： 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到ZooKeeper中去。 原子性： 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。 全局数据一致： 无论客户端连到哪一个ZooKeeper服务器上，">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ZooKeeper学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/09/ZooKeeper学习笔记/" class="article-date">
+  <time datetime="2019-05-09T08:02:05.000Z" itemprop="datePublished">2019-05-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/分布式/">分布式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ZooKeeper学习笔记
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>一个<code>leader</code>多个<code>follower</code>组成的<strong>集群</strong>，只要半数服务器有效，则集群有效。</p>
+<ul>
+<li><strong>顺序一致性：</strong> 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到<code>ZooKeeper</code>中去。</li>
+<li><strong>原子性：</strong> 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。</li>
+<li><strong>全局数据一致：</strong> 无论客户端连到哪一个<code>ZooKeeper</code>服务器上，其看到的服务端数据模型都是一致的。</li>
+<li><strong>可靠性：</strong> 一旦一次更改请求被应用，更改的结果就会被持久化，直到被下一次更改覆盖。</li>
+<li><strong>实时性</strong>：在一段时间内，客户端可以读取到最新的数据(服务器间同步很快)</li>
+</ul>
+<a id="more"></a>
+<h2 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h2><p>事实上<code>ZooKeeper</code>底层只提供了两个功能：</p>
+<ul>
+<li>管理(存储，读取)用户程序提交的数据</li>
+<li>为用户程序提交数据节点监听服务</li>
+</ul>
+<p>由若干服务器构成，每台服务器内存中维护相同的类似于文件系统的树形结构。其中一台通过<code>ZAB</code>原子广播选举主控服务器，其他的作为从属服务器。</p>
+<p>客户端可以通过<code>TCP</code>协议连接任意一台服务器，使用这个<code>TCP</code>连接来发送请求、获取结果、获取监听事件以及发送心跳包。如果这个连接异常断开了，客户端可以连接到另外的机器上。但是：</p>
+<ul>
+<li>每一台从服务器都可以直接响应读请求</li>
+<li>如果是更新或者写数据操作，则必须由主控服务器进行协调更新(客户端如果连接的是从服务器，则请求会被转发至主控服务器上，由其完成)</li>
+</ul>
+<p>因此，<code>ZooKeeper</code>任意一台服务器都可以响应读操作，这是<strong>吞吐量高</strong>的主要原因(数据存储在内存中，因此它也是低延迟的)。并且，在读多于写的应用程序中性能更高。</p>
+<p>但潜在的问题是，即使主控服务器已经更新了内存数据，但是<code>ZAB</code>协议还未能将其广播到从属服务器时，客户端可能会读到过期的数据。所以在<code>API</code>中提供了<code>sync</code>操作：接收到<code>sync</code>命令的从属服务器从主控服务器同步状态信息，保证两者完全一致。因此只要在读操作前调用<code>sync</code>，可以保证客户端读到最新状态的数据。</p>
+<p>服务器在响应请求时，会给客户端分配一个渐增的<code>zxid</code>格式的时间戳(包括了节点创建时间<code>cZxid</code>、节点修改时间<code>mZxid</code>、子节点修改或者创建时间<code>pZxid</code>)，这个时间戳全局有序，实际上是64位的数字，高32位是<code>epoch</code>，用来标识<code>leader</code>是否发生改变，低<code>32</code>位用来递增计数。客户端会在请求中携带该信息，如果发生了服务器切换，当服务器发现自身的<code>zxid</code>比客户端发来的<code>zxid</code>要低，表明服务器数据过期，需要同步。</p>
+<p><code>ZooKeeper</code>的容错是通过重放日志(<code>Replay log</code>)和模糊快照(<code>Fuzzy Snapshot</code>)实现的：</p>
+<ul>
+<li>重放日志：将更新操作体现在内存数据之前先写入外存日志中避免数据丢失</li>
+<li>模糊快照：周期性对内存数据进行数据快照，并不对内存数据加锁，而是用深度遍历的方式将内存中的属性结构转入外存快照数据中。因而快照数据可能与内存中并不一致，是模糊的。</li>
+</ul>
+<p><code>ZooKeeper</code>可以保证数据更新操作是幂等的，只要保证操作顺序一致，即使多次执行统一操作对最终结果没有影响。加载模糊快照，利用重放日志重新执行一遍，系统会恢复到最新状态。</p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="ACL"><a href="#ACL" class="headerlink" title="ACL"></a><code>ACL</code></h3><p><code>ZooKeeper</code>采用<code>ACL</code>(<code>Access Controll List</code>，访问控制)策略进行权限控制，共有五种权限：</p>
+<ul>
+<li><code>create</code>：创建子节点</li>
+<li><code>read</code>：获取节点数据和子节点列表</li>
+<li><code>write</code>：更新节点数据</li>
+<li><code>delete</code>：删除子节点</li>
+<li><code>admin</code>：设置节点<code>ACL</code>权限</li>
+</ul>
+<h3 id="Znode"><a href="#Znode" class="headerlink" title="Znode"></a><code>Znode</code></h3><p>类似于传统的文件系统模式，由树形的层级目录结构组成，节点称之为<code>Znode</code>。每个<code>ZNode</code>默认可以存储<code>1MB</code>的数据。节点既可以是文件，也可以是目录。它有两种类型：持久节点和临时节点。</p>
+<p>对应于每个<code>Znode</code>，<code>Zookeeper</code>都会为其维护一个叫作<code>Stat</code>的数据结构，<code>Stat</code>中记录了这个<code>Znode</code>的三个数据版本，分别是<code>dataVersion</code>(每次对节点进行<code>set</code>操作，数据版本值加)、<code>cVersion</code>(当子节点有变化时，值加1)和<code>aclVersion</code>(当前<code>Znode</code>的访问控制版本号）。</p>
+<blockquote>
+<p><code>dataVersion</code>实际上是乐观锁。</p>
+</blockquote>
+<p>持久节点不论客户端会话情况，一直存在，只有当客户端显式调用删除操作才会消失。临时节点会在会话结束后，自动由<code>ZooKeeper</code>删除。</p>
+<blockquote>
+<p>在<code>ZooKeeper</code>中，一个客户端连接是指客户端和服务器之间的一个<code>TCP</code>长连接。通过这个连接，客户端能够通过心跳检测与服务器保持有效的会话，也能够向<code>Zookeeper</code>服务器发送请求并接受响应，同时还能够通过该连接接收来自服务器的<code>Watch</code>事件通知。 会话的<code>sessionTimeout</code>值用来设置一个客户端会话的超时时间。当由于服务器压力太大、网络故障或是客户端主动断开连接等各种原因导致客户端连接断开时，只要在<code>sessionTimeout</code>规定的时间内能够重新连接上集群中任意一台服务器，那么之前创建的会话仍然有效。</p>
+<p>在为客户端创建会话之前，服务端首先会为每个客户端都分配一个<code>sessionID</code>。由于<code>sessionID</code>是<code>Zookeeper</code>会话的一个重要标识，许多与会话相关的运行机制都是基于这个<code>sessionID</code>的，因此，无论是哪台服务器为客户端分配的<code>sessionID</code>，都务必保证全局唯一。</p>
+</blockquote>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a><code>API</code></h2><p><code>getData</code>、<code>exists</code>和<code>getChildren</code>可以设置观察标识，如果观察标识<code>watch</code>为<code>true</code>，则当节点内容发生变化时，<code>ZooKeeper</code>会主动通知客户端进程，但是并不会将变化内容数据推送过来。</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="领导者选举"><a href="#领导者选举" class="headerlink" title="领导者选举"></a>领导者选举</h3><blockquote>
+<p>当主从结构中主节点发生故障，需要由某台备机成为新的主控机，这个过程被称为领导者选举。</p>
+</blockquote>
+<p><code>ZooKeeper</code>将<code>l</code>节点设置为领导专用节点，存储领导者的地址信息以及其他辅助信息。当进程<code>p</code>尝试读取<code>l</code>，并设置观察标识。</p>
+<ol>
+<li>如果读取成功，说明已有领导者，并且从读取结果中获得领导者相关信息。</li>
+<li>如果读取失败，说明无领导者。<code>p</code>尝试创建<code>l</code>节点，如果创建成功，其他节点因为设置了观察标识，<code>ZooKeeper</code>会通知其他节点领导者发生了故障。</li>
+<li>如果<code>l</code>节点失效了，<code>ZooKeeper</code>会通知其他非领导节点，其他节点再按此步骤进行选举竞争。</li>
+</ol>
+<h3 id="配置管理"><a href="#配置管理" class="headerlink" title="配置管理"></a>配置管理</h3><p>配置文件存储在<code>ZooKeeper</code>的某个节点<code>c</code>中，分布式系统中的客户端进程启动时从该节点读取配置信息并设置观察标记。若配置文件内容被改变，客户端会接收到变化通知。</p>
+<h3 id="组成员管理"><a href="#组成员管理" class="headerlink" title="组成员管理"></a>组成员管理</h3><p> 利用临时节点进行组成员管理，建立一个<code>g</code>节点代表某个群组，某个组成员加入在<code>g</code>下创建临时子节点。负责组成员管理的监控进程可以使用<code>getChildren</code>获得组下所有成员信息并设置观察标识，当后续有新节点加入或者退出时会获得通知消息。</p>
+<h3 id="任务分配"><a href="#任务分配" class="headerlink" title="任务分配"></a>任务分配</h3><p>监控进程创建任务队列管理节点<code>tasks</code>，所有新进入系统的任务都可以在<code>tasks</code>节点下创建子节点。当有新任务<code>task-j</code>时，<code>ZooKeeper</code>通知监控进程，监控进程将其分配给机器<code>i</code>，然后在<code>machines</code>目录下对应的<code>m-i</code>节点创建子节点<code>task-j</code>。<code>m-i</code>节点对应的服务器会监听节点的变化，发现有新增节点时说明有新分配的任务，读出并执行后，将其删除，同时删除<code>tasks</code>节点下的<code>task-j</code>节点。</p>
+<h3 id="锁管理-实现分布式锁"><a href="#锁管理-实现分布式锁" class="headerlink" title="锁管理(实现分布式锁)"></a>锁管理(实现分布式锁)</h3><p>首先设立节点<code>l</code>作为锁标记，每个进程在节点下创立一个临时自增节点，这样各个进程按照建立子节点的先后顺序在名字上进行编号，如果当前进程发现自己编号是<code>l</code>节点下最小的编号节点，那么它就获得了锁。</p>
+<blockquote>
+<p>由于创建的是临时节点，客户端如果发生宕机，过了一定时间<code>ZooKeeper</code>没有收到客户端的心跳包会判断会话失效，将临时节点删除从而释放锁。</p>
+<p>同时，<code>ZooKeeper</code>提供的<code>API</code>中，读取子节点列表(判断自己是否是序号最小的节点)与设置监听器的操作是原子执行的，从而可以保证不会丢失事件。</p>
+</blockquote>
+<p>写锁(排他锁)：判断<code>l</code>下的节点是否存在编号比<strong>自己小<code>1</code></strong>的子节点，并设置观察标识。如果不存在，可以直接获得锁，如果存在则进行等待。</p>
+<p>读锁(并发锁)：判断<code>l</code>下的节点是否存在编号比自己小的子节点持有写锁，如果没有写锁可以直接获得锁；否则监听离自己最近的写锁并进行等待。</p>
+<h3 id="双向路障同步"><a href="#双向路障同步" class="headerlink" title="双向路障同步"></a>双向路障同步</h3><blockquote>
+<p>路障同步是指多个并发进程都要到达某个同步点后再继续向后推进。</p>
+</blockquote>
+<p>利用某个节点<code>b</code>代表路障，每个节点通过在<code>b</code>下创建子节点表明自己已经到达了同步点，离开时通过删除自己节点表明自己准备离开同步点。因此，在开始时，可以判断<code>b</code>下的节点是否到达一定数量，从而判断同步条件是否满足，可以开始运行。如果需要对结束时进行同步，那么判断<code>b</code>下的节点个数是否已经到达<code>0</code>。</p>
+<p>其他还包括命名服务，负载均衡等。</p>
+<h2 id="集群角色"><a href="#集群角色" class="headerlink" title="集群角色"></a>集群角色</h2><p><code>ZooKeeper</code>中没有选择传统的<code>Master/Slave</code>概念，而是引入了<code>Leader</code>、<code>Follower</code>和<code>Observer</code>三种角色。</p>
+<p><code>ZooKeeper</code>集群中的所有机器通过一个<code>Leader</code>选举过程来选定一台称为<code>“Leader”</code> 的机器，<code>Leader</code> 既可以为客户端提供写服务又能提供读服务。除了 <code>Leader</code>外，<code>Follower</code>和<code>Observer</code>都只能提供读服务。<code>Follower</code>和<code>Observer</code>唯一的区别在于<code>Observer</code>机器不参与<code>Leader</code>的选举过程，也不参与写操作的“过半写成功”策略，因此<code>Observer</code>机器可以在不影响写性能的情况下提升集群的读性能。</p>
+<h2 id="半数机制"><a href="#半数机制" class="headerlink" title="半数机制"></a>半数机制</h2><p>我们知道在<code>Zookeeper</code>中<code>Leader</code>选举算法采用了<code>Zab</code>协议。<code>Zab</code>核心思想是当多数<code>Server</code>写成功，则任务数据写成功。</p>
+<ul>
+<li>如果有3个<code>Server</code>，则最多允许1个<code>Server</code> 挂掉。</li>
+<li>如果有4个<code>Server</code>，则同样最多允许1个<code>Server</code>挂掉</li>
+</ul>
+<p>因此选奇数个<code>Server</code>即可。</p>
+<h2 id="ZAB协议"><a href="#ZAB协议" class="headerlink" title="ZAB协议"></a><code>ZAB</code>协议</h2><p><code>ZooKeeper</code>基于<code>paxos</code>算法，但是也拥有自己的核心算法<code>ZAB</code>(原子消息广播协议)，包括消息广播和崩溃恢复两个方面。</p>
+<p>消息广播：</p>
+<ol>
+<li>在广播事务之前<code>Leader</code>服务器会先给这个事务分配一个全局单调递增的唯一<code>ID</code>，也就是<code>zxid</code>，每一个事务必须按照<code>zxid</code>的先后顺序进行处理。</li>
+<li><code>Leader</code> 通过先进先出队列将带有 zxid 的消息作为一个提案(<code>proposal</code>)分发给所有<code>follower</code>。</li>
+<li><code>Follower</code>服务器在接收到<code>proposal</code>之后，都会将其以事务日志的形式写入到本地磁盘中，成功写入后反馈给<code>Leader</code>一个<code>ACK</code>。</li>
+<li>当<code>Leader</code>收到半数<code>ACK</code>响应之后，就会广播一个<code>Commit</code>消息给所有<code>Follower</code>，通知它们进行提交，同时<code>Leader</code>也会完成自身的提交。</li>
+<li>当<code>follower</code>收到<code>COMMIT</code>时，会执行该消息</li>
+</ol>
+<p>因此<code>follower</code>要么回<code>ACK</code>给<code>Leader</code>，要么抛弃<code>Leader</code>，这样可能会导致某一时刻<code>leader</code>和<code>follwer</code>状态不一致。因此<code>ZAB</code>协议还有恢复模式。</p>
+<p>崩溃恢复：</p>
+<ul>
+<li>情况一： <code>leader</code>收到合法数量的<code>ACK</code>后，开始广播<code>COMMIT</code>命令，但是在所有<code>follower</code>都收到之前出现宕机，于是剩下的服务器没有执行这条命令。此时：<ol>
+<li>选举拥有<code>zxid</code>最大的节点作为<code>leader</code>(此节点必为保存了所有<code>COMMIT</code>消息的)</li>
+<li>新的<code>leader</code>将自己事务日志中未<code>COMMIT</code>的消息处理</li>
+<li>新的<code>leader</code>将自身有<code>follwer</code>没有的<code>proposal</code>发送给<code>follower</code>，并将<code>COMMIT</code>命令发送给所有<code>follower</code>，保证所有<code>follower</code>都处理了消息。最终实现已经处理的消息不会丢</li>
+</ol>
+</li>
+<li>情况二：<code>leader</code>还没发送<code>COMMIT</code>就已经宕机了，当<code>leader</code>重新上线成为<code>follower</code>之后，会丢弃被跳过的<code>proposal</code>用以保持与整个系统一致。</li>
+</ul>
+<h2 id="leader选举"><a href="#leader选举" class="headerlink" title="leader选举"></a><code>leader</code>选举</h2><h3 id="服务器启动时的选举"><a href="#服务器启动时的选举" class="headerlink" title="服务器启动时的选举"></a>服务器启动时的选举</h3><ol>
+<li>每台服务器都会发出投票，投给自己</li>
+<li>每台服务器也会受到其他服务器的投票请求，首先比较<code>zxid</code>，如果对方<code>zxid</code>较大，则会认可把投票发送出去。如果<code>zxid</code>相同，则比较<code>myid</code>。</li>
+<li>如果服务器收到了超过半数机器相同的投票信息，那么它将成为<code>leader</code>。</li>
+<li>一旦确定了<code>leader</code>，每个服务器就会更新自己的状态，如果是<code>follower</code>，那么就变更为<code>FOLLOWING</code>，如果是<code>leader</code>，就变更为<code>LEADING</code>。</li>
+</ol>
+<p>对于后面启动的较晚的机器，此时集群已经正常工作，因此只需要和<code>Leader</code>机器简历连接，进行状态同步。</p>
+<h3 id="运行期间的选举"><a href="#运行期间的选举" class="headerlink" title="运行期间的选举"></a>运行期间的选举</h3><ol>
+<li><code>leader</code>宕机后，<code>follower</code>会变更服务器状态为<code>LOOKING</code>，进入选举</li>
+<li>运行期间，每个服务器上的<code>zxid</code>可能不同，每个服务器在第一轮投票也同样地会投给自己。然后与启动时投票类似。</li>
+</ol>
+<p>可见每次投票都是对<code>(vote_sid, vote_zxid)</code>和<code>(self_sid, self_zxid)</code>对比的过程。</p>
+<h2 id="监听机制"><a href="#监听机制" class="headerlink" title="监听机制"></a>监听机制</h2><ul>
+<li>仅触发一次：当数据改变时，一个监听事件被发送到客户端，并取消监听，除非客户端再次设置监听，否则不再监听，所以在回调中应该添加监听。</li>
+<li>服务端维护了两个监听队列：数据监听队列和孩子监听队列。<code>getData()</code>和<code>exists()</code>设置数据监听，<code>getChildren()</code>设置孩子监听。<code>setData()</code>将触发数据监听，<code>create()</code>和<code>delete()</code>将触发一个节点被创建的数据监听和孩子变化的孩子监听。</li>
+<li>当一个客户端连接到一个新服务端时，监听将被触发。在客户端与服务端断开连接后，监听将不能发送到客户端，当客户端重连后，任何先前的注册监听将自动重新注册并根据情况触发，整个过程自动完成。</li>
+<li>存在一种情况将出现监听事件丢失：当客户端与服务端断开连接期间，一个被监听的节点创建并且被删除，客户端将收不到任何监听事件。 </li>
+<li><code>ZooKeeper</code>服务端的监听列表仅保存在内存中，不做持久化。当一个客户端与服务端断开连接后，它所有的<code>watch</code>都会从内存中移除，客户端会在重连后自动重新注册它的所有<code>watch</code>。</li>
+</ul>
+<p>References`:</p>
+<p>《大数据日知录》p96-p104</p>
+<p><a href="https://blog.51cto.com/littledevil/1983260" target="_blank" rel="noopener">Zookeeper详解（一）：分布式与Zookeeper</a></p>
+<p><a href="https://www.jianshu.com/p/fb527a64deee" target="_blank" rel="noopener">Zab：Zookeeper 中的分布式一致性协议介绍</a></p>
+<p>[<a href="https://www.cnblogs.com/leesf456/p/6107600.html" target="_blank" rel="noopener">【分布式】Zookeeper的Leader选举</a>]</p>
+<p>[ZooKeeper监听机制](</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjvgd7xqn0006wi8z8hw4ka22" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ZooKeeper/">ZooKeeper</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/25/Rabbitmq学习记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Rabbitmq学习记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#体系结构"><span class="toc-number">2.</span> <span class="toc-text">体系结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构"><span class="toc-number">3.</span> <span class="toc-text">数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ACL"><span class="toc-number">3.1.</span> <span class="toc-text">ACL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Znode"><span class="toc-number">3.2.</span> <span class="toc-text">Znode</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">4.</span> <span class="toc-text">API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用场景"><span class="toc-number">5.</span> <span class="toc-text">应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#领导者选举"><span class="toc-number">5.1.</span> <span class="toc-text">领导者选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置管理"><span class="toc-number">5.2.</span> <span class="toc-text">配置管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组成员管理"><span class="toc-number">5.3.</span> <span class="toc-text">组成员管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#任务分配"><span class="toc-number">5.4.</span> <span class="toc-text">任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#锁管理-实现分布式锁"><span class="toc-number">5.5.</span> <span class="toc-text">锁管理(实现分布式锁)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#双向路障同步"><span class="toc-number">5.6.</span> <span class="toc-text">双向路障同步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集群角色"><span class="toc-number">6.</span> <span class="toc-text">集群角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#半数机制"><span class="toc-number">7.</span> <span class="toc-text">半数机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZAB协议"><span class="toc-number">8.</span> <span class="toc-text">ZAB协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#leader选举"><span class="toc-number">9.</span> <span class="toc-text">leader选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器启动时的选举"><span class="toc-number">9.1.</span> <span class="toc-text">服务器启动时的选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行期间的选举"><span class="toc-number">9.2.</span> <span class="toc-text">运行期间的选举</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监听机制"><span class="toc-number">10.</span> <span class="toc-text">监听机制</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
