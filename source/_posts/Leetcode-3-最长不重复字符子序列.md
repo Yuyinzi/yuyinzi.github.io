@@ -3,8 +3,10 @@ title: Leetcode 3 最长不重复字符子序列
 date: 2019-05-10 15:49:04
 tags:
 - 算法
-categories:
+- Python
 - Leetcode
+categories:
+- 算法
 ---
 
 ## 题目介绍
