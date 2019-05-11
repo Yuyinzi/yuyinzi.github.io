@@ -5,18 +5,18 @@
   
   <title>面试知识点整理之网络篇 | Yuyinzi&#39;s note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="TCP`三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
+  <meta name="description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） TCP三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
 <meta name="keywords" content="web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试知识点整理之网络篇">
 <meta property="og:url" content="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
-<meta property="og:description" content="TCP`三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
+<meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） TCP三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-11T14:20:22.873Z">
+<meta property="og:updated_time" content="2019-05-11T14:24:05.556Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之网络篇">
-<meta name="twitter:description" content="TCP`三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
+<meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） TCP三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
   
@@ -95,7 +95,8 @@
       
         <!-- Table of Contents -->
         
-        <h2 id="TCP-三次握手与四次挥手"><a href="#TCP-三次握手与四次挥手" class="headerlink" title="TCP`三次握手与四次挥手"></a>TCP`三次握手与四次挥手</h2><ol>
+        <p>面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：）</p>
+<h2 id="TCP三次握手与四次挥手"><a href="#TCP三次握手与四次挥手" class="headerlink" title="TCP三次握手与四次挥手"></a><code>TCP</code>三次握手与四次挥手</h2><ol>
 <li>为何需要四次挥手</li>
 <li>出现大量<code>TIME_WAIT</code>应当如何处理</li>
 </ol>
@@ -363,7 +364,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-三次握手与四次挥手"><span class="toc-number">1.</span> <span class="toc-text">TCP`三次握手与四次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器中输入url到显示主页的过程"><span class="toc-number">2.</span> <span class="toc-text">浏览器中输入url到显示主页的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP如何保证可靠传输"><span class="toc-number">3.</span> <span class="toc-text">TCP如何保证可靠传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP和HTTPS的区别"><span class="toc-number">4.</span> <span class="toc-text">HTTP和HTTPS的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP和UDP协议的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP协议的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的状态码"><span class="toc-number">6.</span> <span class="toc-text">常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP长连接和短连接"><span class="toc-number">7.</span> <span class="toc-text">HTTP长连接和短连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-number">8.</span> <span class="toc-text">cookie和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的报文格式"><span class="toc-number">9.</span> <span class="toc-text">HTTP的报文格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求方法"><span class="toc-number">10.</span> <span class="toc-text">HTTP请求方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET和POST的区别"><span class="toc-number">11.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS和CSRF的区别"><span class="toc-number">12.</span> <span class="toc-text">XSS和CSRF的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会有OPTIONS请求"><span class="toc-number">13.</span> <span class="toc-text">为什么会有OPTIONS请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同源和跨域"><span class="toc-number">14.</span> <span class="toc-text">同源和跨域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密方式"><span class="toc-number">15.</span> <span class="toc-text">加密方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密和非对称加密"><span class="toc-number">15.1.</span> <span class="toc-text">对称加密和非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单向加密"><span class="toc-number">15.2.</span> <span class="toc-text">单向加密</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP三次握手与四次挥手"><span class="toc-number">1.</span> <span class="toc-text">TCP三次握手与四次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器中输入url到显示主页的过程"><span class="toc-number">2.</span> <span class="toc-text">浏览器中输入url到显示主页的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP如何保证可靠传输"><span class="toc-number">3.</span> <span class="toc-text">TCP如何保证可靠传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP和HTTPS的区别"><span class="toc-number">4.</span> <span class="toc-text">HTTP和HTTPS的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP和UDP协议的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP协议的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的状态码"><span class="toc-number">6.</span> <span class="toc-text">常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP长连接和短连接"><span class="toc-number">7.</span> <span class="toc-text">HTTP长连接和短连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-number">8.</span> <span class="toc-text">cookie和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的报文格式"><span class="toc-number">9.</span> <span class="toc-text">HTTP的报文格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求方法"><span class="toc-number">10.</span> <span class="toc-text">HTTP请求方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET和POST的区别"><span class="toc-number">11.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS和CSRF的区别"><span class="toc-number">12.</span> <span class="toc-text">XSS和CSRF的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会有OPTIONS请求"><span class="toc-number">13.</span> <span class="toc-text">为什么会有OPTIONS请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同源和跨域"><span class="toc-number">14.</span> <span class="toc-text">同源和跨域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密方式"><span class="toc-number">15.</span> <span class="toc-text">加密方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密和非对称加密"><span class="toc-number">15.1.</span> <span class="toc-text">对称加密和非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单向加密"><span class="toc-number">15.2.</span> <span class="toc-text">单向加密</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
