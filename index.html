@@ -64,6 +64,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-面试知识点整理之存储篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/13/面试知识点整理之存储篇/" class="article-date">
+  <time datetime="2019-05-13T10:22:20.000Z" itemprop="datePublished">2019-05-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/13/面试知识点整理之存储篇/">面试知识点整理之存储篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：）</p>
+<h2 id="MyISAM和InnoDB的理解与区别"><a href="#MyISAM和InnoDB的理解与区别" class="headerlink" title="MyISAM和InnoDB的理解与区别"></a><code>MyISAM</code>和<code>InnoDB</code>的理解与区别</h2><ul>
+<li>两者采用的都是<code>B+</code>树，<code>MyISAM</code>是非聚集索引，即索引文件和数据文件是分离的，<code>data</code>域保存的是数据文件的指针。索引表只保存数据记录的地址；<code>InnoDB</code>是聚集索引，因此必须需要主键，<code>data</code>域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其他索引也很大。</li>
+<li><code>MyISAM</code>只支持表锁，因此加锁开销小，不会出现死锁，但并发性能差；<code>InnoDB</code>可以支持行锁与表锁，但是仅仅在使用索引时会使用行锁</li>
+<li><code>MyISAM</code>不支持事务和崩溃后的安全恢复，但是<code>InnoDB</code>支持。</li>
+<li><code>MyISAM</code>不支持外键，<code>InnoDB</code>支持</li>
+<li><code>InnoDB</code>不保存表的具体行数，执行<code>select count(*)</code>时需要全表扫描，而<code>MyISAM</code>使用变量保存了整表行数，执行<code>select count(*)</code>速度很快。</li>
+</ul>
+<p>由于<code>MyISAM</code>默认认为写优先级高于读优先级，因此当大量读写场景时，它并不适用。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/13/面试知识点整理之存储篇/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/" data-id="cjvm81d8g0011sx8z7bsrliek" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-面试知识点整理之网络篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/11/面试知识点整理之网络篇/" class="article-date">
@@ -103,7 +160,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjvjllxsp001g1x8zu8jc8lch" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjvm81d8j0015sx8zq8gm7l9r" class="article-share-link">分享</a>
       
       
       
@@ -152,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjvjllxqx00011x8zub7xijka" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjvm81d6h0000sx8zynds1opl" class="article-share-link">分享</a>
       
       
       
@@ -202,7 +259,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjvjllxqq00001x8zzoe2rnmk" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjvm81d6o0001sx8zfra6awx1" class="article-share-link">分享</a>
       
       
       
@@ -257,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjvjllxr400051x8zjvmn500i" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjvm81d8o0018sx8zj5rmbzet" class="article-share-link">分享</a>
       
       
       
@@ -313,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjvjllxsj001a1x8z5i44xp7p" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjvm81d88000vsx8z7mly9bmc" class="article-share-link">分享</a>
       
       
       
@@ -370,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/25/Rabbitmq学习记录/" data-id="cjvjllxti00231x8zpziabh6x" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/25/Rabbitmq学习记录/" data-id="cjvm81d9f0028sx8zej7ve5g0" class="article-share-link">分享</a>
       
       
       
@@ -419,7 +476,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjvjllxsd00141x8zl6hvk6he" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjvm81d86000tsx8zu2lo3v0z" class="article-share-link">分享</a>
       
       
       
@@ -475,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjvjllxu7002f1x8zxh8wpvqb" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjvm81dab002msx8z2cg3brwc" class="article-share-link">分享</a>
       
       
       
@@ -532,70 +589,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjvjllxtg00211x8zshexinyn" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjvm81d9h002asx8zpgbtj11v" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-《Redis设计与实现》读书笔记-第二部分" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" class="article-date">
-  <time datetime="2019-04-12T12:43:13.000Z" itemprop="datePublished">2019-04-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据库/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/">《Redis设计与实现》读书笔记 第二部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第二部分主要解决下面的问题：</p>
-<ul>
-<li>数据库在服务器中是如何保存的</li>
-<li>过期键是如何保存的以及如何被清理的</li>
-<li><code>RDB</code>与<code>AOF</code>的原理，以及<code>AOF</code>的重写</li>
-<li><code>redis</code>是如何实现单线程下的事件驱动的</li>
-<li><code>redis</code>客户端是如何保存的，有哪些属性，在什么情况下会被关闭</li>
-<li>当接收到一个请求时，<code>redis</code>服务器是如何处理的</li>
-<li><code>serverCron</code>是如何管理服务器资源的</li>
-<li><code>redis</code>服务器是如何启动及初始化的</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjvjllxtk00251x8zbcc7hi1l" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
 
     </footer>
   </div>
@@ -637,7 +635,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -647,7 +645,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Django/" style="font-size: 17.67px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 17.67px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 21.33px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 17.67px;">ZooKeeper</a> <a href="/tags/mysql/" style="font-size: 14px;">mysql</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/web/" style="font-size: 17.67px;">web</a> <a href="/tags/分布式/" style="font-size: 17.67px;">分布式</a> <a href="/tags/算法/" style="font-size: 21.33px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
+      <a href="/tags/Django/" style="font-size: 17.67px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 17.67px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 21.33px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 17.67px;">ZooKeeper</a> <a href="/tags/mysql/" style="font-size: 17.67px;">mysql</a> <a href="/tags/redis/" style="font-size: 17.67px;">redis</a> <a href="/tags/web/" style="font-size: 17.67px;">web</a> <a href="/tags/分布式/" style="font-size: 17.67px;">分布式</a> <a href="/tags/算法/" style="font-size: 21.33px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
     </div>
   </div>
 
@@ -657,6 +655,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/05/13/面试知识点整理之存储篇/">面试知识点整理之存储篇</a>
+          </li>
         
           <li>
             <a href="/2019/05/11/面试知识点整理之网络篇/">面试知识点整理之网络篇</a>
@@ -674,10 +676,6 @@
             <a href="/2019/05/10/分布式锁的实现原理学习笔记/">分布式锁的实现原理学习笔记</a>
           </li>
         
-          <li>
-            <a href="/2019/05/09/ZooKeeper学习笔记/">ZooKeeper学习笔记</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -687,7 +685,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
     </div>
   </div>
 

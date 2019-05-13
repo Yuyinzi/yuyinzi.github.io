@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>面试知识点整理之存储篇 | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
+<meta name="keywords" content="mysql,redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试知识点整理之存储篇">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-13T10:24:14.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试知识点整理之存储篇">
+<meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-面试知识点整理之存储篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/13/面试知识点整理之存储篇/" class="article-date">
+  <time datetime="2019-05-13T10:22:20.000Z" itemprop="datePublished">2019-05-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      面试知识点整理之存储篇
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：）</p>
+<h2 id="MyISAM和InnoDB的理解与区别"><a href="#MyISAM和InnoDB的理解与区别" class="headerlink" title="MyISAM和InnoDB的理解与区别"></a><code>MyISAM</code>和<code>InnoDB</code>的理解与区别</h2><ul>
+<li>两者采用的都是<code>B+</code>树，<code>MyISAM</code>是非聚集索引，即索引文件和数据文件是分离的，<code>data</code>域保存的是数据文件的指针。索引表只保存数据记录的地址；<code>InnoDB</code>是聚集索引，因此必须需要主键，<code>data</code>域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其他索引也很大。</li>
+<li><code>MyISAM</code>只支持表锁，因此加锁开销小，不会出现死锁，但并发性能差；<code>InnoDB</code>可以支持行锁与表锁，但是仅仅在使用索引时会使用行锁</li>
+<li><code>MyISAM</code>不支持事务和崩溃后的安全恢复，但是<code>InnoDB</code>支持。</li>
+<li><code>MyISAM</code>不支持外键，<code>InnoDB</code>支持</li>
+<li><code>InnoDB</code>不保存表的具体行数，执行<code>select count(*)</code>时需要全表扫描，而<code>MyISAM</code>使用变量保存了整表行数，执行<code>select count(*)</code>速度很快。</li>
+</ul>
+<p>由于<code>MyISAM</code>默认认为写优先级高于读优先级，因此当大量读写场景时，它并不适用。</p>
+<a id="more"></a>
+<h2 id="Mysql索引"><a href="#Mysql索引" class="headerlink" title="Mysql索引"></a><code>Mysql</code>索引</h2><p><code>MyISAM</code>是非聚集索引，<code>InnoDB</code>是聚集索引，因此在使用<code>InnoDB</code>作为引擎设计表时，不建议使用过长的字段作为主键(以免辅助索引过大)，也不建议使用非单调的字段作为主键(造成树的频繁调整)。</p>
+<p>因此索引会<strong>降低增删改查的速度</strong>。</p>
+<h3 id="索引的优化与失效"><a href="#索引的优化与失效" class="headerlink" title="索引的优化与失效"></a>索引的优化与失效</h3><ul>
+<li>最左匹配原则，<code>MySQL</code>会一直向右匹配直到遇到范围查询<code>(&gt;,&lt;,BETWEEN,LIKE)</code>就停止匹配。因此尽管没有按照索引的顺序来写，<code>MySql</code>仍然会自动优化，因此<code>in</code>、<code>=</code>的顺序并不重要</li>
+<li>选择区分度高的列作为索引，即<code>COUNT(DISTINCT col)/COUNT(*)</code></li>
+<li>索引列不能参与计算</li>
+<li>尽可能扩展索引，而不是新建立索引。比如表中已经有了a的索引，现在要<code>(a,b)</code>的索引，那么只需要修改原来的索引即可。</li>
+<li>尽量使用覆盖索引，而不是使用<code>select *</code></li>
+<li>索引字段不要使用<code>is null</code>或者<code>is not null</code>，会变成全表扫描</li>
+<li>索引字段使用<code>like</code>以通配符开头，即<code>&#39;%xxx&#39;</code>时，会导致索引失效（以通配符结尾并不会导致失效），如果使用<code>%xxx%</code>时，请使用覆盖索引。</li>
+<li>索引是字符串，查询时不加单引号，会导致索引失效。</li>
+<li>索引字段使用<code>or</code>时，会导致索引失效</li>
+<li>表数据较少时，可以全表扫描，不需要建立索引</li>
+</ul>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p><a href="https://juejin.im/post/5b55b842f265da0f9e589e79#comment" target="_blank" rel="noopener">数据库两大神器【索引和锁】</a></p>
+<ul>
+<li>对于<code>UPDATE、DELETE、INSERT</code>语句，<code>**InnoDB**</code>会<strong>自动</strong>给涉及数据集加排他锁<code>(X)</code></li>
+<li><code>**MyISAM**</code>在执行查询语句<code>SELECT</code>前，会<strong>自动</strong>给涉及的所有表加<strong>读锁</strong>，在执行更新操作(<code>UPDATE、DELETE、INSERT</code>等)前，会<strong>自动</strong>给涉及的表加<strong>写锁</strong>，这个过程并<strong>不需要用户干预</strong></li>
+</ul>
+<p>锁根据粒度可以分为：</p>
+<ul>
+<li>表锁：开销小，加锁快，不会出现死锁，发生冲突概率高，并发低。表锁可以分为读锁与写锁<ul>
+<li>读锁：只能加读锁，不能加写锁</li>
+<li>写锁：不能加读锁与写锁</li>
+</ul>
+</li>
+<li>行锁：开销大，加锁慢，会出现死锁，发生冲突概率低，并发高。<code>InnoDB</code>实现了两种类型的行锁：<ul>
+<li>共享锁：也称为读锁，多个客户可以读取同一个资源，但是不允许修改</li>
+<li>排他锁：也称为写锁，会阻塞其他的写锁和读锁。</li>
+</ul>
+</li>
+</ul>
+<p><code>InnoDB</code>支持表锁与行锁(基于索引的)，但是<code>MyISAM</code>支持表锁。默认情况下，<code>InnoDB</code>中<code>select</code>是不加任何锁的，可以通过显示加锁：</p>
+<ul>
+<li>共享锁：<code>SELECT * FROM table_name WHERE ... LOCK IN SHARE MODE</code>。</li>
+<li>排他锁：<code>SELECT * FROM table_name WHERE ... FOR UPDATE</code>。</li>
+</ul>
+<p>为了实现多粒度锁机制，<code>InnoDB</code>还有两种意向锁，都是表锁，也是<strong>自动添加</strong>的：</p>
+<ul>
+<li>意向共享锁(<code>IS</code>)：事务在加共享锁之前，必须先取得该表的<code>IS</code>锁</li>
+<li>意向排他锁(<code>IX</code>)：事务在加排他锁之前，必须先取得<code>IX</code>锁</li>
+</ul>
+<h3 id="MVCC和事务隔离级别"><a href="#MVCC和事务隔离级别" class="headerlink" title="MVCC和事务隔离级别"></a><code>MVCC</code>和事务隔离级别</h3><p><code>MVCC</code>多版本控制，一般是读写不阻塞的，可以提升并发性能，它是通过数据快照的方式来实现的。隐含的增加两列，一个保存了行的创建时间，一个保存行的过期时间。<strong>对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，使得读取时可以完全不加锁</strong>。基于<code>MVCC</code>的实现基本上免除了大部分的锁等待问题。</p>
+<p>事务隔离级别是通过锁来实现的，只是隐藏了加锁的细节。</p>
+<p>事务具有四大特性(<code>ACID</code>)，即原子性，一致性，隔离性和持久性。</p>
+<p>如果不考虑隔离性，可能会出现：</p>
+<ul>
+<li>脏读：读到其他事务未提交的数据</li>
+<li>不可重复读：读到其他事务提交的数据</li>
+<li>幻读：读到其他事务提交的数据，但是针对的是一批数据整体，例如针对同一查询条件，多出几行。</li>
+</ul>
+<p>因而<code>MySQL</code>提供了四种隔离级别：</p>
+<ol>
+<li><code>Serializable</code> (串行化)：可避免脏读、不可重复读、幻读的发生。</li>
+<li><code>Repeatable read</code> (可重复读)：可避免脏读、不可重复读的发生(<code>Innodb</code>和<code>Xtradb</code>通过<code>MVCC</code>解决幻读的问题)。</li>
+<li><code>Read committed</code> (读已提交)：可避免脏读的发生(只能读取其他事务已经提交的结果，因而会带来不可重复读)。</li>
+<li><code>Read uncommitted</code> (读未提交)：最低级别，任何情况都无法保证。(事务中的修改，即使没有提交，对其他事务也是可见的，很少使用）</li>
+</ol>
+<p>默认情况下，<code>MySQL</code>采用的是<code>RR</code>级别。<code>MVCC</code>只和隔离级别<code>RR</code>和<code>RC</code>相兼容：对于<code>RR</code>，需要读取创建版本小于等于当前版本的最新的数据记录；对于<code>RC</code>，只要读取创建版本最新的数据记录。</p>
+<h3 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h3><ul>
+<li><p>乐观锁是一种思想，具体实现是，表中有一个版本字段，第一次读的时候，获取到这个字段。处理完业务逻辑开始更新的时候，需要再次查看该字段的值是否和第一次的一样。如果一样更新，反之拒绝。之所以叫乐观，因为这个模式没有从数据库加锁，等到更新的时候再判断是否可以更新。</p>
+</li>
+<li><p>悲观锁是数据库层面加锁，会阻塞等待锁。</p>
+</li>
+</ul>
+<p>因此<code>MVCC</code>可以看做是一种解决<strong>读写冲突</strong>的无锁并发控制，乐观并发控制是用来解决<strong>写写冲突</strong>的无锁并发控制。</p>
+<h3 id="间隙锁"><a href="#间隙锁" class="headerlink" title="间隙锁"></a>间隙锁</h3><p>当我们<strong>用范围条件检索数据</strong>而不是相等条件检索数据，并请求共享或排他锁时，<code>InnoDB</code>会给符合范围条件的已有数据记录的索引项加锁；对于键值在条件范围内但并不存在的记录，也会加间隙锁。它可以保证，在事务未提交之前，其他事务不能插入满足其锁定条件的任何记录。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Select * from  emp where empid &gt; 100 for update;</span><br></pre></td></tr></table></figure>
+<p>会对大于<code>100</code>的所有行加上锁，即使实际上记录只到<code>101</code>。</p>
+<h3 id="死锁的避免"><a href="#死锁的避免" class="headerlink" title="死锁的避免"></a>死锁的避免</h3><p>一般<code>Mysql</code>会通过回滚解决死锁的问题，但是我们仍然可以避免：</p>
+<ul>
+<li>以固定顺序访问表和行</li>
+<li>大事务拆小</li>
+<li>一个事务中做到一次锁定所需要的资源</li>
+<li>降低隔离级别</li>
+</ul>
+<h2 id="数据库大表优化"><a href="#数据库大表优化" class="headerlink" title="数据库大表优化"></a>数据库大表优化</h2><p>常见优化措施：</p>
+<ul>
+<li>限定数据范围，禁止不带任何限制数据范围的查询</li>
+<li>读/写分离</li>
+<li>使用缓存</li>
+<li>垂直分区，根据功能分表分库，可以使得行数据变小，减少<code>I/O</code>，简化表的结构，易于维护，但可能会有冗余列</li>
+<li>水平分区，比如可以根据用户的地域或者名字等将数据分散到不同表或者库</li>
+</ul>
+<h2 id="redis与memcached的区别"><a href="#redis与memcached的区别" class="headerlink" title="redis与memcached的区别"></a><code>redis</code>与<code>memcached</code>的区别</h2><ul>
+<li><code>redis</code>支持丰富的数据类型</li>
+<li><code>redis</code>支持持久化，发布订阅等附加功能</li>
+<li><code>redis</code>拥有集群模式</li>
+<li><code>memcached</code>是多线程，非阻塞<code>IO</code>;<code>redis</code>使用单线程，<code>IO</code>多路复用</li>
+</ul>
+<h2 id="redis常见数据结构"><a href="#redis常见数据结构" class="headerlink" title="redis常见数据结构"></a><code>redis</code>常见数据结构</h2><ol>
+<li><code>String</code></li>
+<li><code>Hash</code></li>
+<li><code>List</code></li>
+<li><code>Set</code>：可以提供交集、并集、差集等操作</li>
+<li><code>Sorted Set</code>：可以实现排行榜等功能</li>
+</ol>
+<h2 id="redis过期删除和内存淘汰"><a href="#redis过期删除和内存淘汰" class="headerlink" title="redis过期删除和内存淘汰"></a><code>redis</code>过期删除和内存淘汰</h2><p>过期删除采用定期删除+惰性删除。</p>
+<p>内存淘汰有6种策略：</p>
+<ul>
+<li><code>volatile-lru</code>：从已设置过期的<code>keys</code>中挑选最少使用的数据淘汰</li>
+<li><code>volatile-ttl</code>：从已设置过期的<code>keys</code>选择马上要过期的数据淘汰</li>
+<li><code>volatile-random</code>：从已设置过期的<code>keys</code>中随机选择数据淘汰</li>
+<li><code>allkeys-lru</code>：从所有<code>keys</code>中选择最少使用的数据淘汰</li>
+<li><code>no-enviction</code>：不删除，内存不足时直接报错</li>
+</ul>
+<h2 id="redis持久化"><a href="#redis持久化" class="headerlink" title="redis持久化"></a><code>redis</code>持久化</h2><p>持久化有两种方式：<code>RDB</code>和<code>AOF</code>。</p>
+<p><code>RDB</code>是默认使用的方式，根据数据库中的字典生成文件；而如果打开了<code>AOF</code>，则默认使用<code>AOF</code>恢复数据库，<code>AOF</code>是将更改数据库的命令写入。它有三种方式：</p>
+<ul>
+<li><code>appendfsync always</code>：每次有修改都写入</li>
+<li><code>appendfsync everysec</code>：每秒钟同步一次</li>
+<li><code>appendfsync no</code>：由操作系统决定</li>
+</ul>
+<p><code>AOF</code>重写是指，当<code>AOF</code>文件过大时，产生新的<code>AOF</code>文件，它是根据现有数据的键值对实现，无须对现有的<code>AOF</code>文件进行读写分析，而是将需要通过多条命令实现的某个键值对状态，尽可能使用更短的命令实现。</p>
+<h2 id="缓存雪崩和缓存穿透"><a href="#缓存雪崩和缓存穿透" class="headerlink" title="缓存雪崩和缓存穿透"></a>缓存雪崩和缓存穿透</h2><p><strong>缓存雪崩</strong>是指同一时间缓存大面积失效，导致请求落在数据库上，使得数据库短时间内接受大量请求崩掉。</p>
+<p>解决方案：</p>
+<ul>
+<li>使用集群保证<code>redis</code>服务可用性</li>
+<li>过期时间加上随机值，避免缓存集体失效</li>
+<li>使用互斥锁</li>
+<li>针对缓存雪崩发生时，对数据库采用限流，防止其崩掉</li>
+</ul>
+<p>缓存穿透：因为大量请求不存在的<code>key</code>导致，所有请求落在数据库上</p>
+<p>解决方案：</p>
+<ul>
+<li>布隆过滤器，拦截非法<code>key</code></li>
+<li>即使空结果，也进行缓存，但设置短的过期时间</li>
+<li>也可以使用互斥锁</li>
+</ul>
+<h2 id="redis的并发竞争问题"><a href="#redis的并发竞争问题" class="headerlink" title="redis的并发竞争问题"></a><code>redis</code>的并发竞争问题</h2><p>多个进程同时操作一个<code>key</code>时，需要使用分布式锁。可以使用<code>redis</code>，也可以使用<code>zookeeper</code>或者<code>mysql</code>实现。</p>
+<p>针对单机情况，可以使用事务机制。</p>
+<h2 id="如何保证缓存与数据库双写一致"><a href="#如何保证缓存与数据库双写一致" class="headerlink" title="如何保证缓存与数据库双写一致"></a>如何保证缓存与数据库双写一致</h2><p>看了知乎，有如下机制：</p>
+<ol>
+<li>等待<code>redis</code>中的数据自动过期，但是会有过期时间这么长一段时间的数据不一致</li>
+<li>使用代码更新<code>DB</code>，然后删除<code>redis</code>中的<code>key</code>，但是也会有一小段不一致的时间，可以满足绝大部分场景</li>
+<li><code>redis</code>中的数据不过期，只要<code>DB</code>更新，就采用背景任务更新<code>redis</code>，访问者永远只访问<code>redis</code>。不一致的时间取决于，如果是定时更新任务，那么就是更新任务的时间间隔；如果是队列模式，取决于队列的产生和消费的延迟</li>
+<li>针对<code>3</code>的变体，用户写往<code>DB</code>写入，但是永远只读<code>redis</code>，仍然由<code>DB</code>更新<code>redis</code></li>
+</ol>
+<p>综上，总是会有一段时间不一致。即<code>CAP</code>问题，如果需要保证强一致问题<code>CP</code>，那么需要牺牲<code>A</code>:</p>
+<ol>
+<li>不使用<code>redis</code>，只使用单点<code>DB</code></li>
+<li>使用分布式协议，比如<code>2PC</code>、<code>3PC</code>，或者分布式锁。</li>
+</ol>
+<p>所以，要么接受最终一致，要么要求强一致，在分布式情况下就要牺牲<code>A</code>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/" data-id="cjvm81d8g0011sx8z7bsrliek" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/11/面试知识点整理之网络篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">面试知识点整理之网络篇</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MyISAM和InnoDB的理解与区别"><span class="toc-number">1.</span> <span class="toc-text">MyISAM和InnoDB的理解与区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql索引"><span class="toc-number">2.</span> <span class="toc-text">Mysql索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引的优化与失效"><span class="toc-number">2.1.</span> <span class="toc-text">索引的优化与失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁"><span class="toc-number">3.</span> <span class="toc-text">锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MVCC和事务隔离级别"><span class="toc-number">3.1.</span> <span class="toc-text">MVCC和事务隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#乐观锁和悲观锁"><span class="toc-number">3.2.</span> <span class="toc-text">乐观锁和悲观锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#间隙锁"><span class="toc-number">3.3.</span> <span class="toc-text">间隙锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死锁的避免"><span class="toc-number">3.4.</span> <span class="toc-text">死锁的避免</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库大表优化"><span class="toc-number">4.</span> <span class="toc-text">数据库大表优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis与memcached的区别"><span class="toc-number">5.</span> <span class="toc-text">redis与memcached的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis常见数据结构"><span class="toc-number">6.</span> <span class="toc-text">redis常见数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis过期删除和内存淘汰"><span class="toc-number">7.</span> <span class="toc-text">redis过期删除和内存淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis持久化"><span class="toc-number">8.</span> <span class="toc-text">redis持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存雪崩和缓存穿透"><span class="toc-number">9.</span> <span class="toc-text">缓存雪崩和缓存穿透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis的并发竞争问题"><span class="toc-number">10.</span> <span class="toc-text">redis的并发竞争问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何保证缓存与数据库双写一致"><span class="toc-number">11.</span> <span class="toc-text">如何保证缓存与数据库双写一致</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
