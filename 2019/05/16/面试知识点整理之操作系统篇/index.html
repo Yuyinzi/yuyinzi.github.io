@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="用户态和内核态现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-16T08:06:58.777Z">
+<meta property="og:updated_time" content="2019-05-16T08:08:58.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之操作系统篇">
 <meta name="twitter:description" content="用户态和内核态现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G">
@@ -130,7 +130,7 @@
 <li><p>信号可以在任何时候发给某一进程，而无需知道该进程的状态，是软件层次上对终端机制的模拟。常用的有</p>
 <ul>
 <li><code>SIGHUP</code>：用户从终端注销，所有已启动进程都将收到该信号。系统缺省状态下对该信号的处理是终止进程。</li>
-<li>SIGINT：程序终止信号。程序运行过程中，按<code>Ctrl+C</code>键将产生该信号。</li>
+<li><code>SIGINT</code>：程序终止信号。程序运行过程中，按<code>Ctrl+C</code>键将产生该信号。</li>
 <li><code>SIGQUIT</code>：程序退出信号。</li>
 <li><code>SIGBUS和SIGSEGV</code>：进程访问非法地址。</li>
 <li><code>SIGFPE</code>：运算中出现致命错误，如除零操作、数据溢出等。</li>
