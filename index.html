@@ -64,6 +64,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-面试知识点整理之操作系统篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/16/面试知识点整理之操作系统篇/" class="article-date">
+  <time datetime="2019-05-16T07:58:01.000Z" itemprop="datePublished">2019-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/16/面试知识点整理之操作系统篇/">面试知识点整理之操作系统篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="用户态和内核态"><a href="#用户态和内核态" class="headerlink" title="用户态和内核态"></a>用户态和内核态</h2><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(<code>kernel</code>），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为<strong>内核空间</strong>，一部分为<strong>用户空间</strong>。针对<code>linux</code>操作系统而言，将最高的1G字节(从虚拟地址<code>0xC0000000</code>到<code>0xFFFFFFFF</code>)，供内核使用，称为内核空间，而将较低的3G字节(从虚拟地址<code>0x00000000</code>到<code>0xBFFFFFFF</code>)，供各个进程使用，称为用户空间。</p>
+<p>在用户态下，<code>CPU</code>只能访问用户空间内存；当在内核态时，<code>CPU</code>既可以访问用户空间也可以访问内核空间。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/16/面试知识点整理之操作系统篇/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/16/面试知识点整理之操作系统篇/" data-id="cjvqdg48h0019xt8z5dh64ymd" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-面试知识点整理之存储篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/13/面试知识点整理之存储篇/" class="article-date">
@@ -107,7 +157,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/" data-id="cjvm81d8g0011sx8z7bsrliek" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/" data-id="cjvqdg49i0026xt8zo7lhen7g" class="article-share-link">分享</a>
       
       
       
@@ -161,7 +211,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjvm81d8j0015sx8zq8gm7l9r" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjvqdg49l0028xt8zwt3m97hm" class="article-share-link">分享</a>
       
       
       
@@ -210,7 +260,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjvm81d6h0000sx8zynds1opl" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjvqdg46r0001xt8z8ekcspie" class="article-share-link">分享</a>
       
       
       
@@ -260,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjvm81d6o0001sx8zfra6awx1" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjvqdg46k0000xt8zfqkdkyvi" class="article-share-link">分享</a>
       
       
       
@@ -315,7 +365,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjvm81d8o0018sx8zj5rmbzet" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjvqdg46z0005xt8zov4g4qvb" class="article-share-link">分享</a>
       
       
       
@@ -371,7 +421,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjvm81d88000vsx8z7mly9bmc" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjvqdg48d0016xt8z80uzq11t" class="article-share-link">分享</a>
       
       
       
@@ -428,7 +478,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/25/Rabbitmq学习记录/" data-id="cjvm81d9f0028sx8zej7ve5g0" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/25/Rabbitmq学习记录/" data-id="cjvqdg49e0021xt8zglvdo3zy" class="article-share-link">分享</a>
       
       
       
@@ -477,7 +527,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjvm81d86000tsx8zu2lo3v0z" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjvqdg48b0014xt8zjqfvx722" class="article-share-link">分享</a>
       
       
       
@@ -533,68 +583,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjvm81dab002msx8z2cg3brwc" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjvqdg4a8002mxt8zo2a8wqzb" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-TCP学习记录" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/14/TCP学习记录/" class="article-date">
-  <time datetime="2019-04-14T08:25:53.000Z" itemprop="datePublished">2019-04-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/14/TCP学习记录/">TCP学习记录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>网络模型可以概括为五层结构：</p>
-<ul>
-<li>应用层</li>
-<li>传输层</li>
-<li>网络层</li>
-<li>链路层</li>
-<li>物理层</li>
-</ul>
-<p>其中<code>TCP</code>位于传输层，主要用于保证通信的完整性及可靠性。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/14/TCP学习记录/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjvm81d9h002asx8zpgbtj11v" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
 
     </footer>
   </div>
@@ -636,7 +629,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -646,7 +639,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Django/" style="font-size: 17.67px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 17.67px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 21.33px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 17.67px;">ZooKeeper</a> <a href="/tags/mysql/" style="font-size: 17.67px;">mysql</a> <a href="/tags/redis/" style="font-size: 17.67px;">redis</a> <a href="/tags/web/" style="font-size: 17.67px;">web</a> <a href="/tags/分布式/" style="font-size: 17.67px;">分布式</a> <a href="/tags/算法/" style="font-size: 21.33px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
+      <a href="/tags/Django/" style="font-size: 17.67px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 17.67px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 21.33px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 17.67px;">ZooKeeper</a> <a href="/tags/mysql/" style="font-size: 17.67px;">mysql</a> <a href="/tags/redis/" style="font-size: 17.67px;">redis</a> <a href="/tags/web/" style="font-size: 17.67px;">web</a> <a href="/tags/分布式/" style="font-size: 17.67px;">分布式</a> <a href="/tags/操作系统/" style="font-size: 14px;">操作系统</a> <a href="/tags/算法/" style="font-size: 21.33px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
     </div>
   </div>
 
@@ -656,6 +649,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/05/16/面试知识点整理之操作系统篇/">面试知识点整理之操作系统篇</a>
+          </li>
         
           <li>
             <a href="/2019/05/13/面试知识点整理之存储篇/">面试知识点整理之存储篇</a>
@@ -673,10 +670,6 @@
             <a href="/2019/05/10/Leetcode-3-最长不重复字符子序列/">Leetcode 3 最长不重复字符子序列</a>
           </li>
         
-          <li>
-            <a href="/2019/05/10/分布式锁的实现原理学习笔记/">分布式锁的实现原理学习笔记</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -686,7 +679,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
     </div>
   </div>
 

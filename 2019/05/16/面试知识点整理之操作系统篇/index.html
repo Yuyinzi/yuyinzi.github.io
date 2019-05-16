@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>面试知识点整理之操作系统篇 | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="用户态和内核态现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G">
+<meta name="keywords" content="操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试知识点整理之操作系统篇">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/05/16/面试知识点整理之操作系统篇/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="用户态和内核态现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-16T08:06:58.777Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试知识点整理之操作系统篇">
+<meta name="twitter:description" content="用户态和内核态现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-面试知识点整理之操作系统篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/16/面试知识点整理之操作系统篇/" class="article-date">
+  <time datetime="2019-05-16T07:58:01.000Z" itemprop="datePublished">2019-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      面试知识点整理之操作系统篇
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="用户态和内核态"><a href="#用户态和内核态" class="headerlink" title="用户态和内核态"></a>用户态和内核态</h2><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(<code>kernel</code>），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为<strong>内核空间</strong>，一部分为<strong>用户空间</strong>。针对<code>linux</code>操作系统而言，将最高的1G字节(从虚拟地址<code>0xC0000000</code>到<code>0xFFFFFFFF</code>)，供内核使用，称为内核空间，而将较低的3G字节(从虚拟地址<code>0x00000000</code>到<code>0xBFFFFFFF</code>)，供各个进程使用，称为用户空间。</p>
+<p>在用户态下，<code>CPU</code>只能访问用户空间内存；当在内核态时，<code>CPU</code>既可以访问用户空间也可以访问内核空间。</p>
+<a id="more"></a>
+<h2 id="堆和栈的区别"><a href="#堆和栈的区别" class="headerlink" title="堆和栈的区别"></a>堆和栈的区别</h2><ul>
+<li>栈由系统编译器管理，堆需要手动管理，及时释放</li>
+<li>栈地址从高向低扩展，是连续的；堆地址从低向高扩展，是不连续的</li>
+</ul>
+<h2 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h2><p><strong>两个名词不过是对应的CPU时间段的描述：</strong></p>
+<p><strong>进程就是包换上下文切换的程序执行时间总和</strong> = <strong>CPU加载上下文+CPU执行+CPU保存上下文</strong>。而<strong>线程是共享了进程的上下文环境，的更为细小的CPU时间段</strong>。</p>
+<ol>
+<li>进程是系统进行资源调度和分配的独立单位，具有独立的地址空间(也称为段)。从上而下包括，栈，堆，未初始化变量区(<code>BSS</code>)，初始化变量区(数据段)，以及代码段。</li>
+<li>线程间的数据通信更为简单</li>
+<li>创建线程的速度要快于创建进程</li>
+<li>进程的隔离性更好，一个线程的问题可能会影响同一进程内的所有线程</li>
+<li>每个线程都在征用进程中有限的虚拟地址空间，而进程可以使用全部有效虚拟内存</li>
+<li>线程共享进程的虚拟地址空间（共享段、数据段）、用户ID和组ID、文件描述符表、当前工作目录、但是线程也拥有属于自己的栈，用来装载本地变量和函数调用链接信息。</li>
+</ol>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><p>线程可以使用下面两个工具来同步彼此行为：</p>
+<ul>
+<li><p>互斥量：保证资源不会被多个线程同时访问</p>
+</li>
+<li><p>条件变量：通知操作的方式保持多线程同步</p>
+</li>
+</ul>
+<p>并且条件变量总是与互斥量相关。</p>
+<h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><p><a href="https://www.jianshu.com/p/c1015f5ffa74" target="_blank" rel="noopener">进程间通信IPC (InterProcess Communication)</a></p>
+<p>工具包括匿名管道，命名管道，消息队列，信号，共享内存，信号量，<code>socket</code>。</p>
+<ul>
+<li><p>管道是一种半双工的通信方式，数据只能<strong>单向</strong>流动，并且只能在具有亲缘关系的进程间流动，进程的亲缘关系通常是父子进程</p>
+</li>
+<li><p>命名管道也是半双工的通信方式，但它允许无亲缘关系的进程间进行通信</p>
+</li>
+<li><p>信号可以在任何时候发给某一进程，而无需知道该进程的状态，是软件层次上对终端机制的模拟。常用的有</p>
+<ul>
+<li><code>SIGHUP</code>：用户从终端注销，所有已启动进程都将收到该信号。系统缺省状态下对该信号的处理是终止进程。</li>
+<li>SIGINT：程序终止信号。程序运行过程中，按<code>Ctrl+C</code>键将产生该信号。</li>
+<li><code>SIGQUIT</code>：程序退出信号。</li>
+<li><code>SIGBUS和SIGSEGV</code>：进程访问非法地址。</li>
+<li><code>SIGFPE</code>：运算中出现致命错误，如除零操作、数据溢出等。</li>
+<li><code>SIGKILL</code>：用户终止进程执行信号。<code>shell</code>下执行<code>kill -9</code>发送该信号。</li>
+<li><code>SIGTERM</code>：结束进程信号。shell下执行<code>kill 进程pid</code>发送该信号。</li>
+<li><code>SIGALRM</code>：<strong>定时器信号。</strong></li>
+<li><code>SIGCLD</code>：子进程退出信号。如果其父进程没有忽略该信号也没有处理该信号，则子进程退出后将形成僵尸进程。</li>
+</ul>
+</li>
+<li><p>消息队列是消息的链表，存放在<strong>内核</strong>中并由消息队列标识符标识，与管道不同的还有，消息队列在某个进程往一个队列写入消息之前，并不需要另外某个进程在该队列上等待消息的到达。但是它们都是先进先出的。</p>
+</li>
+<li><p>共享内存是内核专门留出了一块内存区，可以由需要访问的进程将其映射到自己的私有地址空间。多个进程可以可以直接读写同一块内存空间，是最快的可用<code>IPC</code>形式。当某进程改变了共享内存的内容，其他所有进程会立即了解到这一变化。</p>
+</li>
+<li><p>信号量是一个计数器，用于多进程对共享数据的访问，信号量的意图在于进程间同步。</p>
+<blockquote>
+<p><strong>信号量与互斥量之间的区别：</strong><br> （1）互斥量用于线程的互斥，信号量用于线程的同步。<br> <strong>互斥：</strong>是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法限制访问者对资源的访问顺序，即访问是无序的。<br> <strong>同步：</strong>是指在互斥的基础上（大多数情况），通过其它机制实现访问者对资源的有序访问。<br> （2）互斥量值只能为0/1，信号量值可以为非负整数。一个互斥量只能用于一个资源的互斥访问，它不能实现多个资源的多线程互斥问题。信号量可以实现多个同类资源的多线程互斥和同步。当信号量为单值信号量时，也可以完成一个资源的互斥访问。<br> （3）互斥量的加锁和解锁必须由同一线程分别对应使用，信号量可以由一个线程释放，另一个线程得到。</p>
+</blockquote>
+</li>
+<li><p><code>socket</code>：可以让不在同一台计算机但通过网络连接计算机上的进程进行通信。</p>
+</li>
+</ul>
+<blockquote>
+<p>信号量和文件锁可以用于同步。互斥量和条件变量通常用于线程同步。</p>
+</blockquote>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><ul>
+<li>就绪状态，等待<code>CPU</code>。也可以细分为活跃就绪(进程在主存中可以被调度)和静止就绪(进程被对换到辅存时，不能被调度)。</li>
+<li>运行状态，已获得<code>CPU</code></li>
+<li>阻塞状态，例如请求<code>I/O</code>，申请缓冲空间。与就绪类似的也可以细分为活跃阻塞和静止阻塞。</li>
+</ul>
+<p>此外还有：</p>
+<ul>
+<li>创建状态：进程还在被创建，尚未到就绪状态</li>
+<li>结束状态</li>
+</ul>
+<h2 id="什么是死锁，如何解决"><a href="#什么是死锁，如何解决" class="headerlink" title="什么是死锁，如何解决"></a>什么是死锁，如何解决</h2><p>产生死锁的条件有四个：</p>
+<ol>
+<li>互斥条件：所谓互斥就是进程在某一时间内独占资源。 </li>
+<li>请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放</li>
+<li>不剥夺条件:进程已获得资源，在末使用完之前，不能强行剥夺。 </li>
+<li>循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。</li>
+</ol>
+<p>死锁预防：破坏任意一个必要条件就可以预防死锁。例如，以一定顺序获得锁，或者一次申请全部的资源，以及超时放弃锁。</p>
+<p>死锁避免：每次申请资源时判断操作是否安全。<a href="[http://chuxiuhong.com/2016/11/26/1%20(5">银行家算法</a>/](<a href="http://chuxiuhong.com/2016/11/26/1" target="_blank" rel="noopener">http://chuxiuhong.com/2016/11/26/1</a> (5)/)</p>
+<p>死锁检测：判断系统是否处于死锁状态。资源分配图。</p>
+<p>死锁解除：</p>
+<ul>
+<li>剥夺，将某进程资源强行收回，分配给其他进程。</li>
+<li>撤销进程</li>
+</ul>
+<h2 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h2><p><a href="https://blog.csdn.net/do2jiang/article/details/4690967" target="_blank" rel="noopener">进程地址空间与虚拟存储空间的理解</a></p>
+<p>段和页用来解决：</p>
+<ol>
+<li>进程地址空间不隔离</li>
+<li>内存使用效率低</li>
+<li>程序运行地址不确定</li>
+</ol>
+<p>因此增加了一个中间层，使用虚拟地址映射到物理地址的方式进行访问。这样对于程序来说，只需要关注虚拟地址。即使虚拟地址一样，对于不同的进程来说，仍然可以保证不同程序最终访问内存地址位于不同区域，用以解决1和3的问题。此时，引入分段的思想，在虚拟地址空间和物理地址空间做一一映射。</p>
+<p>而分页用以解决每次换入内存过大的问题2，即用更小粒度的内存分隔和映射方法。当<code>CPU</code>访问程序中用到的虚拟地址时，发现没有对应的物理地址，会引发一个页错误。此时由操作系统建立映射，并由<code>CPU</code>重新执行。因此，随着程序执行，页错误会不断产生，操作系统也会分配相应的物理页来满足执行需求。</p>
+<p>另外，当内存不足发生页错误时(缺页中断)，操作系统会在内存选择一个页面移出内存，称为页面置换算法。</p>
+<p><strong>虚拟内存将主存看成是一个磁盘的高速缓存，主存中只保存活动区域，并根据需要在磁盘和主存之间来回传送数据。</strong></p>
+<p><a href="https://www.cnblogs.com/yaoxiaowen/p/7805964.html" target="_blank" rel="noopener">什么是内存(二)：虚拟内存</a></p>
+<p>分页与分段管理的比较：</p>
+<ul>
+<li>页是信息的<strong>物理单位</strong>，分页是为实现离散分配方式，以消减内存的外零头，提高内存的利用率。段则是信息的<strong>逻辑单位</strong>，它含有一组其意义相对完整的信息。分段的目的是为了能更好地满足用户的需要。</li>
+<li>页的大小固定且由系统决定；而段的长度却不固定，决定于用户所编写的程序。</li>
+<li>分页的地址空间是一维的，程序员只需利用一个记忆符，即可表示一个地址；而分段的作业地址空间是二维的，程序员在标识一个地址时，既需给出段名，又需给出段内地址。</li>
+</ul>
+<h2 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h2><ul>
+<li>最佳置换算法(理想情况下)：有些页面在内存中，知道其中有一页将很快被访问，其他页面会在执行10、100或者1000条指令才会被访问，那么将1000条指令的页面(最大标记数)置换出去。虽然不可实现，可以用来对算法进行衡量。</li>
+<li>先进先出置换算法：选择在主存中停留时间最长的页置换出去</li>
+<li>最近最久未使用(<code>LRU</code>)算法：选择最近一段时间里没有使用过的页面予以置换</li>
+<li><code>clock</code>算法</li>
+<li>最少使用(<code>LFU</code>)算法：选择近期最少使用的页面淘汰</li>
+<li>最近未使用(<code>NRU</code>)算法</li>
+<li>二次机会算法：每个页面拥有2次机会才会被淘汰出去</li>
+<li>…</li>
+</ul>
+<h2 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h2><ul>
+<li>先来先调度</li>
+<li>短作业先调度</li>
+<li>高优先权先调度，又分为抢占式和非抢占式</li>
+<li>高响应比优先调度，即根据响应时间/要求服务时间的比重，随着等待时间增加，优先级提高</li>
+<li>时间片轮转，可以在给定时间内响应所有用户请求</li>
+<li>多级反馈队列，新任务放置在1的队尾，如果未完成，转移到2的队尾，</li>
+</ul>
+<h2 id="僵尸进程和孤儿进程"><a href="#僵尸进程和孤儿进程" class="headerlink" title="僵尸进程和孤儿进程"></a>僵尸进程和孤儿进程</h2><p>某一子进程的父进程终止后，该进程变成孤儿进程，由<code>init</code>接管。</p>
+<p>而在父进程执行<code>wait()</code>之前，子进程就终止了，那么子进程将成为僵尸进程。它仍然保存着内核进程表中的记录，包含子进程<code>ID</code>、终止状态、资源使用数据等信息，等待着父进程调用<code>wait()</code>后，内核将其删除。</p>
+<h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><ul>
+<li>单一连续分配：适合单用户单任务系统</li>
+<li>固定分区分配：大程序无法放置分区中，小程序容易产生碎片</li>
+<li>动态分区分配：<ul>
+<li>首次适应：从低地址开始查找</li>
+<li>最佳适应：空闲分区从小到大排列，找到第一个能满足要求的分区</li>
+<li>最坏适应：空闲分区从大到小排列，挑选最大分区</li>
+<li>循环首次适应：从上次查找结束的位置开始查找</li>
+<li>快速适应：对空闲分区按照大小进行分类，对每一类空闲分区单独设置链表</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/16/面试知识点整理之操作系统篇/" data-id="cjvqdg48h0019xt8z5dh64ymd" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/13/面试知识点整理之存储篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">面试知识点整理之存储篇</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用户态和内核态"><span class="toc-number">1.</span> <span class="toc-text">用户态和内核态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆和栈的区别"><span class="toc-number">2.</span> <span class="toc-text">堆和栈的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程和线程的区别"><span class="toc-number">3.</span> <span class="toc-text">进程和线程的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程同步"><span class="toc-number">4.</span> <span class="toc-text">线程同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程间通信"><span class="toc-number">5.</span> <span class="toc-text">进程间通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程的状态"><span class="toc-number">6.</span> <span class="toc-text">进程的状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是死锁，如何解决"><span class="toc-number">7.</span> <span class="toc-text">什么是死锁，如何解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页和分段"><span class="toc-number">8.</span> <span class="toc-text">分页和分段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#页面置换算法"><span class="toc-number">9.</span> <span class="toc-text">页面置换算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调度策略"><span class="toc-number">10.</span> <span class="toc-text">调度策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#僵尸进程和孤儿进程"><span class="toc-number">11.</span> <span class="toc-text">僵尸进程和孤儿进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配"><span class="toc-number">12.</span> <span class="toc-text">内存分配</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
