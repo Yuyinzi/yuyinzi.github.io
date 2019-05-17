@@ -72,3 +72,7 @@ class Solution(object):
         return res
 ```
 
+## 延伸
+
+类似的还有[3Sum Closest](https://leetcode.com/problems/3sum-closest/)，不同的是`target`可能小于0，因此最开始的判断`nums[i]>target`不再需要了。
+
