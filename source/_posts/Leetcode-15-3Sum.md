@@ -76,3 +76,44 @@ class Solution(object):
 
 类似的还有[3Sum Closest](https://leetcode.com/problems/3sum-closest/)，不同的是`target`可能小于0，因此最开始的判断`nums[i]>target`不再需要了。
 
+更复杂一点的[4Sum](https://leetcode.com/problems/4sum/)也可以采用这种做法，选取一个数`nums[i]`，则相当于求另外三个数之和为`target-nums[i]`，但是重复情况要复杂一点，需要有两次判断
+
+1. 出现诸如`nums=[0,0,0,0,0,0], target=0`时，对于`nums[i]`，如果与`nums[i-1]`相等，那么应当跳过
+2. 出现`nums=[-4,-1,-1,0,1,2], target=-1`时，`[-1,-1,0,1]`也为正确答案，即当`i=1`，有` nums[i]=-1`，从`j=2`时开始计算三数之和为`target-nums[i]=0`，不能仅仅判断`nums[j]==nums[j-1]`就跳过，只有当`j`与`i`并不相邻时，才能跳过
+
+```python 
+class Solution(object):
+    def fourSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        nums.sort()
+        res = []
+        for i in range(len(nums)-3):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            t = target - nums[i]
+            for j in range(i+1, len(nums)-2):
+                if j - i > 1 and nums[j-1] == nums[j]:
+                    continue
+                l , r = j+1, len(nums)-1
+                while l < r:
+                    total = nums[j] + nums[l] + nums[r]
+                    if total > t:
+                        r -= 1
+                    elif total < t:
+                        l += 1
+                    else:
+                        res.append([nums[i], nums[j], nums[l], nums[r]])
+                        l += 1
+                        r -= 1
+                        while l < r and nums[l] == nums[l-1]:
+                            l += 1
+                        while l < r and nums[r] == nums[r+1]:
+                            r -= 1
+                        
+        return res
+```
+
