@@ -4,6 +4,8 @@ date: 2019-05-17 15:29:59
 tags:
 - Leetcode
 - Python
+categories:
+- 算法
 ---
 
 ## 题目介绍
