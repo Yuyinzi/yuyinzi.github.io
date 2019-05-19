@@ -92,9 +92,7 @@ p = p.next
 
 不能表示为：
 `p.next, p = cur, p.next`
-因为会产生一个中间变量`p.next`，而不是已经赋值为`cur`的`p.next`。
-
-例如：
+因为会产生一个中间变量`p.next`，而不是已经赋值为`cur`的`p.next`。例如：
 
 ```python 
 >>> a, b = 1, 2
@@ -103,6 +101,30 @@ p = p.next
 3
 >>> b
 1
+```
+
+这种特点可以很方便的解决链表的问题，例如：[leetcode 12 Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
+
+```python 
+class Solution(object):
+    def swapPairs(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        dummy = ListNode(0)
+        dummy.next = head
+        prev, p = dummy, head
+        while p and p.next:
+            # 0. 原始序列0->1->2->3->4
+            # 1. 节点p的下个节点指向下个节点的下个节点,1->3
+            # 2. 节点p指向下一个节点,p为2
+            # 3. 节点p的下个节点指向p,2->1
+            # 综上，节点p一直都是以前的变量，可以看做temp=p，操作的都是temp
+            p.next, p, p.next = p.next.next, p.next, p
+            # 同理，此时p=2, 0->2后，prev=1，p=3
+            prev.next, prev, p = p, p.next, p.next.next
+        return dummy.next
 ```
 
 ### 堆
