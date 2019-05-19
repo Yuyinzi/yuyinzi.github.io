@@ -103,7 +103,7 @@ p = p.next
 1
 ```
 
-这种特点可以很方便的解决链表的问题，例如：[leetcode 12 Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
+这种特点可以很方便的解决链表的问题，例如：[leetcode 24 Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/)
 
 ```python 
 class Solution(object):
