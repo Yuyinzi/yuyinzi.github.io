@@ -68,7 +68,7 @@ class Solution(object):
         return max(res, end)
 ```
 
-## `DP`
+### `DP`
 
 这个方法理解了很久，思路是设置一个`dp`数组，其中`dp[i]`表示以`i`结尾的最长合法括号的长度，有以下几种情况：
 
