@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="题目介绍给定由&amp;#39;(&amp;#39;和&amp;#39;)&amp;#39;组成的字符串，判断最长的合法的括号长度。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-21T16:24:18.662Z">
+<meta property="og:updated_time" content="2019-05-21T16:25:27.729Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Leetcode 32 Longest Valid Parentheses">
 <meta name="twitter:description" content="题目介绍给定由&amp;#39;(&amp;#39;和&amp;#39;)&amp;#39;组成的字符串，判断最长的合法的括号长度。">
@@ -115,7 +115,7 @@
 <li>如果<code>s[i]==&#39;(&#39;</code>，那么<code>dp[i]=0</code></li>
 <li>如果<code>s[i]==&#39;)&#39;</code>：<ol>
 <li>如果<code>s[i-1]==&#39;(&#39;</code>，则可以延长，即<code>dp[i]=dp[i-2]+2</code></li>
-<li>如果<code>s[i-1]==&#39;)&#39;</code>，则需要判断<code>i-1-dp[i-1]</code>位置(<code>i-1</code>位置所能匹配到的左括号的前一个位置)处是否是<code>(</code>，如果是则<code>dp[i]=dp[i-1]+2+dp[i-2-dp[i-1]]</code>，表示以<code>i-2-dp[i-1]</code>为分隔点的两端连接起来(因为<code>s[i-1]==&#39;)&#39;，所以此时应该是</code>dp[i-1]+2`)</li>
+<li>如果<code>s[i-1]==&#39;)&#39;</code>，则需要判断<code>i-1-dp[i-1]</code>位置(<code>i-1</code>位置所能匹配到的左括号的前一个位置)处是否是<code>(</code>，如果是则<code>dp[i]=dp[i-1]+2+dp[i-2-dp[i-1]]</code>，表示以<code>i-2-dp[i-1]</code>为分隔点的两端连接起来(因为<code>s[i-1]==&#39;)&#39;</code>，所以此时应该是<code>dp[i-1]+2</code>)</li>
 </ol>
 </li>
 </ol>
