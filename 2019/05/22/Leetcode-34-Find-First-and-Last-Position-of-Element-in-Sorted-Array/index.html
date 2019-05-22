@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Leetcode 34 Find First and Last Position of Element in Sorted Array | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目描述给定已经排序好的序列nums，当给定target时，要求在时间复杂度为O(logn)内，查找target在nums中的出现范围，如果不存在，则返回[-1,-1]。">
+<meta name="keywords" content="Leetcode,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 34 Find First and Last Position of Element in Sorted Array">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/05/22/Leetcode-34-Find-First-and-Last-Position-of-Element-in-Sorted-Array/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="题目描述给定已经排序好的序列nums，当给定target时，要求在时间复杂度为O(logn)内，查找target在nums中的出现范围，如果不存在，则返回[-1,-1]。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-22T07:58:38.065Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Leetcode 34 Find First and Last Position of Element in Sorted Array">
+<meta name="twitter:description" content="题目描述给定已经排序好的序列nums，当给定target时，要求在时间复杂度为O(logn)内，查找target在nums中的出现范围，如果不存在，则返回[-1,-1]。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Leetcode-34-Find-First-and-Last-Position-of-Element-in-Sorted-Array" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/22/Leetcode-34-Find-First-and-Last-Position-of-Element-in-Sorted-Array/" class="article-date">
+  <time datetime="2019-05-22T07:39:19.000Z" itemprop="datePublished">2019-05-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Leetcode 34 Find First and Last Position of Element in Sorted Array
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定已经排序好的序列<code>nums</code>，当给定<code>target</code>时，要求在时间复杂度为<code>O(logn)</code>内，查找<code>target</code>在<code>nums</code>中的出现范围，如果不存在，则返回<code>[-1,-1]</code>。</p>
+<a id="more"></a>
+<p><code>Examples</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: nums = [<span class="number">5</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">10</span>], target = <span class="number">8</span></span><br><span class="line">Output: [<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">  </span><br><span class="line">Input: nums = [<span class="number">5</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">10</span>], target = <span class="number">6</span></span><br><span class="line">Output: [<span class="number">-1</span>,<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a><code>Solution</code></h2><p>因为有序且要求时间复杂度为<code>O(logn)</code>，所以应当采用二分查找。</p>
+<p>首先查找第一次出现的位置，如果不存在，可以直接返回<code>-1</code>，接着查找最右边出现的位置。所以需要查找两次。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">searchRange</span><span class="params">(self, nums, target)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :type target: int</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        res = [<span class="number">-1</span>, <span class="number">-1</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        start, end = <span class="number">0</span>, len(nums)<span class="number">-1</span></span><br><span class="line">        <span class="comment"># 不断往左边查找</span></span><br><span class="line">        <span class="keyword">while</span> start &lt; end:</span><br><span class="line">            mid = start + (end - start) / <span class="number">2</span></span><br><span class="line">            <span class="comment"># 只有确认不在[start, mid]之间，才能移动start</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] &lt; target:</span><br><span class="line">                start = mid + <span class="number">1</span></span><br><span class="line">            <span class="comment"># 其他情况比如mid处值等于target，或者mid处的值大于target</span></span><br><span class="line">            <span class="comment"># 应当保守一点移动</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                end -= <span class="number">1</span></span><br><span class="line">                <span class="comment"># end = mid</span></span><br><span class="line">        <span class="keyword">if</span> nums[start] == target:</span><br><span class="line">            res[<span class="number">0</span>] = start</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> [<span class="number">-1</span>, <span class="number">-1</span>]</span><br><span class="line">        </span><br><span class="line">        end = len(nums) - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> start &lt; end:</span><br><span class="line">            <span class="comment"># 使得mid更偏向于end，比如[5,8,9]查找8时</span></span><br><span class="line">            <span class="comment"># 即使start+=1也不会跳过，使start不断趋近于end</span></span><br><span class="line">            mid = start + (end - start) / <span class="number">2</span> + <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] &gt; target:</span><br><span class="line">                end = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                start += <span class="number">1</span></span><br><span class="line">                <span class="comment"># start = mid</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> nums[start] == target:</span><br><span class="line">            res[<span class="number">1</span>] = start</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注释的代码是大神的代码，效率更高。</p>
+</blockquote>
+<p>总之二分查找的左右范围是让人头疼的事情~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/22/Leetcode-34-Find-First-and-Last-Position-of-Element-in-Sorted-Array/" data-id="cjvyxsfz200090p8z6c1yp9cj" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/22/Leetcode-33-Search-in-Rotated-Sorted-Array/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Leetcode 33 Search in Rotated Sorted Array</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目描述"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solution"><span class="toc-number">2.</span> <span class="toc-text">Solution</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
