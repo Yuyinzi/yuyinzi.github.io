@@ -4,6 +4,7 @@ date: 2019-05-21 23:26:45
 tags:
 - Leetcode
 - Python
+- stack
 categories:
 - 算法
 ---

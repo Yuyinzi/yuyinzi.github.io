@@ -4,6 +4,8 @@ date: 2019-05-19 16:11:15
 tags:
 - Leetcode
 - Python
+- priority queue
+- list
 categories:
 - 算法
 ---
