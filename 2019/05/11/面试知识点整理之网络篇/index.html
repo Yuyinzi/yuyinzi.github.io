@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） TCP三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理 SYN FLOOD出现原因及原理">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-22T16:30:01.750Z">
+<meta property="og:updated_time" content="2019-05-23T10:18:53.045Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之网络篇">
 <meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） TCP三次握手与四次挥手 为何需要四次挥手 出现大量TIME_WAIT应当如何处理 SYN FLOOD出现原因及原理">
@@ -335,6 +335,54 @@
 <p>交换机工作在链路层，通过<code>MAC</code>地址传送信息</p>
 <p>路由器工作在网络层，存在路由表进行<code>IP</code>寻址</p>
 <p>网卡的作用将数据封装成帧，通过网线发送出去；将帧组合成数据，发送给计算机，工作在数据链路层。</p>
+<h2 id="同步异步，阻塞与非阻塞"><a href="#同步异步，阻塞与非阻塞" class="headerlink" title="同步异步，阻塞与非阻塞"></a>同步异步，阻塞与非阻塞</h2><p>[<a href="https://segmentfault.com/a/1190000003063859" target="_blank" rel="noopener">Linux IO模式及 select、poll、epoll详解</a>]</p>
+<ul>
+<li>同步在进行数据拷贝时会将进程阻塞</li>
+<li><p>异步是将数据拷贝完之后才通知进程，进程不会被阻塞。</p>
+</li>
+<li><p>阻塞会一直阻塞住对应的进程，直到操作完成(包括数据从内核空间拷贝至用户空间)；</p>
+</li>
+<li>非阻塞会在内核还准备数据的情况下返回，当数据准备好后，需要进程<strong>主动</strong>调用<code>recvfrom</code>将数据拷贝至用户空间，在数据从内核空间拷贝至用户空间时，仍然会阻塞进程</li>
+</ul>
+<p>因此阻塞与非阻塞<code>IO</code>都是同步<code>IO</code>。</p>
+<h2 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a><code>I/O</code>多路复用</h2><p><code>IO multiplexing</code>就是我们说的<code>select</code>，<code>poll</code>，<code>epoll</code>，有些地方也称这种<code>IO</code>方式为<code>event driven IO</code>。<code>select/epoll</code>的好处就在于单个<code>process</code>就可以同时处理多个网络连接的<code>IO</code>。它的基本原理就是<code>select</code>，<code>poll</code>，<code>epoll</code>监听所负责的所有<code>socket</code>，当某个<code>socket</code>有数据到达了，就通知用户进程进行拷贝。因此这种方式仍然是同步<code>IO</code>。</p>
+<h2 id="select-poll-epoll"><a href="#select-poll-epoll" class="headerlink" title="select/poll/epoll"></a><code>select</code>/<code>poll</code>/<code>epoll</code></h2><p><code>select</code>将监听描述符分为3类，直到有监听的事件发生时返回，通过遍历描述符集合，来找到就绪的描述符。</p>
+<p>缺点：</p>
+<ul>
+<li>监听描述符有限制，为1024</li>
+<li>每次调用时需要将文件描述符从用户空间拷贝到内核空间，当有事件发生时，需要再将描述符从内和线性拷贝到用户空间</li>
+<li>每次调用都会线性扫描整个<code>fd_set</code></li>
+<li>再次调用时需要初始化所有描述符(<code>select</code>返回后会把以前加入的但并无事件发生的<code>fd</code>清空)</li>
+</ul>
+<p>因此<code>poll</code>进行了改进，使用一个指针代替描述符，解决了描述符数量限制与重新初始化的问题。</p>
+<p><code>epoll</code>使用了一棵红黑树以及就绪队列，每当添加事件时，会往红黑树添加，并且向内核注册回调，当有事件发生时，回调函数会将就绪的<code>socket</code>放置就绪队列，因此，解决了遍历的问题。它支持<code>LT</code>和<code>ET</code>：</p>
+<ul>
+<li><strong>LT模式</strong>：当<code>epoll_wait</code>检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用<code>epoll_wait</code>时，会再次响应应用程序并通知此事件。</li>
+<li><strong>ET模式</strong>：当<code>epoll_wait</code>检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用<code>epoll_wait</code>时，不会再次响应应用程序并通知此事件。</li>
+</ul>
+<h2 id="SQL注入和DDos"><a href="#SQL注入和DDos" class="headerlink" title="SQL注入和DDos"></a><code>SQL</code>注入和<code>DDos</code></h2><p><code>SQL</code>注入是指在填写某些字段的时候，字段中带有某些特殊字符(<code>sql</code>语法)，并未对字段中的数据进行验证。由于缺乏<code>sql</code>的转义，从而使得原本<code>sql</code>语句失效。通过修改数据库来修改网页上的内容。</p>
+<p>从层次上<code>DDoS</code>可以分为：</p>
+<ul>
+<li><p>网络层<code>DDoS</code>:</p>
+<ul>
+<li><p><code>SYN Flood</code>: 三次握手时，当攻击方随意构造源IP去发送<code>SYN</code>包，服务器返回的<code>SYN+ACK</code>并不能得到正确应答，这时服务器会尝试重新发送并且等待，导致资源饱和和服务不可用</p>
+</li>
+<li><p><code>ACK Flood</code>：<code>TCP</code>建立之后，大量发送<code>ACK</code>，会导致服务器端花费大量的精力接收报文，并且判断数据包是否合法，同时要主动回应<code>RST</code>报文，正常的数据包可能就无法得到及时的处理</p>
+</li>
+<li><code>UDP Flood</code>：由于<code>UDP</code>协议是一种无连接的服务，在<code>UDP Flood</code>攻击中，攻击者可发送大量伪造源IP地址的小<code>UDP</code>包。</li>
+<li><code>ICMP Flood</code>：在短时间内向目的主机发送大量<code>ping</code>包，消耗主机资源，主机资源耗尽后就会瘫痪或者无法提供其他服务。</li>
+</ul>
+</li>
+<li><p>应用层<code>DDos</code>：</p>
+<ul>
+<li><p><code>CC</code>攻击： 针对消耗资源比较大的页面不断发起不正常的请求，导致资源耗尽。比如需要查询数据库的页面，读写硬盘文件。使用爬虫对这些网页发起<code>HTTP</code>请求。</p>
+</li>
+<li><p><code>DNS Flood</code>：向被攻击的服务器发送大量的域名解析请求(通常是随机生成或者是根本不存在的域名)，被攻击的<code>DNS</code>服务器在解析域名的过程会带来很大的负载。</p>
+</li>
+<li><code>HTTP</code>慢速连接攻击：针对<code>HTTP</code>协议，建立其连接之后，设置一个较大的<code>Content-Length</code>，每次只发送很少的字节，让服务器一直以为<code>HTTP</code>头部没有传输完成，连接一多就很快会出现连接耗尽。</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -439,7 +487,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP三次握手与四次挥手"><span class="toc-number">1.</span> <span class="toc-text">TCP三次握手与四次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器中输入url到显示主页的过程"><span class="toc-number">2.</span> <span class="toc-text">浏览器中输入url到显示主页的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP如何保证可靠传输"><span class="toc-number">3.</span> <span class="toc-text">TCP如何保证可靠传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP和HTTPS的区别"><span class="toc-number">4.</span> <span class="toc-text">HTTP和HTTPS的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP和UDP协议的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP协议的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的状态码"><span class="toc-number">6.</span> <span class="toc-text">常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP长连接和短连接"><span class="toc-number">7.</span> <span class="toc-text">HTTP长连接和短连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-number">8.</span> <span class="toc-text">cookie和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的报文格式"><span class="toc-number">9.</span> <span class="toc-text">HTTP的报文格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求方法"><span class="toc-number">10.</span> <span class="toc-text">HTTP请求方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET和POST的区别"><span class="toc-number">11.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS和CSRF的区别"><span class="toc-number">12.</span> <span class="toc-text">XSS和CSRF的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会有OPTIONS请求"><span class="toc-number">13.</span> <span class="toc-text">为什么会有OPTIONS请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同源和跨域"><span class="toc-number">14.</span> <span class="toc-text">同源和跨域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密方式"><span class="toc-number">15.</span> <span class="toc-text">加密方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密和非对称加密"><span class="toc-number">15.1.</span> <span class="toc-text">对称加密和非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单向加密"><span class="toc-number">15.2.</span> <span class="toc-text">单向加密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP1-0-HTTP1-1-HTTP2-0的区别"><span class="toc-number">16.</span> <span class="toc-text">HTTP1.0/HTTP1.1/HTTP2.0的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何验证HTTPS证书的合法性"><span class="toc-number">17.</span> <span class="toc-text">如何验证HTTPS证书的合法性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何设计可靠的udp协议"><span class="toc-number">18.</span> <span class="toc-text">如何设计可靠的udp协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型与TCP-IP协议"><span class="toc-number">19.</span> <span class="toc-text">OSI模型与TCP/IP协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP地址分类"><span class="toc-number">20.</span> <span class="toc-text">IP地址分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层的协议"><span class="toc-number">21.</span> <span class="toc-text">各层的协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有了IP地址，为什么还需要MAC地址"><span class="toc-number">22.</span> <span class="toc-text">有了IP地址，为什么还需要MAC地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集线器、交换机和路由器，网卡"><span class="toc-number">23.</span> <span class="toc-text">集线器、交换机和路由器，网卡</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP三次握手与四次挥手"><span class="toc-number">1.</span> <span class="toc-text">TCP三次握手与四次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器中输入url到显示主页的过程"><span class="toc-number">2.</span> <span class="toc-text">浏览器中输入url到显示主页的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP如何保证可靠传输"><span class="toc-number">3.</span> <span class="toc-text">TCP如何保证可靠传输</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP和HTTPS的区别"><span class="toc-number">4.</span> <span class="toc-text">HTTP和HTTPS的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP和UDP协议的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP协议的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见的状态码"><span class="toc-number">6.</span> <span class="toc-text">常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP长连接和短连接"><span class="toc-number">7.</span> <span class="toc-text">HTTP长连接和短连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-number">8.</span> <span class="toc-text">cookie和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的报文格式"><span class="toc-number">9.</span> <span class="toc-text">HTTP的报文格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求方法"><span class="toc-number">10.</span> <span class="toc-text">HTTP请求方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GET和POST的区别"><span class="toc-number">11.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS和CSRF的区别"><span class="toc-number">12.</span> <span class="toc-text">XSS和CSRF的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么会有OPTIONS请求"><span class="toc-number">13.</span> <span class="toc-text">为什么会有OPTIONS请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同源和跨域"><span class="toc-number">14.</span> <span class="toc-text">同源和跨域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加密方式"><span class="toc-number">15.</span> <span class="toc-text">加密方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密和非对称加密"><span class="toc-number">15.1.</span> <span class="toc-text">对称加密和非对称加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单向加密"><span class="toc-number">15.2.</span> <span class="toc-text">单向加密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP1-0-HTTP1-1-HTTP2-0的区别"><span class="toc-number">16.</span> <span class="toc-text">HTTP1.0/HTTP1.1/HTTP2.0的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何验证HTTPS证书的合法性"><span class="toc-number">17.</span> <span class="toc-text">如何验证HTTPS证书的合法性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何设计可靠的udp协议"><span class="toc-number">18.</span> <span class="toc-text">如何设计可靠的udp协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI模型与TCP-IP协议"><span class="toc-number">19.</span> <span class="toc-text">OSI模型与TCP/IP协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP地址分类"><span class="toc-number">20.</span> <span class="toc-text">IP地址分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各层的协议"><span class="toc-number">21.</span> <span class="toc-text">各层的协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有了IP地址，为什么还需要MAC地址"><span class="toc-number">22.</span> <span class="toc-text">有了IP地址，为什么还需要MAC地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集线器、交换机和路由器，网卡"><span class="toc-number">23.</span> <span class="toc-text">集线器、交换机和路由器，网卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步异步，阻塞与非阻塞"><span class="toc-number">24.</span> <span class="toc-text">同步异步，阻塞与非阻塞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I-O多路复用"><span class="toc-number">25.</span> <span class="toc-text">I/O多路复用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select-poll-epoll"><span class="toc-number">26.</span> <span class="toc-text">select/poll/epoll</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入和DDos"><span class="toc-number">27.</span> <span class="toc-text">SQL注入和DDos</span></a></li></ol>
           </div>
       </div>
     </div>
