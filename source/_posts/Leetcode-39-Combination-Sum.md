@@ -69,6 +69,8 @@ class Solution(object):
 
 ## 延伸
 
+### `Combination Sum II`
+
 与之相对应的还有[Leetcode 40 Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
 
 这题不同的地方在于，给定的序列中含有重复的字符，但每个数字只能使用一次。因此在寻找下一个数字时，应当从当前下标的下一个开始寻找。然而，这样会出现重复的结果：
@@ -102,6 +104,55 @@ class Solution(object):
                     return
                 helpfunc(j+1, target-candidates[j], res+[candidates[j]])
         helpfunc(0, target, [])
+        return ans
+```
+
+### `Permutations`
+
+这题来自于[Leetcode 46 Permutations](https://leetcode.com/problems/permutations/)，算是标准的回溯。
+
+要求给定不重复的数字，求出全排列。
+
+`Examples`：
+
+```python 
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+```
+
+
+
+对于回溯来说，需要构造传进下一个子树的状态，并且在回溯返回时复原这个状态。
+
+```python 
+class Solution(object):
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        ans = []
+        def helpfunc(res, t):
+            if len(res) == len(nums):
+                ans.append(res)
+                return
+            for j in range(len(t)):
+              	# 标记这个数是否被访问过
+                if t[j] == "":
+                    continue
+                temp, t[j] = t[j], ""
+                helpfunc(res+[temp], t)
+                # 复原，取消标记
+                t[j] = temp
+        helpfunc([], nums)
         return ans
 ```
 
