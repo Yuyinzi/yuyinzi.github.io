@@ -156,3 +156,34 @@ class Solution(object):
         return ans
 ```
 
+### `Permutations II`
+
+针对46的变种，如果给定的数字有重复的情况下，即[Leetcode 47 Permutations II](https://leetcode.com/problems/permutations-ii/)。
+
+当给定的数字重复的情况下，为了产生不重复的结果，首先需要排序；接着在回溯的过程，需要判断相邻的两个数字是否相等。因此可以对46稍微改动一下：
+
+```pytho 
+class Solution(object):
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        nums.sort()
+        ans = []
+        def helpfunc(res, t):
+            if len(res) == len(nums):
+                ans.append(res)
+                return
+            for j in range(len(t)):
+                if j>0 and t[j] == t[j-1]:
+                    continue
+                if t[j] == "":
+                    continue
+                temp, t[j] = t[j], ""
+                helpfunc(res+[temp], t)
+                t[j] = temp
+        helpfunc([], nums)
+        return ans
+```
+
