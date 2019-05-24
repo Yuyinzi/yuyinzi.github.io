@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-05-13T10:31:23.214Z">
+<meta property="og:updated_time" content="2019-05-23T14:18:14.492Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之存储篇">
 <meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
@@ -108,7 +108,7 @@
 <h2 id="Mysql索引"><a href="#Mysql索引" class="headerlink" title="Mysql索引"></a><code>Mysql</code>索引</h2><p><code>MyISAM</code>是非聚集索引，<code>InnoDB</code>是聚集索引，因此在使用<code>InnoDB</code>作为引擎设计表时，不建议使用过长的字段作为主键(以免辅助索引过大)，也不建议使用非单调的字段作为主键(造成树的频繁调整)。</p>
 <p>因此索引会<strong>降低增删改查的速度</strong>。</p>
 <h3 id="索引的优化与失效"><a href="#索引的优化与失效" class="headerlink" title="索引的优化与失效"></a>索引的优化与失效</h3><ul>
-<li>最左匹配原则，<code>MySQL</code>会一直向右匹配直到遇到范围查询<code>(&gt;,&lt;,BETWEEN,LIKE)</code>就停止匹配。因此尽管没有按照索引的顺序来写，<code>MySql</code>仍然会自动优化，因此<code>in</code>、<code>=</code>的顺序并不重要</li>
+<li>最左匹配原则，<code>MySQL</code>会一直向右匹配直到遇到范围查询<code>(&gt;,&lt;,BETWEEN,LIKE)</code>就停止匹配(<code>&gt;=</code>，<code>&lt;=</code>是可以的)。因此尽管没有按照索引的顺序来写，<code>MySql</code>仍然会自动优化，因此<code>in</code>、<code>=</code>的顺序并不重要</li>
 <li>选择区分度高的列作为索引，即<code>COUNT(DISTINCT col)/COUNT(*)</code></li>
 <li>索引列不能参与计算</li>
 <li>尽可能扩展索引，而不是新建立索引。比如表中已经有了a的索引，现在要<code>(a,b)</code>的索引，那么只需要修改原来的索引即可。</li>
@@ -249,6 +249,51 @@
 <li>使用分布式协议，比如<code>2PC</code>、<code>3PC</code>，或者分布式锁。</li>
 </ol>
 <p>所以，要么接受最终一致，要么要求强一致，在分布式情况下就要牺牲<code>A</code>。</p>
+<h2 id="CHAR和VARCHAR"><a href="#CHAR和VARCHAR" class="headerlink" title="CHAR和VARCHAR"></a><code>CHAR</code>和<code>VARCHAR</code></h2><p><a href="[http://www.fordba.com/mysql-char-and-varchar-storage-include-blankspace.html](http://www.fordba.com/mysql-char-and-varchar-storage-include-blankspace.html">MySQL的char和varchar针对空格的处理</a>)</p>
+<ul>
+<li><strong>char：</strong>存储<strong>定长数据</strong>，最大只能存储<code>255</code>个字符。<code>CHAR</code>字段上的索引效率级高，必须在括号里定义长度，可以有默认值，比如定义<code>char(10)</code>，那么不论你存储的数据是否达到了<code>10</code>个字符，都要占去<code>10</code>个字符的空间（自动用空格填充），且在检索的时候查询条件后面的空格会被移除(左边的会保留)，存储的数据也会移除右侧的空格。</li>
+<li><strong>varchar：</strong>存储<strong>变长数据</strong>，但存储效率没有<code>CHAR</code>高，必须在括号里定义长度，可以有默认值。保存数据的时候，不进行空格自动填充，而且如果数据存在空格时，当值保存和检索时尾部的空格仍会保留。另外，<code>varchar</code>类型的实际长度会长1-2个字节(用来指示保存值的字节数)，如果小于等于255个字节，使用1个字节，大于255个字节，使用2个字节。存储时<code>VARCHAR</code>并不会移除左右的空格，但是查询时会移除查询条件右边的空格。</li>
+<li><strong>text：</strong>存储可变长度的非<code>Unicode</code>数据，最大长度为<code>2^31-1</code>个字符。<code>text</code>列不能有默认值，存储或检索过程中，不存在大小写转换，后面如果指定长度，不会报错误，但是这个长度是不起作用的，意思就是你插入数据的时候，超过你指定的长度还是可以正常插入。</li>
+</ul>
+<h2 id="MySQL事务的实现"><a href="#MySQL事务的实现" class="headerlink" title="MySQL事务的实现"></a><code>MySQL</code>事务的实现</h2><p><a href="https://draveness.me/mysql-transaction" target="_blank" rel="noopener">『浅入深出』MySQL 中事务的实现</a></p>
+<p><a href="https://juejin.im/post/5cb2e3b46fb9a0686e40c5cb" target="_blank" rel="noopener">Mysql事务实现原理</a></p>
+<p>原子性：需要在异常发生时进行回滚，因此需要依靠<strong>回滚日志</strong>(<code>undo log</code>)。他有如下特点：</p>
+<ul>
+<li>每条数据变更(<code>insert</code>/<code>update</code>/<code>delete</code>)操作都伴随一条<code>undo log</code>的生成,并且回滚日志必须先于数据持久化到磁盘上</li>
+<li>所谓的回滚就是根据回滚日志做逆向操作，比如<code>delete</code>的逆向操作为<code>insert</code>，<code>insert</code>的逆向操作为<code>delete</code>，<code>update</code>的逆向为<code>update</code>等</li>
+</ul>
+<p>持久性：使用<strong>重做日志(<code>redo log</code>)</strong>实现的，它包括两个部分：</p>
+<ul>
+<li>内存中的重做日志缓冲区</li>
+<li>磁盘上的重做日志文件</li>
+</ul>
+<p>这样一来，尝试对事务进行修改时，会经历以下步骤：</p>
+<ol>
+<li>数据从磁盘读入内存</li>
+<li>更新内存中缓存的数据</li>
+<li>生成重做日志写入重做日志缓冲区</li>
+<li>提交时，将缓冲区中的内容刷新到磁盘的重做日志文件</li>
+<li>将内存中的数据更新到磁盘</li>
+</ol>
+<p>因此，重做日志是用来记录已经成功提交事务的修改信息(在日志刷新到磁盘中之后，在数据从内存更新到磁盘中之前)，即使宕机了，也可以在读取<code>redo log</code>之后恢复最新数据。</p>
+<blockquote>
+<p>重做日志是以512字节块的形式存储的，块大小与磁盘扇区大小相同。重做日志可以保证原子性。</p>
+</blockquote>
+<p>隔离性：由锁+<code>MVCC</code>进行实现。</p>
+<h2 id="drop、delete和truncate"><a href="#drop、delete和truncate" class="headerlink" title="drop、delete和truncate"></a><code>drop</code>、<code>delete</code>和<code>truncate</code></h2><ol>
+<li><code>drop</code>直接删掉表，将表所占有的空间全部释放掉</li>
+<li><code>delete</code>每次从表中删除一行，并且将操作作为事务记录保存在日志中以便进行回滚，不会减少表或者索引所占的空间</li>
+<li><code>truncate</code>删除的是表中的数据，表和索引占用的空间会恢复初始大小</li>
+<li><code>truncate</code>和<code>drop</code>都无法回滚</li>
+<li>如果需要保留<code>id</code>的计数，使用<code>delete</code></li>
+<li>如果具有外键约束，不能使用<code>truncate</code></li>
+</ol>
+<h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p>由于存储介质的特性，磁盘本身存取就比主存慢很多，再加上机械运动耗费，磁盘的存取速度往往是主存的几百万分之一，因此为了提高效率，要尽量减少磁盘<code>I/O</code>。为了达到这个目的，磁盘往往不是严格按需读取，而是每次都会预读，即使只需要一个字节，磁盘也会从这个位置开始，顺序向后读取一定长度的数据放入内存。这样做的理论依据是计算机科学中著名的局部性原理，即<code></code>CPU访问存储器时，无论是存取指令还是存取数据，所访问的存储单元都趋于聚集在一个较小的连续区域中：</p>
+<ul>
+<li>时间局部性：如果一个信息项正在被访问，那么在近期它很可能还会被再次访问。</li>
+<li>空间局部性：在最近的将来将用到的信息很可能与现在正在使用的信息在空间地址上是临近的。</li>
+</ul>
+<p>预读的长度一般为页<code>(page)</code>的整倍数。</p>
 
       
     </div>
@@ -353,7 +398,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MyISAM和InnoDB的理解与区别"><span class="toc-number">1.</span> <span class="toc-text">MyISAM和InnoDB的理解与区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql索引"><span class="toc-number">2.</span> <span class="toc-text">Mysql索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引的优化与失效"><span class="toc-number">2.1.</span> <span class="toc-text">索引的优化与失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁"><span class="toc-number">3.</span> <span class="toc-text">锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MVCC和事务隔离级别"><span class="toc-number">3.1.</span> <span class="toc-text">MVCC和事务隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#乐观锁和悲观锁"><span class="toc-number">3.2.</span> <span class="toc-text">乐观锁和悲观锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#间隙锁"><span class="toc-number">3.3.</span> <span class="toc-text">间隙锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死锁的避免"><span class="toc-number">3.4.</span> <span class="toc-text">死锁的避免</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库大表优化"><span class="toc-number">4.</span> <span class="toc-text">数据库大表优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis与memcached的区别"><span class="toc-number">5.</span> <span class="toc-text">redis与memcached的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis常见数据结构"><span class="toc-number">6.</span> <span class="toc-text">redis常见数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis过期删除和内存淘汰"><span class="toc-number">7.</span> <span class="toc-text">redis过期删除和内存淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis持久化"><span class="toc-number">8.</span> <span class="toc-text">redis持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存雪崩和缓存穿透"><span class="toc-number">9.</span> <span class="toc-text">缓存雪崩和缓存穿透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis的并发竞争问题"><span class="toc-number">10.</span> <span class="toc-text">redis的并发竞争问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何保证缓存与数据库双写一致"><span class="toc-number">11.</span> <span class="toc-text">如何保证缓存与数据库双写一致</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MyISAM和InnoDB的理解与区别"><span class="toc-number">1.</span> <span class="toc-text">MyISAM和InnoDB的理解与区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql索引"><span class="toc-number">2.</span> <span class="toc-text">Mysql索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引的优化与失效"><span class="toc-number">2.1.</span> <span class="toc-text">索引的优化与失效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁"><span class="toc-number">3.</span> <span class="toc-text">锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MVCC和事务隔离级别"><span class="toc-number">3.1.</span> <span class="toc-text">MVCC和事务隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#乐观锁和悲观锁"><span class="toc-number">3.2.</span> <span class="toc-text">乐观锁和悲观锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#间隙锁"><span class="toc-number">3.3.</span> <span class="toc-text">间隙锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#死锁的避免"><span class="toc-number">3.4.</span> <span class="toc-text">死锁的避免</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库大表优化"><span class="toc-number">4.</span> <span class="toc-text">数据库大表优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis与memcached的区别"><span class="toc-number">5.</span> <span class="toc-text">redis与memcached的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis常见数据结构"><span class="toc-number">6.</span> <span class="toc-text">redis常见数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis过期删除和内存淘汰"><span class="toc-number">7.</span> <span class="toc-text">redis过期删除和内存淘汰</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis持久化"><span class="toc-number">8.</span> <span class="toc-text">redis持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存雪崩和缓存穿透"><span class="toc-number">9.</span> <span class="toc-text">缓存雪崩和缓存穿透</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis的并发竞争问题"><span class="toc-number">10.</span> <span class="toc-text">redis的并发竞争问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何保证缓存与数据库双写一致"><span class="toc-number">11.</span> <span class="toc-text">如何保证缓存与数据库双写一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CHAR和VARCHAR"><span class="toc-number">12.</span> <span class="toc-text">CHAR和VARCHAR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL事务的实现"><span class="toc-number">13.</span> <span class="toc-text">MySQL事务的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#drop、delete和truncate"><span class="toc-number">14.</span> <span class="toc-text">drop、delete和truncate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部性原理"><span class="toc-number">15.</span> <span class="toc-text">局部性原理</span></a></li></ol>
           </div>
       </div>
     </div>
