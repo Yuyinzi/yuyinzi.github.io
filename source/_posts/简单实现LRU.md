@@ -3,7 +3,8 @@ title: 简单实现LRU
 date: 2019-05-27 22:15:37
 tags:
 - Python
-categories：
+- 算法
+categories:
 - 算法
 ---
 
@@ -163,4 +164,3 @@ print(cache.get(3))
 `References:`
 
 [LRU cache](https://juejin.im/post/5cab4ae46fb9a0688d2e24b4#heading-6)
-
