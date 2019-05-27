@@ -64,6 +64,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-简单实现LRU" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/27/简单实现LRU/" class="article-date">
+  <time datetime="2019-05-27T14:15:37.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/27/简单实现LRU/">简单实现LRU</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>设计和实现一个<code>LRU</code>(最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 <code>get</code>和 写入数据<code>save</code> ，这两种操作的时间复杂度都为<code>O(1)</code>。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/27/简单实现LRU/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/27/简单实现LRU/" data-id="cjw6h131l0000y08zzrbkmvl5" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-Leetcode-39-Combination-Sum" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/23/Leetcode-39-Combination-Sum/" class="article-date">
@@ -506,56 +555,6 @@
 
 
   
-    <article id="post-面试知识点整理之操作系统篇" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/16/面试知识点整理之操作系统篇/" class="article-date">
-  <time datetime="2019-05-16T07:58:01.000Z" itemprop="datePublished">2019-05-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/16/面试知识点整理之操作系统篇/">面试知识点整理之操作系统篇</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="用户态和内核态"><a href="#用户态和内核态" class="headerlink" title="用户态和内核态"></a>用户态和内核态</h2><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(<code>kernel</code>），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为<strong>内核空间</strong>，一部分为<strong>用户空间</strong>。针对<code>linux</code>操作系统而言，将最高的1G字节(从虚拟地址<code>0xC0000000</code>到<code>0xFFFFFFFF</code>)，供内核使用，称为内核空间，而将较低的3G字节(从虚拟地址<code>0x00000000</code>到<code>0xBFFFFFFF</code>)，供各个进程使用，称为用户空间。</p>
-<p>在用户态下，<code>CPU</code>只能访问用户空间内存；当在内核态时，<code>CPU</code>既可以访问用户空间也可以访问内核空间。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/05/16/面试知识点整理之操作系统篇/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/16/面试知识点整理之操作系统篇/" data-id="cjw6gxyyr0037un8zjcmv8ntd" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
 
 
   <nav id="page-nav">
@@ -588,7 +587,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">12</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/MQ/">MQ</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web/">Web</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/工作之外/">工作之外</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据库/">数据库</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">13</span></li></ul>
     </div>
   </div>
 
@@ -598,7 +597,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/DP/" style="font-size: 14px;">DP</a> <a href="/tags/Django/" style="font-size: 16.75px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 22.25px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 19.5px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 16.75px;">ZooKeeper</a> <a href="/tags/backtracking/" style="font-size: 14px;">backtracking</a> <a href="/tags/dict/" style="font-size: 14px;">dict</a> <a href="/tags/list/" style="font-size: 16.75px;">list</a> <a href="/tags/mysql/" style="font-size: 16.75px;">mysql</a> <a href="/tags/priority-queue/" style="font-size: 14px;">priority queue</a> <a href="/tags/recursion/" style="font-size: 14px;">recursion</a> <a href="/tags/redis/" style="font-size: 16.75px;">redis</a> <a href="/tags/stack/" style="font-size: 14px;">stack</a> <a href="/tags/two-pointers/" style="font-size: 14px;">two pointers</a> <a href="/tags/web/" style="font-size: 16.75px;">web</a> <a href="/tags/二分查找/" style="font-size: 16.75px;">二分查找</a> <a href="/tags/分布式/" style="font-size: 16.75px;">分布式</a> <a href="/tags/操作系统/" style="font-size: 14px;">操作系统</a> <a href="/tags/算法/" style="font-size: 19.5px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
+      <a href="/tags/DP/" style="font-size: 14px;">DP</a> <a href="/tags/Django/" style="font-size: 16.2px;">Django</a> <a href="/tags/Leetcode/" style="font-size: 22.8px;">Leetcode</a> <a href="/tags/Python/" style="font-size: 25px;">Python</a> <a href="/tags/Rabbitmq/" style="font-size: 14px;">Rabbitmq</a> <a href="/tags/Redis/" style="font-size: 18.4px;">Redis</a> <a href="/tags/ZooKeeper/" style="font-size: 16.2px;">ZooKeeper</a> <a href="/tags/backtracking/" style="font-size: 14px;">backtracking</a> <a href="/tags/dict/" style="font-size: 14px;">dict</a> <a href="/tags/list/" style="font-size: 16.2px;">list</a> <a href="/tags/mysql/" style="font-size: 16.2px;">mysql</a> <a href="/tags/priority-queue/" style="font-size: 14px;">priority queue</a> <a href="/tags/recursion/" style="font-size: 14px;">recursion</a> <a href="/tags/redis/" style="font-size: 16.2px;">redis</a> <a href="/tags/stack/" style="font-size: 14px;">stack</a> <a href="/tags/two-pointers/" style="font-size: 14px;">two pointers</a> <a href="/tags/web/" style="font-size: 16.2px;">web</a> <a href="/tags/二分查找/" style="font-size: 16.2px;">二分查找</a> <a href="/tags/分布式/" style="font-size: 16.2px;">分布式</a> <a href="/tags/操作系统/" style="font-size: 14px;">操作系统</a> <a href="/tags/算法/" style="font-size: 20.6px;">算法</a> <a href="/tags/随笔/" style="font-size: 14px;">随笔</a>
     </div>
   </div>
 
@@ -608,6 +607,10 @@
     <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/05/27/简单实现LRU/">简单实现LRU</a>
+          </li>
         
           <li>
             <a href="/2019/05/23/Leetcode-39-Combination-Sum/">Leetcode 39 Combination Sum</a>
@@ -625,10 +628,6 @@
             <a href="/2019/05/21/Leetcode-32-Longest-Valid-Parentheses/">Leetcode 32 Longest Valid Parentheses</a>
           </li>
         
-          <li>
-            <a href="/2019/05/21/Leetcode-31-Next-Permutation/">Leetcode 31 Next Permutation</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -638,7 +637,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a><span class="archive-list-count">17</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">12</span></li></ul>
     </div>
   </div>
 

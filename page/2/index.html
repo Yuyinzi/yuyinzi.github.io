@@ -64,6 +64,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-面试知识点整理之操作系统篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/16/面试知识点整理之操作系统篇/" class="article-date">
+  <time datetime="2019-05-16T07:58:01.000Z" itemprop="datePublished">2019-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/16/面试知识点整理之操作系统篇/">面试知识点整理之操作系统篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="用户态和内核态"><a href="#用户态和内核态" class="headerlink" title="用户态和内核态"></a>用户态和内核态</h2><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核(<code>kernel</code>），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为<strong>内核空间</strong>，一部分为<strong>用户空间</strong>。针对<code>linux</code>操作系统而言，将最高的1G字节(从虚拟地址<code>0xC0000000</code>到<code>0xFFFFFFFF</code>)，供内核使用，称为内核空间，而将较低的3G字节(从虚拟地址<code>0x00000000</code>到<code>0xBFFFFFFF</code>)，供各个进程使用，称为用户空间。</p>
+<p>在用户态下，<code>CPU</code>只能访问用户空间内存；当在内核态时，<code>CPU</code>既可以访问用户空间也可以访问内核空间。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/16/面试知识点整理之操作系统篇/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/16/面试知识点整理之操作系统篇/" data-id="cjw6gxyyr0037un8zjcmv8ntd" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-面试知识点整理之存储篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/13/面试知识点整理之存储篇/" class="article-date">
@@ -547,62 +597,6 @@
 
 
   
-    <article id="post-TCP学习记录" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/14/TCP学习记录/" class="article-date">
-  <time datetime="2019-04-14T08:25:53.000Z" itemprop="datePublished">2019-04-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/14/TCP学习记录/">TCP学习记录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><code>TCP/IP</code>网络模型可以概括为四层结构：</p>
-<ul>
-<li>应用层</li>
-<li>传输层</li>
-<li>网络层</li>
-<li>链路层</li>
-</ul>
-<p>其中<code>TCP</code>位于传输层，主要用于保证通信的完整性及可靠性。</p>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/14/TCP学习记录/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjw6gxyzq003sun8zb2hgvgze" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
 
 
   <nav id="page-nav">
@@ -629,6 +623,10 @@
       <ul>
         
           <li>
+            <a href="/2019/05/27/简单实现LRU/">简单实现LRU</a>
+          </li>
+        
+          <li>
             <a href="/2019/05/23/Leetcode-39-Combination-Sum/">Leetcode 39 Combination Sum</a>
           </li>
         
@@ -642,10 +640,6 @@
         
           <li>
             <a href="/2019/05/21/Leetcode-32-Longest-Valid-Parentheses/">Leetcode 32 Longest Valid Parentheses</a>
-          </li>
-        
-          <li>
-            <a href="/2019/05/21/Leetcode-31-Next-Permutation/">Leetcode 31 Next Permutation</a>
           </li>
         
       </ul>

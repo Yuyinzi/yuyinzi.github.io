@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>简单实现LRU | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="要求设计和实现一个LRU(最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 get和 写入数据save ，这两种操作的时间复杂度都为O(1)。">
+<meta name="keywords" content="Python,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单实现LRU">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/05/27/简单实现LRU/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="要求设计和实现一个LRU(最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 get和 写入数据save ，这两种操作的时间复杂度都为O(1)。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-27T14:32:26.121Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单实现LRU">
+<meta name="twitter:description" content="要求设计和实现一个LRU(最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 get和 写入数据save ，这两种操作的时间复杂度都为O(1)。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-简单实现LRU" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/27/简单实现LRU/" class="article-date">
+  <time datetime="2019-05-27T14:15:37.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      简单实现LRU
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>设计和实现一个<code>LRU</code>(最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 <code>get</code>和 写入数据<code>save</code> ，这两种操作的时间复杂度都为<code>O(1)</code>。</p>
+<a id="more"></a>
+<p><code>get</code>: 如果<code>key</code>存在于缓存中，则获取密钥的值（总是正数），否则返回 -1。 </p>
+<p><code>save(key, value)</code>：如果<code>key</code>不存在，则写入其数据值，如果存在，覆盖其原来数据值。当缓存容量达到上限时，它应该在写入新数据之前删除最近最少使用的数据值，从而为新的数据值留出空间。</p>
+<p><code>Example</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LRUCache cache = new LRUCache(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">cache.save(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">cache.save(<span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line">cache.get(<span class="number">1</span>);       // 返回  <span class="number">1</span></span><br><span class="line">cache.save(<span class="number">3</span>, <span class="number">3</span>);    // 该操作会使得密钥 <span class="number">2</span> 作废</span><br><span class="line">cache.get(<span class="number">2</span>);       // 返回 <span class="number">-1</span> (未找到)</span><br><span class="line">cache.save(<span class="number">4</span>, <span class="number">4</span>);    // 该操作会使得密钥 <span class="number">1</span> 作废</span><br><span class="line">cache.get(<span class="number">1</span>);       // 返回 <span class="number">-1</span> (未找到)</span><br><span class="line">cache.get(<span class="number">3</span>);       // 返回  <span class="number">3</span></span><br><span class="line">cache.get(<span class="number">4</span>);       // 返回  <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>要进行插入和读取的复杂度都为<code>O(1)</code>，可以使用双端链表以及字典来实现。因此需要自定义一个双端链表节点，以及双端链表，与字典一起构成个<code>LRU</code>。</p>
+<p>每当插入新值/修改值/获得值时，都需要将节点插入到链表头。当链表超过自定义大小时，将尾端节点删除。</p>
+<p>下面是一个简单实现(没有进行异常处理)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># author: May</span></span><br><span class="line"><span class="comment"># Time: 2019-05-27 18:01</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        self.key = key</span><br><span class="line">        self.value = value</span><br><span class="line">        self.pre = <span class="literal">None</span></span><br><span class="line">        self.nxt = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleLinklist</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.head = Node(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        self.tail = Node(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        self.head.nxt = self.tail</span><br><span class="line">        self.tail.pre = self.head</span><br><span class="line">        self.size = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRU</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, size)</span>:</span></span><br><span class="line">        self.link = DoubleLinklist()</span><br><span class="line">        self.hash_map = &#123;&#125;</span><br><span class="line">        self.size = size</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_to_head</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        f_node = self.link.head.nxt</span><br><span class="line">        <span class="comment"># 如果第一个节点是自己，不移动，否则会使自己指向自己</span></span><br><span class="line">        <span class="keyword">if</span> node != f_node:</span><br><span class="line">            self.link.head.nxt, node.pre = node, self.link.head</span><br><span class="line">            node.nxt, f_node.pre = f_node, node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_node</span><span class="params">(self, node)</span>:</span></span><br><span class="line">        p_node, n_node = node.pre, node.nxt</span><br><span class="line">        p_node.nxt, n_node.pre = n_node, p_node</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">save</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="comment"># 节点存在，则直接更改值，放置于链表头</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.hash_map:</span><br><span class="line">            node = self.hash_map[key]</span><br><span class="line">            node.value = value</span><br><span class="line"></span><br><span class="line">            self.add_to_head(node)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 否则创建一个新节点，放置于链表头</span></span><br><span class="line">            node = Node(key, value)</span><br><span class="line">            self.add_to_head(node)</span><br><span class="line">            self.hash_map[key] = node</span><br><span class="line">            self.link.size += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 当前链表大小大于指定大小时，才需要删除最久未使用的节点</span></span><br><span class="line">            <span class="keyword">if</span> self.link.size &gt; self.size:</span><br><span class="line">                t_node = self.link.tail.pre</span><br><span class="line">                self.remove_node(t_node)</span><br><span class="line">                <span class="keyword">del</span> self.hash_map[t_node.key]</span><br><span class="line">                <span class="keyword">del</span> t_node</span><br><span class="line">                self.link.size -= <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'SUCCESS'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.hash_map:</span><br><span class="line">            node = self.hash_map[key]</span><br><span class="line">            self.add_to_head(node)</span><br><span class="line">            <span class="keyword">return</span> node.value</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> self.hash_map:</span><br><span class="line">            node = self.hash_map[key]</span><br><span class="line">            self.remove_node(node)</span><br><span class="line">            self.link.size -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">del</span> self.hash_map[key]</span><br><span class="line">            <span class="keyword">del</span> node</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'SUCCESS'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cache = LRU(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">print(cache.save(<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.save(<span class="number">2</span>, <span class="number">2</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.save(<span class="number">1</span>, <span class="number">3</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.get(<span class="number">1</span>))</span><br><span class="line"><span class="comment"># 3</span></span><br><span class="line">print(cache.save(<span class="number">3</span>, <span class="number">3</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.get(<span class="number">2</span>))</span><br><span class="line"><span class="comment"># 2</span></span><br><span class="line">print(cache.save(<span class="number">4</span>, <span class="number">4</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.get(<span class="number">1</span>))</span><br><span class="line"><span class="comment"># -1</span></span><br><span class="line">print(cache.get(<span class="number">3</span>))</span><br><span class="line"><span class="comment"># 3</span></span><br><span class="line">print(cache.get(<span class="number">4</span>))</span><br><span class="line"><span class="comment"># 4</span></span><br><span class="line">print(cache.delete(<span class="number">4</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.get(<span class="number">4</span>))</span><br><span class="line"><span class="comment"># -1</span></span><br><span class="line">print(cache.delete(<span class="number">1</span>))</span><br><span class="line"><span class="comment"># -1</span></span><br><span class="line">print(cache.delete(<span class="number">3</span>))</span><br><span class="line"><span class="comment"># SUCCESS</span></span><br><span class="line">print(cache.get(<span class="number">3</span>))</span><br><span class="line"><span class="comment"># -1</span></span><br></pre></td></tr></table></figure>
+<p><code>References:</code></p>
+<p><a href="https://juejin.im/post/5cab4ae46fb9a0688d2e24b4#heading-6" target="_blank" rel="noopener">LRU cache</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/27/简单实现LRU/" data-id="cjw6h131l0000y08zzrbkmvl5" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/23/Leetcode-39-Combination-Sum/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Leetcode 39 Combination Sum</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#要求"><span class="toc-number">1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
