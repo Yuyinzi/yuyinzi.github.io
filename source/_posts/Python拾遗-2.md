@@ -31,7 +31,7 @@ False
 当超出`int`限制时，会自动转换成为`long`。
 
 ## `float`
-在`python2`中，`/`默认返回整数，而`python3`中默认返回浮点数。如果需要准确控制运算精度，有效位数和`round`的结果，使用`Decimal`代替。(但是建议往`Decimal`传入字符串型的浮点数 -- (为什么你需要少看垃圾博客以及如何在Python里精确地四舍五入)[https://zhuanlan.zhihu.com/p/60952919])
+在`python2`中，`/`默认返回整数，而`python3`中默认返回浮点数。如果需要准确控制运算精度，有效位数和`round`的结果，使用`Decimal`代替。(但是建议往`Decimal`传入字符串型的浮点数 -- [为什么你需要少看垃圾博客以及如何在Python里精确地四舍五入](https://zhuanlan.zhihu.com/p/60952919)
 ```python
 >>> from decimal import Decimal, ROUND_UP, ROUND_DOWN
 >>> float('0.1') * 3 == float('0.3')
