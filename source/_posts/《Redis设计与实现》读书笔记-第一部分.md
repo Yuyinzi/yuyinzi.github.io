@@ -111,7 +111,7 @@ struct zskiplist{
     struct zskiplistNode * header, * tail;
     // 跳跃表的长度，可以在O(1)时间内返回
     unsigned long length;
-    // 跳跃表的层高，表头节点并不包含在内
+    // 跳跃表的最大层高，表头节点并不包含在内
     int level;
 }
 ```
