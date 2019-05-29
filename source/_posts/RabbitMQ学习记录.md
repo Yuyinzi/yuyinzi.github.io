@@ -197,6 +197,7 @@ def callback(ch, method, properties, body):
     # 主动使用ack告知调用方
     ch.basic_ack(delivery_tag=method.delivery_tag)
 ...
+
 ```
 
 可以发现，消费者`1`只处理了三条数据(并且网页端显示一直是`unacked`)，其他的数据都由消费者`2`处理了。接着此时关闭消费者`1`，会发现这三条数据又被分配给消费者`2`所处理了。
@@ -230,6 +231,7 @@ for i in range(20):
     channel.basic_publish(exchange='hello_fanout',
                           routing_key='world',
                           body=body)
+
 ```
 
 在`fanout`模式下，`routing_key`即使不匹配也没有关系。消费者`1`和消费者`2`的输出结果一样。
@@ -252,6 +254,7 @@ channel.basic_consume(on_message_callback=callback,
                       )
 
 ...
+
 ```
 
 生产者：
@@ -274,6 +277,7 @@ for i in range(20):
                               routing_key='hello.2',
                               body=body)
 ...
+
 ```
 
 此时`i<10`的消息会由消费者`1`处理。
@@ -307,6 +311,7 @@ for i in range(20):
                               body=body)
 ...
 
+
 ```
 
 一个队列可以使用多种路由规则与同一`exchange`绑定。此时消费者`2`可以收到全部消息，而消费者`1`只能收到`11-19`之间的消息。
@@ -336,6 +341,7 @@ for i in range(20):
         channel.basic_publish(exchange='hello_direct',
                               routing_key='hello.2',
                               body=body)
+
 ```
 
 此时，消费者`2`可以收到全部消息。
@@ -366,6 +372,7 @@ channel.basic_consume(on_message_callback=callback,
                        queue=r.method.queue)
 
 channel.start_consuming()
+
 ```
 
 这样可以实现一个动态创建队列的消费者。
@@ -378,6 +385,7 @@ channel.start_consuming()
 # rabbit_c1.py
 channel.exchange_declare(exchange='hello_topic', exchange_type='topic', durable=True)
 channel.queue_declare(queue='hello1', durable=True)
+
 ```
 
 需要注意的是，如果消费者声明了`durable=True`，那么生产者在再次声明时，也必须将其声明为`durable=True`，否则会报错。或者也可以删除后再次声明：
@@ -385,6 +393,7 @@ channel.queue_declare(queue='hello1', durable=True)
 ```python 
 channel.queue_delete(queue='hello1')
 channel.exchange_delete(exchange='hello_topic')
+
 ```
 
 
@@ -397,6 +406,7 @@ channel.basic_publish(exchange='hello_topic',
                       routing_key='hello.1',
                       properties=pika.BasicProperties(delivery_mode=2),
                       body=body)
+
 ```
 
 这样从交换机、队列层面保证了消息只要进入了，就不会丢失，但是如果在投递的过程中丢失，比如消息并未到达交换机或者没有对应的队列(消息会被丢弃)，此时应当使用`RabbitMQ`提供的`confirm mode`。
@@ -419,6 +429,7 @@ res = channel.basic_publish(exchange='test',
                          properties=pika.BasicProperties(content_type='text/plain',
                                                          delivery_mode=2),
                             mandatory=True)
+
 ```
 
 此时由于没有消费者绑定名为`test`的`exchange`，因此会返回`False`。
@@ -441,6 +452,7 @@ def callback(ch, method, properties, body):
         print(body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     count += 1
+
 ```
 
 默认情况下，`requeue=True`，表示消息被拒绝后可以由其他消费者处理。
@@ -478,6 +490,7 @@ ch.basic_publish(exchange='rpc_p',
                      correlation_id=correlation_id
                  ))
 ch.start_consuming()
+
 ```
 
 生产者指定自己发出消息的交换机为`rpc_p`，需要接受回复使用的交换机为`rpc_r`，并分别绑定队列`rpc_p`和`rpc_r`，在发布消息时，指定`reply_to`参数以及标识这条消息的唯一`id`。
@@ -508,6 +521,7 @@ def callback(channel, method, properties, body):
 
 ch.basic_consume(callback, queue='rpc_p')
 ch.start_consuming()
+
 ```
 
 消费者只需要一直监听来自队列`rpc_p`的消息，并且在接收到消息后将确认信息发送至`reply_to`所指向的队列，同时指明自己所收到的是哪条消息。
@@ -520,6 +534,7 @@ ch.start_consuming()
 b'10' 7bfd8db775144308945b679ed4c5a2ed
 # 消费者
 b'1,2,3,4'
+
 ```
 
 
