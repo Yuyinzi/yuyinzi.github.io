@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Leetcode 75 Sort Colors | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目介绍由n个元素组成的数组，每个元素的取值只能为0、1、2，将该数组进行排序。要求只遍历一次，不适用内置的排序函数。">
+<meta name="keywords" content="Leetcode,Python,two pointers">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 75 Sort Colors">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/06/12/Leetcode-75-Sort-Colors/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="题目介绍由n个元素组成的数组，每个元素的取值只能为0、1、2，将该数组进行排序。要求只遍历一次，不适用内置的排序函数。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-12T09:01:03.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Leetcode 75 Sort Colors">
+<meta name="twitter:description" content="题目介绍由n个元素组成的数组，每个元素的取值只能为0、1、2，将该数组进行排序。要求只遍历一次，不适用内置的排序函数。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Leetcode-75-Sort-Colors" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/12/Leetcode-75-Sort-Colors/" class="article-date">
+  <time datetime="2019-06-12T08:51:50.000Z" itemprop="datePublished">2019-06-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Leetcode 75 Sort Colors
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h2><p>由<code>n</code>个元素组成的数组，每个元素的取值只能为<code>0</code>、<code>1</code>、<code>2</code>，将该数组进行排序。要求只遍历一次，不适用内置的排序函数。</p>
+<a id="more"></a>
+<p><code>Examples:</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [2,0,2,1,1,0]</span><br><span class="line">Output: [0,0,1,1,2,2]</span><br></pre></td></tr></table></figure>
+<h2 id="Solutions"><a href="#Solutions" class="headerlink" title="Solutions"></a><code>Solutions</code></h2><p>因为只能遍历一次，所以需要采用两个指针。</p>
+<h3 id="两次遍历"><a href="#两次遍历" class="headerlink" title="两次遍历"></a>两次遍历</h3><p>第一次遍历将<code>0</code>放好，第二次遍历将<code>2</code>放好。但是需要两次遍历，不符合题目要求：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sortColors</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        zero, nzero = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> nzero &lt; len(nums):</span><br><span class="line">            <span class="keyword">if</span> nums[nzero] == <span class="number">0</span>:</span><br><span class="line">                nums[nzero], nums[zero] = nums[zero], nums[nzero]</span><br><span class="line">                zero += <span class="number">1</span></span><br><span class="line">            nzero += <span class="number">1</span></span><br><span class="line">        two, ntwo = len(nums)<span class="number">-1</span>, len(nums)<span class="number">-1</span></span><br><span class="line">        <span class="keyword">while</span> ntwo &gt;= <span class="number">0</span> <span class="keyword">and</span> nums[ntwo] != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">if</span> nums[ntwo] == <span class="number">2</span>:</span><br><span class="line">                nums[ntwo], nums[two] = nums[two], nums[ntwo]</span><br><span class="line">                two -= <span class="number">1</span></span><br><span class="line">            ntwo -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="一次遍历"><a href="#一次遍历" class="headerlink" title="一次遍历"></a>一次遍历</h3><p>可以将两次遍历合为一次，需要注意的是：</p>
+<p>当遍历的值为<code>2</code>时，与<code>two</code>指针指向的元素进行交换，但是有可能交换回来的值仍然为<code>2</code>，所以不能增加<code>p</code>；</p>
+<p>当遍历的值为<code>1</code>时，即使交换回来的值仍然为<code>1</code>，也表明<code>p</code>前面的数是有序的，所以需要增加<code>p</code>。这是因为<code>p</code>永远不可能落后于指向<code>0</code>的位置<code>zero</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sortColors</span><span class="params">(self, nums)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: None Do not return anything, modify nums in-place instead.</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        zero, two, p = <span class="number">0</span>, len(nums) - <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> p &lt;= two:</span><br><span class="line">            <span class="keyword">if</span> nums[p] == <span class="number">2</span>:</span><br><span class="line">                nums[p], nums[two] = nums[two], nums[p]</span><br><span class="line">                two -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> nums[p] == <span class="number">0</span>:</span><br><span class="line">                nums[p], nums[zero] = nums[zero], nums[p]</span><br><span class="line">                zero += <span class="number">1</span></span><br><span class="line">                p += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                p += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/06/12/Leetcode-75-Sort-Colors/" data-id="cjwt09ast0010pk8zgczh9uh4" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/two-pointers/">two pointers</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/04/Docker搭建Django-uWSGI-nginx/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Docker搭建Django+uWSGI+nginx</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目介绍"><span class="toc-number">1.</span> <span class="toc-text">题目介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solutions"><span class="toc-number">2.</span> <span class="toc-text">Solutions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#两次遍历"><span class="toc-number">2.1.</span> <span class="toc-text">两次遍历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一次遍历"><span class="toc-number">2.2.</span> <span class="toc-text">一次遍历</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
