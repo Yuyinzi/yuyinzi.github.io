@@ -66,3 +66,37 @@ class Solution(object):
         return -1
 ```
 
+## 延伸
+
+在旋转数组中查找指定数的还有[Leetcode 81 Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii/)，它的不同之处在于数组中可能出现重复的数。当`nums[end]==nums[mid]`时，并不能判断在左边还是右边是单调区间，由于这个数并不等于`target`，因此可以将它排除在外(`end -= 1`)。
+
+```python 
+class Solution(object):
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: bool
+        """
+        start, end = 0, len(nums)-1
+        
+        while start <= end:
+            mid = start + (end - start) / 2
+            if nums[mid] == target:
+                return True
+            else:
+                if nums[end] < nums[mid]:
+                    if nums[mid] > target and nums[start] <= target:
+                        end = mid - 1
+                    else:
+                        start = mid + 1
+                elif nums[end] > nums[mid]:
+                    if nums[mid] < target and nums[end] >= target:
+                        start = mid + 1
+                    else:
+                        end = mid - 1
+                else:
+                    end -= 1
+        return False
+```
+
