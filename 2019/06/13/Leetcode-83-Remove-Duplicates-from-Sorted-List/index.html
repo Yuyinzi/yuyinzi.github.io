@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Leetcode 83 Remove Duplicates from Sorted List | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目介绍给定已经排好序的链表，删除所有重复的节点，只保留一个。">
+<meta name="keywords" content="Leetcode,Python,list">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 83 Remove Duplicates from Sorted List">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/06/13/Leetcode-83-Remove-Duplicates-from-Sorted-List/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="题目介绍给定已经排好序的链表，删除所有重复的节点，只保留一个。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-13T13:39:18.822Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Leetcode 83 Remove Duplicates from Sorted List">
+<meta name="twitter:description" content="题目介绍给定已经排好序的链表，删除所有重复的节点，只保留一个。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Leetcode-83-Remove-Duplicates-from-Sorted-List" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/13/Leetcode-83-Remove-Duplicates-from-Sorted-List/" class="article-date">
+  <time datetime="2019-06-13T13:27:40.000Z" itemprop="datePublished">2019-06-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Leetcode 83 Remove Duplicates from Sorted List
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h2><p>给定已经排好序的链表，删除所有重复的节点，只保留一个。</p>
+<a id="more"></a>
+<p><code>Examples:</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Input: 1-&gt;1-&gt;2</span><br><span class="line">Output: 1-&gt;2</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">Input: 1-&gt;1-&gt;2-&gt;3-&gt;3</span><br><span class="line">Output: 1-&gt;2-&gt;3</span><br></pre></td></tr></table></figure>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a><code>Solution</code></h2><p>可以构造一个虚构的头节点<code>phead</code>，使得当前节点<code>cur</code>指向它。遍历节点，当找到最后一个不与前面节点重复的节点<code>p</code>时，使得<code>cur</code>的<code>next</code>指向<code>p</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deleteDuplicates</span><span class="params">(self, head)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type head: ListNode</span></span><br><span class="line"><span class="string">        :rtype: ListNode</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        phead = ListNode(<span class="number">0</span>)</span><br><span class="line">        phead.next = head</span><br><span class="line">        cur, p = phead, head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">while</span> p.next <span class="keyword">and</span> p.val == p.next.val:</span><br><span class="line">                p = p.next</span><br><span class="line">            cur.next = p</span><br><span class="line">            cur = cur.next</span><br><span class="line">            p = p.next</span><br><span class="line">        <span class="keyword">return</span> phead.next</span><br></pre></td></tr></table></figure>
+<h2 id="延伸"><a href="#延伸" class="headerlink" title="延伸"></a>延伸</h2><p>与这题类似的还有<a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/" target="_blank" rel="noopener">Remove Duplicates from Sorted List II</a>，只是需要将重复的节点都不保留。</p>
+<p><code>Examples:</code></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: 1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5</span><br><span class="line">Output: 1-&gt;2-&gt;5</span><br><span class="line"></span><br><span class="line">Input: 1-&gt;1-&gt;1-&gt;2-&gt;3</span><br><span class="line">Output: 2-&gt;3</span><br></pre></td></tr></table></figure>
+<p>可以采用同样的思路，有了<code>phead</code>的存在，即使链表为<code>1-&gt;1-&gt;1</code>，也可以处理。只是相比而言需要多一点判断：</p>
+<p>当<code>p</code>与<code>p.next</code>的值不相等时，有两种情况：</p>
+<ol>
+<li><code>p</code>是重复节点的最后一个，此时有<code>cur.next != p</code>，所以需要抛弃<code>p</code>节点，使得<code>cur</code>的<code>next</code>指向<code>p.next</code>，但是此时有可能<code>p.next</code>是下一个重复节点的第一个节点，所以不需要更改<code>cur</code>；</li>
+<li><code>p</code>是单独的不重复的节点，只有这种情况，才能使得<code>cur</code>向前移动。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deleteDuplicates</span><span class="params">(self, head)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type head: ListNode</span></span><br><span class="line"><span class="string">        :rtype: ListNode</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> head</span><br><span class="line">        phead = ListNode(<span class="number">0</span>)</span><br><span class="line">        phead.next = head</span><br><span class="line">        cur, p = phead, head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">while</span> p.next <span class="keyword">and</span> p.val == p.next.val:</span><br><span class="line">                p = p.next</span><br><span class="line">            <span class="keyword">if</span> cur.next == p:</span><br><span class="line">                cur = cur.next</span><br><span class="line">                p = p.next</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur.next = p.next</span><br><span class="line">                p = p.next</span><br><span class="line">        <span class="keyword">return</span> phead.next</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/06/13/Leetcode-83-Remove-Duplicates-from-Sorted-List/" data-id="cjwupmooi000vqo8zz8xvvem9" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/list/">list</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/12/Leetcode-79-Word-Search/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Leetcode 79 Word Search</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目介绍"><span class="toc-number">1.</span> <span class="toc-text">题目介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solution"><span class="toc-number">2.</span> <span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#延伸"><span class="toc-number">3.</span> <span class="toc-text">延伸</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
