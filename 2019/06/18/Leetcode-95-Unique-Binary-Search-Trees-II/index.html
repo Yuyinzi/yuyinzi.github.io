@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Leetcode 95 Unique Binary Search Trees II | Yuyinzi&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目介绍给定正整数n，利用1到n构造所有可能的二叉树，并返回。">
+<meta name="keywords" content="Leetcode,Python,DP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 95 Unique Binary Search Trees II">
+<meta property="og:url" content="http://yuyinzi.github.io/2019/06/18/Leetcode-95-Unique-Binary-Search-Trees-II/index.html">
+<meta property="og:site_name" content="Yuyinzi&#39;s note">
+<meta property="og:description" content="题目介绍给定正整数n，利用1到n构造所有可能的二叉树，并返回。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-18T07:31:33.848Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Leetcode 95 Unique Binary Search Trees II">
+<meta name="twitter:description" content="题目介绍给定正整数n，利用1到n构造所有可能的二叉树，并返回。">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/may.jpeg">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yuyinzi.github.io"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Yuyinzi&#39;s note</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Leetcode-95-Unique-Binary-Search-Trees-II" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/18/Leetcode-95-Unique-Binary-Search-Trees-II/" class="article-date">
+  <time datetime="2019-06-18T07:22:16.000Z" itemprop="datePublished">2019-06-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/算法/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Leetcode 95 Unique Binary Search Trees II
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h2><p>给定正整数<code>n</code>，利用<code>1</code>到<code>n</code>构造所有可能的二叉树，并返回。</p>
+<a id="more"></a>
+<p><code>Example</code>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Input: <span class="number">3</span></span><br><span class="line">Output:</span><br><span class="line">[</span><br><span class="line">  [<span class="number">1</span>,null,<span class="number">3</span>,<span class="number">2</span>],</span><br><span class="line">  [<span class="number">3</span>,<span class="number">2</span>,null,<span class="number">1</span>],</span><br><span class="line">  [<span class="number">3</span>,<span class="number">1</span>,null,null,<span class="number">2</span>],</span><br><span class="line">  [<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>],</span><br><span class="line">  [<span class="number">1</span>,null,<span class="number">2</span>,null,<span class="number">3</span>]</span><br><span class="line">]</span><br><span class="line">Explanation:</span><br><span class="line">The above output corresponds to the <span class="number">5</span> unique BST<span class="string">'s shown below:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">   1         3     3      2      1</span></span><br><span class="line"><span class="string">    \       /     /      / \      \</span></span><br><span class="line"><span class="string">     3     2     1      1   3      2</span></span><br><span class="line"><span class="string">    /     /       \                 \</span></span><br><span class="line"><span class="string">   2     1         2                 3</span></span><br></pre></td></tr></table></figure>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a><code>Solution</code></h2><p>一开始想用回溯去做，但是发现<code>root</code>所做的更改将会影响到前面的结果。后面发现应该使用动态规划(为啥哪都可以用上动态规划= =)：</p>
+<p>取每一个节点<code>i</code>，那么它的左子树由<code>[1,i-1]</code>组成，右子树由<code>[i+1, n]</code>组成。左右子树的构成方法又可以分解为更小的问题。以此类推。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generateTrees</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type n: int</span></span><br><span class="line"><span class="string">        :rtype: List[TreeNode]</span></span><br><span class="line"><span class="string">        """</span> </span><br><span class="line">        <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">helpfunc</span><span class="params">(start, end)</span>:</span></span><br><span class="line">            temp = []</span><br><span class="line">            <span class="comment"># 如果右边界比左边界小，不存在子树，返回[None]用以遍历</span></span><br><span class="line">            <span class="keyword">if</span> start &gt; end:</span><br><span class="line">                <span class="keyword">return</span> [<span class="literal">None</span>]</span><br><span class="line">            <span class="comment"># 如果左右边界相等，返回节点自身，例如求2，3的组成，当节点为2时，其右子树应当为[3]</span></span><br><span class="line">            <span class="keyword">if</span> start == end:</span><br><span class="line">                temp.append(TreeNode(start))</span><br><span class="line">                <span class="keyword">return</span> temp</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(start, end + <span class="number">1</span>):</span><br><span class="line">                ltrees = helpfunc(start, i - <span class="number">1</span>)</span><br><span class="line">                rtrees = helpfunc(i + <span class="number">1</span>, end)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">for</span> ltree <span class="keyword">in</span> ltrees:</span><br><span class="line">                    <span class="keyword">for</span> rtree <span class="keyword">in</span> rtrees:</span><br><span class="line">                        <span class="comment"># 每次都能生成不同的根节点</span></span><br><span class="line">                        node = TreeNode(i)</span><br><span class="line">                        node.left = ltree</span><br><span class="line">                        node.right = rtree</span><br><span class="line">                        temp.append(node)</span><br><span class="line">            <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line">        ans = helpfunc(<span class="number">1</span>, n)</span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/06/18/Leetcode-95-Unique-Binary-Search-Trees-II/" data-id="cjx1hqfw8001fkk8ztm7dlyb6" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DP/">DP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/">Leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/17/Leetcode-94-Binary-Tree-Inorder-Traversal/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Leetcode 94 Binary Tree Inorder Traversal</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+   <!-- 
+  <div class="comments" id="comments">
+    
+     
+       
+       
+      
+      
+  </div>
+  -->
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目介绍"><span class="toc-number">1.</span> <span class="toc-text">题目介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solution"><span class="toc-number">2.</span> <span class="toc-text">Solution</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 Littlemay&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;littlemay2015@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png">
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
