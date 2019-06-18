@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-17T04:03:44.591Z">
+<meta property="og:updated_time" content="2019-06-18T06:09:04.662Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之存储篇">
 <meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
@@ -280,7 +280,8 @@
 </ul>
 <h2 id="redis的并发竞争问题"><a href="#redis的并发竞争问题" class="headerlink" title="redis的并发竞争问题"></a><code>redis</code>的并发竞争问题</h2><p>多个进程同时操作一个<code>key</code>时，需要使用分布式锁。可以使用<code>redis</code>，也可以使用<code>zookeeper</code>或者<code>mysql</code>实现。</p>
 <p>针对单机情况，可以使用事务机制。</p>
-<h2 id="如何保证缓存与数据库双写一致"><a href="#如何保证缓存与数据库双写一致" class="headerlink" title="如何保证缓存与数据库双写一致"></a>如何保证缓存与数据库双写一致</h2><p>看了知乎，有如下机制：</p>
+<h2 id="如何保证缓存与数据库双写一致"><a href="#如何保证缓存与数据库双写一致" class="headerlink" title="如何保证缓存与数据库双写一致"></a>如何保证缓存与数据库双写一致</h2><p><a href="https://www.cnblogs.com/LBSer/p/4715395.html#4233430" target="_blank" rel="noopener">如何用消息系统避免分布式事务</a></p>
+<p>看了知乎，有如下机制：</p>
 <ol>
 <li>等待<code>redis</code>中的数据自动过期，但是会有过期时间这么长一段时间的数据不一致</li>
 <li>使用代码更新<code>DB</code>，然后删除<code>redis</code>中的<code>key</code>，但是也会有一小段不一致的时间，可以满足绝大部分场景</li>
