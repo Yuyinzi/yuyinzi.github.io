@@ -1,5 +1,5 @@
 ---
-title: Leetcode 98 Vlidate Binary Search Tree
+title: Leetcode 98 Validate Binary Search Tree
 date: 2019-06-18 19:41:50
 tags:
 - Python
