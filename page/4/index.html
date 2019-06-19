@@ -64,6 +64,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ZooKeeper学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/09/ZooKeeper学习笔记/" class="article-date">
+  <time datetime="2019-05-09T08:02:05.000Z" itemprop="datePublished">2019-05-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/分布式/">分布式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/09/ZooKeeper学习笔记/">ZooKeeper学习笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>一个<code>leader</code>多个<code>follower</code>组成的<strong>集群</strong>，只要半数服务器有效，则集群有效。</p>
+<ul>
+<li><strong>顺序一致性：</strong> 从同一客户端发起的事务请求，最终将会严格地按照顺序被应用到<code>ZooKeeper</code>中去。</li>
+<li><strong>原子性：</strong> 所有事务请求的处理结果在整个集群中所有机器上的应用情况是一致的，也就是说，要么整个集群中所有的机器都成功应用了某一个事务，要么都没有应用。</li>
+<li><strong>全局数据一致：</strong> 无论客户端连到哪一个<code>ZooKeeper</code>服务器上，其看到的服务端数据模型都是一致的。</li>
+<li><strong>可靠性：</strong> 一旦一次更改请求被应用，更改的结果就会被持久化，直到被下一次更改覆盖。</li>
+<li><strong>实时性</strong>：在一段时间内，客户端可以读取到最新的数据(服务器间同步很快)</li>
+</ul>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/09/ZooKeeper学习笔记/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjx2wnvo0005icg8zvz38eedx" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ZooKeeper/">ZooKeeper</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/分布式/">分布式</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-RabbitMQ学习记录" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/25/RabbitMQ学习记录/" class="article-date">
@@ -107,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/25/RabbitMQ学习记录/" data-id="cjx2usftn00628r8z7ey7xmrd" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/25/RabbitMQ学习记录/" data-id="cjx2wnvoy0066cg8zpk4uwf1v" class="article-share-link">分享</a>
       
       
       
@@ -156,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjx2usfsk00598r8zccr2sk3t" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjx2wnvnx005ecg8zuiofso2t" class="article-share-link">分享</a>
       
       
       
@@ -212,7 +268,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjx2usfu2006r8r8zj92lbi8c" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjx2wnvpd006vcg8z9k2v03g4" class="article-share-link">分享</a>
       
       
       
@@ -268,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjx2usftp00648r8ztpu93cwz" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjx2wnvoz0068cg8z4lqn93lq" class="article-share-link">分享</a>
       
       
       
@@ -327,7 +383,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjx2usftv006a8r8zzbzzlk20" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjx2wnvp1006bcg8z7gsvjpca" class="article-share-link">分享</a>
       
       
       
@@ -376,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/常用排序算法的Python实现/" data-id="cjx2usfri00238r8zw3481ak4" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/12/常用排序算法的Python实现/" data-id="cjx2wnvmm0028cg8zsgty14io" class="article-share-link">分享</a>
       
       
       
@@ -425,7 +481,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/11/Django源码分析/" data-id="cjx2usfsm005a8r8zfskys69w" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/11/Django源码分析/" data-id="cjx2wnvnw005dcg8zpavsd6uw" class="article-share-link">分享</a>
       
       
       
@@ -474,7 +530,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-2/" data-id="cjx2usfsn005c8r8zk73t583j" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-2/" data-id="cjx2wnvo3005ocg8zurfgrjpx" class="article-share-link">分享</a>
       
       
       
@@ -523,65 +579,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-1/" data-id="cjx2usfsq005h8r8zlgj6m9s6" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/10/Python拾遗-1/" data-id="cjx2wnvnz005gcg8z1fd1qknr" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-《Redis设计与实现》读书笔记-第一部分" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" class="article-date">
-  <time datetime="2019-04-10T06:05:33.000Z" itemprop="datePublished">2019-04-10</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据库/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/">《Redis设计与实现》读书笔记 第一部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第一部分从第二章到第八章，主要解决下面几个问题：</p>
-<ul>
-<li><code>redis</code>的底层是由哪些数据结构实现的，它们的应用场景又是什么</li>
-<li><code>redis</code>的五大对象分别用了哪些数据结构实现</li>
-<li><code>redis</code>的内存回收机制</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/10/《Redis设计与实现》读书笔记-第一部分/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/10/《Redis设计与实现》读书笔记-第一部分/" data-id="cjx2usfss005k8r8zbz5ikhq1" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
 
     </footer>
   </div>
@@ -617,6 +619,10 @@
       <ul>
         
           <li>
+            <a href="/2019/06/19/Leetcode-71-Simplify-Path/">Leetcode 71 Simplify Path</a>
+          </li>
+        
+          <li>
             <a href="/2019/06/19/Leetcode-51-N-Queens/">Leetcode 51 N-Queens</a>
           </li>
         
@@ -630,10 +636,6 @@
         
           <li>
             <a href="/2019/06/17/Leetcode-94-Binary-Tree-Inorder-Traversal/">Leetcode 94 Binary Tree Inorder Traversal</a>
-          </li>
-        
-          <li>
-            <a href="/2019/06/17/Leetcode-93-Restore-IP-Address/">Leetcode 93 Restore IP Address</a>
           </li>
         
       </ul>
