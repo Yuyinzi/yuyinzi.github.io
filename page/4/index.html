@@ -64,6 +64,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-面试知识点整理之存储篇" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/13/面试知识点整理之存储篇/" class="article-date">
+  <time datetime="2019-05-13T10:22:20.000Z" itemprop="datePublished">2019-05-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/数据库/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/13/面试知识点整理之存储篇/">面试知识点整理之存储篇</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：）</p>
+<h2 id="MyISAM和InnoDB的理解与区别"><a href="#MyISAM和InnoDB的理解与区别" class="headerlink" title="MyISAM和InnoDB的理解与区别"></a><code>MyISAM</code>和<code>InnoDB</code>的理解与区别</h2><ul>
+<li>两者采用的都是<code>B+</code>树，<code>MyISAM</code>是非聚集索引，即索引文件和数据文件是分离的，<code>data</code>域保存的是数据文件的指针。索引表只保存数据记录的地址；<code>InnoDB</code>是聚集索引，因此必须需要主键，<code>data</code>域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其他索引也很大。</li>
+<li><code>MyISAM</code>只支持表锁，因此加锁开销小，不会出现死锁，但并发性能差；<code>InnoDB</code>可以支持行锁与表锁，但是仅仅在使用索引时会使用行锁</li>
+<li><code>MyISAM</code>不支持事务和崩溃后的安全恢复，但是<code>InnoDB</code>支持。</li>
+<li><code>MyISAM</code>不支持外键，<code>InnoDB</code>支持</li>
+<li><code>InnoDB</code>不保存表的具体行数，执行<code>select count(*)</code>时需要全表扫描，而<code>MyISAM</code>使用变量保存了整表行数，执行<code>select count(*)</code>速度很快。</li>
+</ul>
+<p>由于<code>MySQL</code>默认认为写优先级高于读优先级，因此当大量读写场景时，<code>MyISAM</code>的锁调度总是写进程先获得锁，因此它并不适合有大量更新操作和查询操作应用的原因，可能会造成查询操作很难获得读锁,从而可能永远阻塞。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/13/面试知识点整理之存储篇/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yuyinzi.github.io/2019/05/13/面试知识点整理之存储篇/" data-id="cjxa8g35l006ytl8zuaiaaphb" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-面试知识点整理之网络篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/11/面试知识点整理之网络篇/" class="article-date">
@@ -104,7 +161,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjxa2ziy4006ybc8zkxd2q59n" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/11/面试知识点整理之网络篇/" data-id="cjxa8g35m006ztl8zr5nmr6la" class="article-share-link">分享</a>
       
       
       
@@ -153,7 +210,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjxa2ziui001fbc8z348a53vh" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-5-求最长回文子序列/" data-id="cjxa8g32i001vtl8z6nckb7si" class="article-share-link">分享</a>
       
       
       
@@ -203,7 +260,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjxa2ziu3000rbc8zjcd9qeue" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/Leetcode-3-最长不重复字符子序列/" data-id="cjxa8g322000ytl8zxcxonu3h" class="article-share-link">分享</a>
       
       
       
@@ -258,7 +315,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjxa2zivc002mbc8zuer7u6ns" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/10/分布式锁的实现原理学习笔记/" data-id="cjxa8g32z002ntl8zx1o9bmg7" class="article-share-link">分享</a>
       
       
       
@@ -314,7 +371,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjxa2ziws0066bc8zk7f1vaan" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/05/09/ZooKeeper学习笔记/" data-id="cjxa8g34a0065tl8z551bcvjn" class="article-share-link">分享</a>
       
       
       
@@ -371,7 +428,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/25/RabbitMQ学习记录/" data-id="cjxa2zixx006rbc8z54vc8m45" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/25/RabbitMQ学习记录/" data-id="cjxa8g35g006qtl8z7xzwj2h8" class="article-share-link">分享</a>
       
       
       
@@ -420,7 +477,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjxa2ziwm005ybc8z63te6t0l" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/16/Django笔记/" data-id="cjxa8g345005ytl8zrxxd2dkz" class="article-share-link">分享</a>
       
       
       
@@ -476,7 +533,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjxa2ziyy007gbc8zfkelh0jv" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/15/《Redis设计与实现》读书笔记-第三-四部分/" data-id="cjxa8g35u007ftl8zxauhisqi" class="article-share-link">分享</a>
       
       
       
@@ -532,70 +589,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjxa2zixz006tbc8zz33wp015" class="article-share-link">分享</a>
+      <a data-url="http://yuyinzi.github.io/2019/04/14/TCP学习记录/" data-id="cjxa8g35j006vtl8zftovvxxs" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-《Redis设计与实现》读书笔记-第二部分" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" class="article-date">
-  <time datetime="2019-04-12T12:43:13.000Z" itemprop="datePublished">2019-04-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据库/">数据库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/">《Redis设计与实现》读书笔记 第二部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第二部分主要解决下面的问题：</p>
-<ul>
-<li>数据库在服务器中是如何保存的</li>
-<li>过期键是如何保存的以及如何被清理的</li>
-<li><code>RDB</code>与<code>AOF</code>的原理，以及<code>AOF</code>的重写</li>
-<li><code>redis</code>是如何实现单线程下的事件驱动的</li>
-<li><code>redis</code>客户端是如何保存的，有哪些属性，在什么情况下会被关闭</li>
-<li>当接收到一个请求时，<code>redis</code>服务器是如何处理的</li>
-<li><code>serverCron</code>是如何管理服务器资源的</li>
-<li><code>redis</code>服务器是如何启动及初始化的</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2019/04/12/《Redis设计与实现》读书笔记-第二部分/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yuyinzi.github.io/2019/04/12/《Redis设计与实现》读书笔记-第二部分/" data-id="cjxa2ziy2006wbc8zt5u4ssqu" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
 
     </footer>
   </div>
@@ -631,6 +629,10 @@
       <ul>
         
           <li>
+            <a href="/2019/06/24/Leetcode-127-Word-Ladder/">Leetcode 127 Word Ladder</a>
+          </li>
+        
+          <li>
             <a href="/2019/06/24/Leetcode-128-Longest-Consecutive-Sequence/">Leetcode 128 Longest Consecutive Sequence</a>
           </li>
         
@@ -644,10 +646,6 @@
         
           <li>
             <a href="/2019/06/19/Leetcode-295-Find-Median-from-Data-Stream/">Leetcode 295 Find Median from Data Stream</a>
-          </li>
-        
-          <li>
-            <a href="/2019/06/19/Leetcode-71-Simplify-Path/">Leetcode 71 Simplify Path</a>
           </li>
         
       </ul>
