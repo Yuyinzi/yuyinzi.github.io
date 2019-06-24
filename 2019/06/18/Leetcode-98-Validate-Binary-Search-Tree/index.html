@@ -5,18 +5,18 @@
   
   <title>Leetcode 98 Validate Binary Search Tree | Yuyinzi&#39;s note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="题目介绍判断给定二叉树是否为一棵平衡二叉树。">
+  <meta name="description" content="题目介绍判断给定二叉树是否为一棵二叉搜索树。">
 <meta name="keywords" content="Leetcode,Python,DFS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Leetcode 98 Validate Binary Search Tree">
 <meta property="og:url" content="http://yuyinzi.github.io/2019/06/18/Leetcode-98-Validate-Binary-Search-Tree/index.html">
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
-<meta property="og:description" content="题目介绍判断给定二叉树是否为一棵平衡二叉树。">
+<meta property="og:description" content="题目介绍判断给定二叉树是否为一棵二叉搜索树。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-18T12:12:17.432Z">
+<meta property="og:updated_time" content="2019-06-24T11:34:00.273Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Leetcode 98 Validate Binary Search Tree">
-<meta name="twitter:description" content="题目介绍判断给定二叉树是否为一棵平衡二叉树。">
+<meta name="twitter:description" content="题目介绍判断给定二叉树是否为一棵二叉搜索树。">
   
     <link rel="alternate" href="/atom.xml" title="Yuyinzi&#39;s note" type="application/atom+xml">
   
@@ -95,7 +95,7 @@
       
         <!-- Table of Contents -->
         
-        <h2 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h2><p>判断给定二叉树是否为一棵平衡二叉树。</p>
+        <h2 id="题目介绍"><a href="#题目介绍" class="headerlink" title="题目介绍"></a>题目介绍</h2><p>判断给定二叉树是否为一棵二叉搜索树。</p>
 <a id="more"></a>
 <p><code>Examples:</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">    <span class="number">2</span></span><br><span class="line">   / \</span><br><span class="line">  <span class="number">1</span>   <span class="number">3</span></span><br><span class="line"></span><br><span class="line">Input: [<span class="number">2</span>,<span class="number">1</span>,<span class="number">3</span>]</span><br><span class="line">Output: true</span><br><span class="line">  </span><br><span class="line">    <span class="number">5</span></span><br><span class="line">   / \</span><br><span class="line">  <span class="number">1</span>   <span class="number">4</span></span><br><span class="line">     / \</span><br><span class="line">    <span class="number">3</span>   <span class="number">6</span></span><br><span class="line"></span><br><span class="line">Input: [<span class="number">5</span>,<span class="number">1</span>,<span class="number">4</span>,null,null,<span class="number">3</span>,<span class="number">6</span>]</span><br><span class="line">Output: false</span><br></pre></td></tr></table></figure>
