@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Yuyinzi&#39;s note">
 <meta property="og:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-20T06:55:27.343Z">
+<meta property="og:updated_time" content="2019-06-24T14:38:56.461Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试知识点整理之存储篇">
 <meta name="twitter:description" content="面试时所必要，或者被问到的问题的记录，如果有理解错误或者疏漏，烦请指出，万分感谢：） MyISAM和InnoDB的理解与区别 两者采用的都是B+树，MyISAM是非聚集索引，即索引文件和数据文件是分离的，data域保存的是数据文件的指针。索引表只保存数据记录的地址；InnoDB是聚集索引，因此必须需要主键，data域保存完整的数据记录。但是通过辅助索引需要两次查询，因此主键不应该过大，否则会导致其">
@@ -267,13 +267,13 @@
 <li>过期时间加上随机值，避免缓存集体失效</li>
 <li>针对缓存雪崩发生时，对数据库采用限流，防止其崩掉</li>
 </ul>
-<p>缓存穿透：因为大量请求<code>redis</code>中不存在且数据库也不存在的<code>key</code>导致，所有请求落在数据库上</p>
+<p>缓存穿透：因为大量请求<code>redis</code>中不存在的<code>key</code>导致，缓存不起作用所有请求落在数据库上</p>
 <p>解决方案：</p>
 <ul>
 <li>布隆过滤器，拦截非法<code>key</code></li>
 <li>即使空结果，也进行缓存，但设置短的过期时间</li>
 </ul>
-<p>缓存击穿：大量查询一个正好失效的<code>key</code></p>
+<p>缓存击穿：大量查询一个正好失效的<code>key</code>，导致瞬时<code>DB</code>请求量大</p>
 <p>解决方案：</p>
 <ul>
 <li>互斥锁</li>
