@@ -44,11 +44,11 @@ Explanation: The endWord "cog" is not in wordList, therefore no possible transfo
 可以使用`BFS`来做，例如从`hit`开始查找只变化一位的单词，再根据这个单词寻找是否存在只变化一位的单词…以此类推。而最终结果可以看成是一个树的层高，所以需要使用队列的思想，每次从左边弹出，从右边压入。并且由于可能会遍历到以前遍历过的单词，所以还需要标记是否已经使用过。如图：
 
 ```python 
-				hit
-  				 |
-    			hot
-      		  /     \
-        	dot     lot
+		hit
+  		 |
+    	        hot
+      	      /     \
+            dot     lot
           /   \    /   \
         lot  dog  dot   log
     (repeat)    (repeat)
